@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../services/auth_service.dart';
+import '../services/portfolio_service.dart';
+import 'transactions_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // We can use AuthService to get the user
     final user = AuthService().currentUser;
 
     return Scaffold(
@@ -18,6 +20,40 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => AuthService().signOut(),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text(user?.displayName ?? "User"),
+              accountEmail: Text(user?.email ?? ""),
+              currentAccountPicture: user?.photoURL != null
+                  ? CircleAvatar(backgroundImage: NetworkImage(user!.photoURL!))
+                  : const CircleAvatar(child: Icon(Icons.person)),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.list),
+              title: const Text('Transactions'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TransactionsScreen(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Column(
@@ -38,26 +74,46 @@ class HomeScreen extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32),
-            const Card(
-              margin: EdgeInsets.all(16),
+            Card(
+              margin: const EdgeInsets.all(16),
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Text('Total Balance', style: TextStyle(fontSize: 16)),
-                    SizedBox(height: 8),
-                    Text(
-                      '\$0.00',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.greenAccent,
-                      ),
+                    const Text(
+                      'Total Invertido',
+                      style: TextStyle(fontSize: 16),
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Coming soon from Firestore...',
-                      style: TextStyle(color: Colors.grey),
+                    const SizedBox(height: 8),
+                    StreamBuilder<double>(
+                      stream: PortfolioService().getNetInvestedStream(
+                        user?.uid ?? '',
+                      ),
+                      initialData: 0.0,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting &&
+                            !snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
+                        final balance = snapshot.data ?? 0.0;
+
+                        // Use NumberFormat for proper currency formatting
+                        final formatter = NumberFormat.currency(
+                          locale: 'es_ES',
+                          symbol: '€',
+                          decimalDigits: 2,
+                        );
+
+                        return Text(
+                          formatter.format(balance),
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.greenAccent,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
