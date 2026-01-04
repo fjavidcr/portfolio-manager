@@ -28,4 +28,17 @@ class AssetService {
         .doc(asset.id)
         .set(asset.toMap());
   }
+
+  // Update asset current value
+  Future<void> updateAssetValue(String uid, String assetId, double newValue) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('assets')
+        .doc(assetId)
+        .update({
+          'currentValue': newValue,
+          'lastUpdated': FieldValue.serverTimestamp(),
+        });
+  }
 }
