@@ -25,4 +25,40 @@ class TransactionService {
         .collection('transactions')
         .add(transaction.toMap());
   }
+
+  Future<void> updateTransaction(String uid, TransactionModel transaction) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('transactions')
+        .doc(transaction.id)
+        .update(transaction.toMap());
+  }
+
+  Future<void> deleteTransaction(String uid, String transactionId) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('transactions')
+        .doc(transactionId)
+        .delete();
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getTransactionsPage(
+    String uid, {
+    int limit = 20,
+    DocumentSnapshot? startAfter,
+  }) {
+    Query<Map<String, dynamic>> query = _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('transactions')
+        .orderBy('date', descending: true);
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    return query.limit(limit).get();
+  }
 }

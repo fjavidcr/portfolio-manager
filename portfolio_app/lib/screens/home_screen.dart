@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../main.dart';
 import '../services/auth_service.dart';
-import '../services/portfolio_service.dart';
 import 'transactions_screen.dart';
+import 'add_transaction_screen.dart';
 import 'asset_summary_screen.dart';
+import 'manage_assets_screen.dart';
+import '../models/transaction.dart';
+import '../services/transaction_service.dart';
+import '../widgets/portfolio_dashboard.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,11 +18,39 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Portfolio'),
+        title: const Text('Portfolio Manager'),
         actions: [
+          ValueListenableBuilder<ThemeMode>(
+            valueListenable: themeNotifier,
+            builder: (context, currentMode, _) {
+              IconData icon;
+              if (currentMode == ThemeMode.system) {
+                icon = Icons.brightness_auto;
+              } else if (currentMode == ThemeMode.light) {
+                icon = Icons.light_mode;
+              } else {
+                icon = Icons.dark_mode;
+              }
+              return IconButton(
+                icon: Icon(icon),
+                onPressed: () {
+                  if (currentMode == ThemeMode.system) {
+                    themeNotifier.value = ThemeMode.light;
+                  } else if (currentMode == ThemeMode.light) {
+                    themeNotifier.value = ThemeMode.dark;
+                  } else {
+                    themeNotifier.value = ThemeMode.system;
+                  }
+                },
+                tooltip: 'Cambiar tema (Sistema/Claro/Oscuro)',
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => AuthService().signOut(),
+            onPressed: () async {
+              await AuthService().signOut();
+            },
           ),
         ],
       ),
@@ -27,6 +59,7 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               accountName: Text(user?.displayName ?? "User"),
               accountEmail: Text(user?.email ?? ""),
               currentAccountPicture: user?.photoURL != null
@@ -66,71 +99,195 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.settings_suggest),
+              title: const Text('Manage Assets'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ManageAssetsScreen(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (user?.photoURL != null)
-              CircleAvatar(
-                backgroundImage: NetworkImage(user!.photoURL!),
-                radius: 40,
-              ),
-            const SizedBox(height: 16),
-            Text('Welcome, ${user?.displayName ?? "User"}!'),
-            const SizedBox(height: 8),
-            Text('${user?.email}'),
-            const SizedBox(height: 8),
-            SelectableText(
-              'UID: ${user?.uid}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 32),
-            Card(
-              margin: const EdgeInsets.all(16),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Total Invertido',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    StreamBuilder<double>(
-                      stream: PortfolioService().getNetInvestedStream(
-                        user?.uid ?? '',
+      body: user == null
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Hola, ${user.displayName ?? 'Inversionista'} 👋",
+                            style: Theme.of(context).textTheme.headlineSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                ),
+                          ),
+                          Text(
+                            "Bienvenido de nuevo a tu portafolio",
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
-                      initialData: 0.0,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                                ConnectionState.waiting &&
-                            !snapshot.hasData) {
-                          return const CircularProgressIndicator();
-                        }
-                        final balance = snapshot.data ?? 0.0;
+                      const Spacer(),
+                      if (user.photoURL != null)
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(user.photoURL!),
+                          radius: 24,
+                        )
+                      else
+                        const CircleAvatar(
+                          child: Icon(Icons.person),
+                          radius: 24,
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
 
-                        // Use NumberFormat for proper currency formatting
-                        final formatter = NumberFormat.currency(
-                          locale: 'es_ES',
-                          symbol: '€',
-                          decimalDigits: 2,
-                        );
+                // Dashboard
+                PortfolioDashboard(uid: user.uid),
+                const SizedBox(height: 32),
 
-                        return Text(
-                          formatter.format(balance),
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.greenAccent,
+                // Quick Actions
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "Acciones Rápidas",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      _buildQuickAction(
+                        context,
+                        "Añadir transacción",
+                        Icons.add_circle_outline,
+                        Colors.blue,
+                        const AddTransactionScreen(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Recent Activity
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Actividad Reciente",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TransactionsScreen(),
+                          ),
+                        ),
+                        child: const Text("Ver todas"),
+                      ),
+                    ],
+                  ),
+                ),
+                StreamBuilder<List<TransactionModel>>(
+                  stream: TransactionService().getUserTransactions(user.uid),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const SizedBox();
+                    final recent = snapshot.data!.take(3).toList();
+                    if (recent.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("No hay transacciones recientes"),
+                      );
+                    }
+                    return Column(
+                      children: recent.map((tx) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: TransactionCard(
+                            uid: user.uid,
+                            tx: tx,
+                            onRefresh: () {},
                           ),
                         );
-                      },
-                    ),
-                  ],
+                      }).toList(),
+                    );
+                  },
                 ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildQuickAction(
+    BuildContext context,
+    String label,
+    IconData icon,
+    Color color,
+    Widget screen,
+  ) {
+    return InkWell(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => screen),
+      ),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: 110,
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withOpacity(0.2)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 28),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: color is MaterialColor ? color.shade800 : color,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],

@@ -5,6 +5,7 @@ import '../models/asset.dart';
 import '../models/transaction.dart';
 import '../services/asset_service.dart';
 import '../services/transaction_service.dart';
+import '../widgets/portfolio_dashboard.dart';
 
 class AssetSummaryScreen extends StatefulWidget {
   const AssetSummaryScreen({super.key});
@@ -17,6 +18,17 @@ class _AssetSummaryScreenState extends State<AssetSummaryScreen> {
   final AssetService _assetService = AssetService();
   final TransactionService _transactionService = TransactionService();
   final String _uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+  late Stream<List<AssetModel>> _assetsStream;
+  late Stream<List<TransactionModel>> _transactionsStream;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_uid.isNotEmpty) {
+      _assetsStream = _assetService.getUserAssets(_uid);
+      _transactionsStream = _transactionService.getUserTransactions(_uid);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +44,7 @@ class _AssetSummaryScreenState extends State<AssetSummaryScreen> {
         centerTitle: true,
       ),
       body: StreamBuilder<List<AssetModel>>(
-        stream: _assetService.getUserAssets(_uid),
+        stream: _assetsStream,
         builder: (context, assetSnapshot) {
           if (assetSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -44,7 +56,7 @@ class _AssetSummaryScreenState extends State<AssetSummaryScreen> {
           final assets = assetSnapshot.data ?? [];
 
           return StreamBuilder<List<TransactionModel>>(
-            stream: _transactionService.getUserTransactions(_uid),
+            stream: _transactionsStream,
             builder: (context, txSnapshot) {
               if (txSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -78,34 +90,58 @@ class _AssetSummaryScreenState extends State<AssetSummaryScreen> {
               return ListView(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 children: [
+                  PortfolioDashboard(uid: _uid),
+                  const SizedBox(height: 24),
                   if (activeAssets.isEmpty && archivedAssets.isEmpty)
                     const Center(child: Text("No hay activos disponibles")),
-
-                  if (activeAssets.isNotEmpty)
-                    Center(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columnSpacing: 15,
-                          horizontalMargin: 16,
-                          columns: const [
-                            DataColumn(label: Text('Activo')),
-                            DataColumn(label: Text('Invertido')),
-                            DataColumn(label: Text('Actual')),
-                            DataColumn(label: Text('ROI')),
-                            DataColumn(label: Text('Actualizado')),
-                            DataColumn(label: Text('')),
-                          ],
-                          rows: activeAssets.map((asset) {
-                            final invested = assetInvested[asset.id] ?? 0.0;
-                            return _buildDataRow(asset, invested);
-                          }).toList(),
+                  if (activeAssets.isNotEmpty) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "Tus Activos",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-
+                    const SizedBox(height: 8),
+                    Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            dataTableTheme: DataTableThemeData(
+                              headingTextStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.teal,
+                              ),
+                              headingRowColor: WidgetStateProperty.all(
+                                Colors.teal.withOpacity(0.05),
+                              ),
+                            ),
+                          ),
+                          child: DataTable(
+                            columnSpacing: 20,
+                            horizontalMargin: 16,
+                            columns: const [
+                              DataColumn(label: Text('Activo')),
+                              DataColumn(label: Text('Invertido')),
+                              DataColumn(label: Text('Actual')),
+                              DataColumn(label: Text('ROI')),
+                              DataColumn(label: Text('Actualizado')),
+                              DataColumn(label: Text('')),
+                            ],
+                            rows: activeAssets.map((asset) {
+                              final invested = assetInvested[asset.id] ?? 0.0;
+                              return _buildDataRow(asset, invested);
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                   if (archivedAssets.isNotEmpty) ...[
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 32),
                     Theme(
                       data: Theme.of(
                         context,

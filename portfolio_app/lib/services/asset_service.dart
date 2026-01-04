@@ -41,4 +41,24 @@ class AssetService {
           'lastUpdated': FieldValue.serverTimestamp(),
         });
   }
+
+  // Update full asset data
+  Future<void> updateAsset(String uid, AssetModel asset) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('assets')
+        .doc(asset.id)
+        .update(asset.toMap());
+  }
+
+  // Delete an asset
+  Future<void> deleteAsset(String uid, String assetId) {
+    return _firestore
+        .collection('users')
+        .doc(uid)
+        .collection('assets')
+        .doc(assetId)
+        .delete();
+  }
 }

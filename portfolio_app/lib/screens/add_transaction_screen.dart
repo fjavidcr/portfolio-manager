@@ -6,7 +6,8 @@ import '../services/transaction_service.dart';
 import '../services/asset_service.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+  final TransactionModel? transaction;
+  const AddTransactionScreen({super.key, this.transaction});
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -20,8 +21,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String? _selectedAssetId;
   String? _selectedAssetName;
 
-  String _selectedType = 'Plan';
-  DateTime _selectedDate = DateTime.now();
+  late String _selectedType;
+  late DateTime _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController.text = widget.transaction?.amount.toString() ?? '';
+    _selectedAssetId = widget.transaction?.assetId;
+    _selectedAssetName = widget.transaction?.description;
+    _selectedType = widget.transaction?.type ?? 'Plan';
+    _selectedDate = widget.transaction?.date ?? DateTime.now();
+  }
 
   // Use types from Model
   final List<String> _transactionTypes = TransactionModel.validTypes;
@@ -63,7 +74,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       final amount = double.tryParse(_amountController.text) ?? 0.0;
 
       final transaction = TransactionModel(
-        id: '',
+        id: widget.transaction?.id ?? '',
         userId: user.uid,
         amount: amount,
         description: _selectedAssetName ?? '',
@@ -73,18 +84,60 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       );
 
       try {
-        await TransactionService().addTransaction(user.uid, transaction);
+        if (widget.transaction != null) {
+          await TransactionService().updateTransaction(user.uid, transaction);
+        } else {
+          await TransactionService().addTransaction(user.uid, transaction);
+        }
         if (mounted) {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error adding transaction: $e')),
+            SnackBar(
+              content: Text(
+                'Error ${widget.transaction != null ? 'updating' : 'adding'} transaction: $e',
+              ),
+            ),
           );
         }
       }
     }
+  }
+
+  void _confirmDelete() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Eliminar Transacción"),
+        content: const Text(
+          "¿Estás seguro de que quieres eliminar esta transacción?",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () async {
+              final user = AuthService().currentUser;
+              if (user != null && widget.transaction != null) {
+                await TransactionService().deleteTransaction(
+                  user.uid,
+                  widget.transaction!.id,
+                );
+                if (mounted) {
+                  Navigator.pop(context); // Pop dialog
+                  Navigator.pop(context, true); // Pop screen with refresh flag
+                }
+              }
+            },
+            child: const Text("Eliminar", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -92,7 +145,23 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     final user = AuthService().currentUser;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Transaction')),
+      appBar: AppBar(
+        title: Text(
+          widget.transaction != null ? 'Edit Transaction' : 'Add Transaction',
+        ),
+        actions: widget.transaction != null
+            ? [
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: _confirmDelete,
+                  tooltip: 'Eliminar transacción',
+                ),
+              ]
+            : null,
+      ),
       body: user == null
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -198,7 +267,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     Center(
                       child: ElevatedButton(
                         onPressed: _saveTransaction,
-                        child: const Text('Save Transaction'),
+                        child: Text(
+                          widget.transaction != null
+                              ? 'Update Transaction'
+                              : 'Save Transaction',
+                        ),
                       ),
                     ),
                   ],
