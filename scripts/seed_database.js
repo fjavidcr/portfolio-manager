@@ -14,7 +14,8 @@ admin.initializeApp({
 const db = admin.firestore();
 
 // ID de usuario "Hardcodeado" para pruebas (luego esto vendría del Auth)
-const USER_ID = 'gLB5zjmDNfOrd9hpma0Qm9YbPiX2';
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
+const USER_ID = process.env.USER_ID;
 
 // Función genérica para leer CSV y devolver Promesa con los datos
 function leerCSV(archivoPath) {
