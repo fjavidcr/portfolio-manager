@@ -5,6 +5,10 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  AuthService() {
+    _firebaseAuth.setPersistence(Persistence.LOCAL);
+  }
+
   // Sign out
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
