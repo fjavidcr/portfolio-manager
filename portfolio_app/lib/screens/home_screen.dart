@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../services/auth_service.dart';
 import '../services/portfolio_service.dart';
 import 'transactions_screen.dart';
+import 'asset_summary_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -48,6 +49,19 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const TransactionsScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.pie_chart),
+              title: const Text('Asset Summary'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AssetSummaryScreen(),
                   ),
                 );
               },
