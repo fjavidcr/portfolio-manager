@@ -1,0 +1,18 @@
+{
+  "name": "portfolio-manager",
+  "version": "1.0.0",
+  "description": "Portfolio manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node scripts/seed_database.js",
+    "users-list": "node scripts/list_users.js",
+    "migrate-tx": "node scripts/migrate_transactions.js"
+  },
+  "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "firebase-admin": "^13.6.0"
+  }
+}
