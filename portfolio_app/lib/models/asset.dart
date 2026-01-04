@@ -5,6 +5,7 @@ class AssetModel {
   final String name;
   final String type; // 'Stock', 'Crypto', 'ETF', etc.
   final double currentValue;
+  final String platformId; // The ID of the platform where the asset is held
   final DateTime? lastUpdated;
 
   AssetModel({
@@ -12,6 +13,7 @@ class AssetModel {
     required this.name,
     required this.type,
     this.currentValue = 0.0,
+    this.platformId = '',
     this.lastUpdated,
   });
 
@@ -28,6 +30,7 @@ class AssetModel {
       name: data['name'] ?? '',
       type: data['type'] ?? 'General',
       currentValue: (data['currentValue'] ?? 0.0).toDouble(),
+      platformId: data['platformId'] ?? '',
       lastUpdated: lastUpdated,
     );
   }
@@ -37,6 +40,7 @@ class AssetModel {
       'name': name,
       'type': type,
       'currentValue': currentValue,
+      'platformId': platformId,
       'lastUpdated': lastUpdated != null
           ? Timestamp.fromDate(lastUpdated!)
           : null,
