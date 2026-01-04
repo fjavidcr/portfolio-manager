@@ -1,0 +1,3 @@
+node_modules/
+account/  <-- ¡CRÍTICO! Nunca subas tus credenciales al repo.
+csv/                   <-- Opcional, si no quieres subir tus datos financieros.
