@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node scripts/seed_database.js",
     "users-list": "node scripts/list_users.js",
-    "migrate-tx": "node scripts/migrate_transactions.js"
+    "migrate-tx": "node scripts/migrate_transactions.js",
+    "deploy": "node scripts/deploy.js"
   },
   "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
   "license": "ISC",
