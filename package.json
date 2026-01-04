@@ -2,6 +2,9 @@
   "name": "portfolio-manager",
   "version": "1.0.0",
   "description": "Portfolio manager",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -14,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "csv-parser": "^3.2.0",
+    "dotenv": "^17.2.3",
     "firebase-admin": "^13.6.0"
   }
 }
