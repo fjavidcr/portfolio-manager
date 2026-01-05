@@ -6,6 +6,7 @@ export interface AssetModel {
     type: string; // 'Stock', 'Crypto', 'ETF', etc.
     currentValue: number;
     platformId: string;
+    description?: string;
     lastUpdated?: Date | Timestamp;
 }
 

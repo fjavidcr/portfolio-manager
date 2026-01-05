@@ -1,17 +1,17 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import AssetTable from "@features/portfolio/components/AssetTable.vue";
+import AssetTable from "@features/assets/components/AssetTable.vue";
 ---
 
-<Layout title="Assets - Portfolio Manager">
+<Layout title="Assets - Portfolio Manager" requireAuth={true}>
   <div class="space-y-6">
     <div class="flex justify-between items-center">
-      <h1 class="text-2xl font-semibold text-white">Assets</h1>
+      <h1 class="text-2xl font-semibold text-on-surface">Assets</h1>
       <a
-        href="/add-transaction"
+        href="/add-asset"
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
       >
-        Add Transaction
+        Añadir Asset
       </a>
     </div>
 

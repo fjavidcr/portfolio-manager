@@ -1,0 +1,20 @@
+---
+import Layout from "@layouts/Layout.astro";
+import AddAssetForm from "@features/assets/components/AddAssetForm.vue";
+---
+
+<Layout title="Añadir Asset - Portfolio Manager" requireAuth={true}>
+    <div class="max-w-2xl mx-auto space-y-6">
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-semibold text-white">
+                Añadir Nuevo Asset
+            </h1>
+        </div>
+
+        <div
+            class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-6"
+        >
+            <AddAssetForm client:load />
+        </div>
+    </div>
+</Layout>
