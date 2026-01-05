@@ -3,78 +3,162 @@ import UserProfile from "@features/auth/components/UserProfile.vue";
 ---
 
 <aside
-    class="fixed inset-y-0 left-0 w-64 bg-surface-container-low text-on-surface border-r border-outline-variant transform transition-transform duration-300 md:translate-x-0 -translate-x-full z-30"
+    class="fixed inset-y-0 left-0 w-72 bg-surface-container-low text-on-surface transition-transform duration-300 md:translate-x-0 -translate-x-full z-30 flex flex-col shadow-xl md:shadow-none"
     id="sidebar"
 >
-    <div class="h-16 flex items-center px-6 border-b border-outline-variant">
+    <!-- Header -->
+    <div class="pt-8 pb-6 px-6">
+        <div class="flex items-center gap-3 mb-2">
+            <div
+                class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary"
+            >
+                <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </div>
+            <span
+                class="text-sm font-bold tracking-wider text-secondary uppercase"
+                >Finance</span
+            >
+        </div>
         <h1
-            class="text-xl font-bold bg-gradient-to-r from-primary to-primary-container bg-clip-text text-transparent"
+            class="text-2xl font-bold bg-gradient-to-r from-primary to-primary-container bg-clip-text text-transparent"
         >
-            Portfolio Manager
+            Portfolio
         </h1>
     </div>
 
-    <nav class="p-4 space-y-2">
-        <a
-            href="/"
-            class="flex items-center px-4 py-3 text-sm font-medium rounded-full transition-colors hover:bg-surface-container-high focus:bg-secondary-container focus:text-on-secondary-container"
-            id="nav-dashboard"
-        >
-            <svg
-                class="w-5 h-5 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                ></path></svg
+    <!-- Navigation -->
+    <nav class="flex-1 px-4 space-y-2 py-4">
+        <div class="space-y-1">
+            <a
+                href="/"
+                class="flex items-center px-4 py-3.5 text-sm font-medium rounded-2xl transition-all duration-200 group nav-item hover:bg-surface-container-high"
+                id="nav-dashboard"
             >
-            Dashboard
-        </a>
-        <a
-            href="/assets"
-            class="flex items-center px-4 py-3 text-sm font-medium rounded-full transition-colors hover:bg-surface-container-high focus:bg-secondary-container focus:text-on-secondary-container"
-            id="nav-assets"
-        >
-            <svg
-                class="w-5 h-5 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path></svg
+                <svg
+                    class="w-5 h-5 mr-3 transition-colors group-hover:text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                    ></path>
+                </svg>
+                Dashboard
+            </a>
+            <a
+                href="/assets"
+                class="flex items-center px-4 py-3.5 text-sm font-medium rounded-2xl transition-all duration-200 group nav-item hover:bg-surface-container-high"
+                id="nav-assets"
             >
-            Assets
-        </a>
-        <a
-            href="/transactions"
-            class="flex items-center px-4 py-3 text-sm font-medium rounded-full transition-colors hover:bg-surface-container-high focus:bg-secondary-container focus:text-on-secondary-container"
-            id="nav-transactions"
-        >
-            <svg
-                class="w-5 h-5 mr-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                ><path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                ></path></svg
+                <svg
+                    class="w-5 h-5 mr-3 transition-colors group-hover:text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                </svg>
+                Assets
+            </a>
+            <a
+                href="/transactions"
+                class="flex items-center px-4 py-3.5 text-sm font-medium rounded-2xl transition-all duration-200 group nav-item hover:bg-surface-container-high"
+                id="nav-transactions"
             >
-            Transactions
-        </a>
+                <svg
+                    class="w-5 h-5 mr-3 transition-colors group-hover:text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                    ></path>
+                </svg>
+                Transactions
+            </a>
+        </div>
     </nav>
 
-    <UserProfile client:only="vue" />
+    <!-- Bottom Actions -->
+    <div class="p-4 mt-auto space-y-4">
+        <button
+            id="theme-toggle"
+            class="flex items-center w-full px-4 py-3 text-sm font-medium rounded-2xl transition-colors hover:bg-surface-container-high focus:outline-none text-on-surface"
+        >
+            <!-- Sun (Light) -->
+            <svg
+                id="theme-icon-light"
+                class="w-5 h-5 mr-3 hidden"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                ></path></svg
+            >
+            <!-- Moon (Dark) -->
+            <svg
+                id="theme-icon-dark"
+                class="w-5 h-5 mr-3 hidden"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                ></path></svg
+            >
+            <!-- Computer (System) -->
+            <svg
+                id="theme-icon-system"
+                class="w-5 h-5 mr-3 hidden"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                ><path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                ></path></svg
+            >
+
+            <span id="theme-toggle-text">System Theme</span>
+        </button>
+
+        <div class="px-2">
+            <UserProfile client:only="vue" />
+        </div>
+    </div>
 </aside>
 
 <div
@@ -110,6 +194,73 @@ import UserProfile from "@features/auth/components/UserProfile.vue";
 
     overlay?.addEventListener("click", () => {
         sidebar?.classList.remove("translate-x-0");
+        sidebar?.classList.add("-translate-x-full");
         overlay.classList.add("hidden");
     });
+
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById("theme-toggle");
+    const iconLight = document.getElementById("theme-icon-light");
+    const iconDark = document.getElementById("theme-icon-dark");
+    const iconSystem = document.getElementById("theme-icon-system");
+    const themeText = document.getElementById("theme-toggle-text");
+
+    const STORAGE_KEY = "theme_pref";
+
+    const updateThemeUI = () => {
+        const stored = localStorage.getItem(STORAGE_KEY) || "system";
+
+        // Hide all
+        iconLight?.classList.add("hidden");
+        iconDark?.classList.add("hidden");
+        iconSystem?.classList.add("hidden");
+
+        if (stored === "light") {
+            iconLight?.classList.remove("hidden");
+            if (themeText) themeText.textContent = "Light Mode";
+        } else if (stored === "dark") {
+            iconDark?.classList.remove("hidden");
+            if (themeText) themeText.textContent = "Dark Mode";
+        } else {
+            iconSystem?.classList.remove("hidden");
+            if (themeText) themeText.textContent = "System Default";
+        }
+
+        // Apply class
+        const sysDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+        ).matches;
+        const shouldBeDark =
+            stored === "dark" || (stored === "system" && sysDark);
+
+        if (shouldBeDark) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+
+        console.log(
+            `Theme Debug: Pref: ${stored} | SysDark: ${sysDark} | Active: ${shouldBeDark ? "Dark" : "Light"}`,
+        );
+    };
+
+    // Initial check
+    updateThemeUI();
+
+    themeToggleBtn?.addEventListener("click", () => {
+        const current = localStorage.getItem(STORAGE_KEY) || "system";
+        let next = "system";
+        if (current === "system") next = "light";
+        else if (current === "light") next = "dark";
+        else if (current === "dark") next = "system";
+
+        localStorage.setItem(STORAGE_KEY, next);
+        updateThemeUI();
+    });
+
+    // Sync with other tabs/windows or system changes
+    window.addEventListener("storage", updateThemeUI);
+    window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", updateThemeUI);
 </script>

@@ -5,3 +5,13 @@ export const formatCurrency = (value: number, currency: string = 'EUR') => {
         useGrouping: true,
     }).format(value);
 };
+
+export const formatDate = (date: any) => {
+    if (!date) return '-';
+    // Handle Firestore Timestamp
+    if (date.seconds) {
+        return new Date(date.seconds * 1000).toLocaleDateString('es-ES');
+    }
+    // Handle Date object or string
+    return new Date(date).toLocaleDateString('es-ES');
+};

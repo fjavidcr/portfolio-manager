@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue';
-import { netInvested, currentPortfolioValue, totalROI, portfolioStore } from '@features/portfolio/stores/portfolioStore';
+import { netInvested, currentPortfolioValue, totalROI, portfolioStore } from '@shared/stores/portfolioStore';
 import { user } from '@features/auth/stores/authStore';
 import { formatCurrency } from '@shared/lib/utils';
 
@@ -37,6 +37,40 @@ const $portfolio = useStore(portfolioStore);
             </div>
         </div>
         <div v-else class="animate-pulse bg-gray-800 h-32 rounded-2xl w-full"></div>
+
+        <!-- Missing Index Alert -->
+        <div v-if="$portfolio.missingIndex" class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-md shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-amber-800">Configuration Required</h3>
+                    <div class="mt-2 text-sm text-amber-700">
+                        <p>Server-side aggregation requires a database index. Please open the browser console (F12) and click the Firebase link to create it.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- General Totals Error (Quota etc) -->
+        <div v-else-if="$portfolio.totalsError" class="bg-red-50 border-l-4 border-red-400 p-4 rounded-md shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Error Loading Totals</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                         <p>{{ $portfolio.totalsError.includes('resource-exhausted') ? 'Firestore Quota Exceeded. The daily read/aggregation limit has been reached. Please try again tomorrow or upgrade plan.' : $portfolio.totalsError }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- KPI Grid -->
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
