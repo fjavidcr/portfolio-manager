@@ -29,73 +29,73 @@ const getActionStyle = (type: string) => {
     // Compra (Buy) -> Red (Cash Out)
     if (t.includes('compra') || t.includes('buy')) {
         return {
-            bg: 'bg-rose-100 dark:bg-rose-900/30',
-            text: 'text-rose-700 dark:text-rose-300',
-            border: 'border-rose-200 dark:border-rose-800',
-            iconBg: 'bg-rose-100 text-rose-700 dark:bg-rose-800 dark:text-rose-200'
+            bg: 'tx-rose-bg',
+            text: 'tx-rose-text',
+            border: 'tx-rose-border',
+            iconBg: 'tx-rose-icon'
         };
     }
     // Venta (Sell) -> Green (Cash In)
     if (t.includes('venta') || t.includes('sell')) {
         return {
-            bg: 'bg-emerald-100 dark:bg-emerald-900/30',
-            text: 'text-emerald-700 dark:text-emerald-300',
-            border: 'border-emerald-200 dark:border-emerald-800',
-            iconBg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-800 dark:text-emerald-200'
+            bg: 'tx-emerald-bg',
+            text: 'tx-emerald-text',
+            border: 'tx-emerald-border',
+            iconBg: 'tx-emerald-icon'
         };
     }
     // Dividendo (Dividend) -> Amber/Gold
     if (t.includes('dividendo') || t.includes('dividend')) {
         return {
-            bg: 'bg-amber-100 dark:bg-amber-900/30',
-            text: 'text-amber-700 dark:text-amber-300',
-            border: 'border-amber-200 dark:border-amber-800',
-            iconBg: 'bg-amber-100 text-amber-700 dark:bg-amber-800 dark:text-amber-200'
+            bg: 'tx-amber-bg',
+            text: 'tx-amber-text',
+            border: 'tx-amber-border',
+            iconBg: 'tx-amber-icon'
         };
     }
     // Aportación (Deposit) -> Blue
     if (t.includes('aportación') || t.includes('deposit')) {
         return {
-            bg: 'bg-blue-100 dark:bg-blue-900/30',
-            text: 'text-blue-700 dark:text-blue-300',
-            border: 'border-blue-200 dark:border-blue-800',
-            iconBg: 'bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200'
+            bg: 'tx-blue-bg',
+            text: 'tx-blue-text',
+            border: 'tx-blue-border',
+            iconBg: 'tx-blue-icon'
         };
     }
     // Retirada (Withdrawal) -> Orange
     if (t.includes('retirada') || t.includes('withdraw')) {
         return {
-            bg: 'bg-orange-100 dark:bg-orange-900/30',
-            text: 'text-orange-700 dark:text-orange-300',
-            border: 'border-orange-200 dark:border-orange-800',
-            iconBg: 'bg-orange-100 text-orange-700 dark:bg-orange-800 dark:text-orange-200'
+            bg: 'tx-orange-bg',
+            text: 'tx-orange-text',
+            border: 'tx-orange-border',
+            iconBg: 'tx-orange-icon'
         };
     }
     // Traspaso (Transfer) -> Slate/Gray
     if (t.includes('traspaso') || t.includes('transfer')) {
         return {
-            bg: 'bg-slate-100 dark:bg-slate-900/30',
-            text: 'text-slate-700 dark:text-slate-300',
-            border: 'border-slate-200 dark:border-slate-800',
-            iconBg: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200'
+            bg: 'tx-slate-bg',
+            text: 'tx-slate-text',
+            border: 'tx-slate-border',
+            iconBg: 'tx-slate-icon'
         };
     }
     // Plan -> Indigo/Purple
     if (t.includes('plan')) {
         return {
-            bg: 'bg-indigo-100 dark:bg-indigo-900/30',
-            text: 'text-indigo-700 dark:text-indigo-300',
-            border: 'border-indigo-200 dark:border-indigo-800',
-            iconBg: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-800 dark:text-indigo-200'
+            bg: 'tx-indigo-bg',
+            text: 'tx-indigo-text',
+            border: 'tx-indigo-border',
+            iconBg: 'tx-indigo-icon'
         };
     }
 
     // Default -> Primary
     return {
-        bg: 'bg-primary-container',
-        text: 'text-on-primary-container',
-        border: 'border-primary-container',
-        iconBg: 'bg-primary-container text-on-primary-container'
+        bg: 'bg-primary-container dark:bg-primary-container/20',
+        text: 'text-on-primary-container dark:text-on-primary-container',
+        border: 'border-primary-container dark:border-primary-container/20',
+        iconBg: 'bg-primary-container text-on-primary-container dark:bg-primary-container/20'
     };
 };
 
@@ -153,7 +153,7 @@ const getModernIcon = (type: string) => {
                             {{ transaction.type }}
                         </span>
                     <!-- Date (Subtle) -->
-                    <p class="text-[10px] text-secondary font-medium truncate leading-none">
+                    <p class="text-[10px] text-secondary dark:text-gray-400 font-medium truncate leading-none">
                         {{ formatDate(transaction.date) }}
                     </p>
                 </div>
@@ -172,7 +172,7 @@ const getModernIcon = (type: string) => {
             <h3 class="text-lg font-bold text-on-surface leading-tight truncate" :title="getAssetName(transaction.assetId)">
                 {{ getAssetName(transaction.assetId) }}
             </h3>
-            <p class="text-[10px] text-secondary/60 mt-0.5" v-if="transaction.description">
+            <p class="text-[10px] text-secondary/60 dark:text-gray-500 mt-0.5" v-if="transaction.description">
                     {{ transaction.description }}
             </p>
         </div>

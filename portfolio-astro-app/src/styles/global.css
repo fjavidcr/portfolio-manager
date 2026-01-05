@@ -74,3 +74,212 @@ body {
     color: var(--color-on-surface);
     @apply transition-colors duration-300;
 }
+
+/* Transaction Card Colors - Using CSS Variables */
+:root {
+    --tx-rose-bg: rgb(254 242 242);
+    --tx-rose-text: rgb(185 28 28);
+    --tx-rose-border: rgb(254 205 211);
+    --tx-rose-icon-bg: rgb(254 242 242);
+    --tx-rose-icon-text: rgb(185 28 28);
+
+    --tx-emerald-bg: rgb(236 253 245);
+    --tx-emerald-text: rgb(4 120 87);
+    --tx-emerald-border: rgb(167 243 208);
+    --tx-emerald-icon-bg: rgb(236 253 245);
+    --tx-emerald-icon-text: rgb(4 120 87);
+
+    --tx-amber-bg: rgb(254 252 232);
+    --tx-amber-text: rgb(161 98 7);
+    --tx-amber-border: rgb(253 230 138);
+    --tx-amber-icon-bg: rgb(254 252 232);
+    --tx-amber-icon-text: rgb(161 98 7);
+
+    --tx-blue-bg: rgb(239 246 255);
+    --tx-blue-text: rgb(29 78 216);
+    --tx-blue-border: rgb(191 219 254);
+    --tx-blue-icon-bg: rgb(239 246 255);
+    --tx-blue-icon-text: rgb(29 78 216);
+
+    --tx-orange-bg: rgb(255 247 237);
+    --tx-orange-text: rgb(194 65 12);
+    --tx-orange-border: rgb(254 215 170);
+    --tx-orange-icon-bg: rgb(255 247 237);
+    --tx-orange-icon-text: rgb(194 65 12);
+
+    --tx-slate-bg: rgb(248 250 252);
+    --tx-slate-text: rgb(51 65 85);
+    --tx-slate-border: rgb(226 232 240);
+    --tx-slate-icon-bg: rgb(248 250 252);
+    --tx-slate-icon-text: rgb(51 65 85);
+
+    --tx-indigo-bg: rgb(238 242 255);
+    --tx-indigo-text: rgb(67 56 202);
+    --tx-indigo-border: rgb(199 210 254);
+    --tx-indigo-icon-bg: rgb(238 242 255);
+    --tx-indigo-icon-text: rgb(67 56 202);
+}
+
+.dark {
+    --tx-rose-bg: rgb(244 63 94 / 0.1);
+    --tx-rose-text: rgb(254 205 211);
+    --tx-rose-border: rgb(244 63 94 / 0.2);
+    --tx-rose-icon-bg: rgb(244 63 94 / 0.2);
+    --tx-rose-icon-text: rgb(254 205 211);
+
+    --tx-emerald-bg: rgb(16 185 129 / 0.1);
+    --tx-emerald-text: rgb(167 243 208);
+    --tx-emerald-border: rgb(16 185 129 / 0.2);
+    --tx-emerald-icon-bg: rgb(16 185 129 / 0.2);
+    --tx-emerald-icon-text: rgb(167 243 208);
+
+    --tx-amber-bg: rgb(245 158 11 / 0.1);
+    --tx-amber-text: rgb(253 230 138);
+    --tx-amber-border: rgb(245 158 11 / 0.2);
+    --tx-amber-icon-bg: rgb(245 158 11 / 0.2);
+    --tx-amber-icon-text: rgb(253 230 138);
+
+    --tx-blue-bg: rgb(59 130 246 / 0.1);
+    --tx-blue-text: rgb(191 219 254);
+    --tx-blue-border: rgb(59 130 246 / 0.2);
+    --tx-blue-icon-bg: rgb(59 130 246 / 0.2);
+    --tx-blue-icon-text: rgb(191 219 254);
+
+    --tx-orange-bg: rgb(249 115 22 / 0.1);
+    --tx-orange-text: rgb(254 215 170);
+    --tx-orange-border: rgb(249 115 22 / 0.2);
+    --tx-orange-icon-bg: rgb(249 115 22 / 0.2);
+    --tx-orange-icon-text: rgb(254 215 170);
+
+    --tx-slate-bg: rgb(148 163 184 / 0.1);
+    --tx-slate-text: rgb(226 232 240);
+    --tx-slate-border: rgb(148 163 184 / 0.2);
+    --tx-slate-icon-bg: rgb(148 163 184 / 0.2);
+    --tx-slate-icon-text: rgb(226 232 240);
+
+    --tx-indigo-bg: rgb(99 102 241 / 0.1);
+    --tx-indigo-text: rgb(199 210 254);
+    --tx-indigo-border: rgb(99 102 241 / 0.2);
+    --tx-indigo-icon-bg: rgb(99 102 241 / 0.2);
+    --tx-indigo-icon-text: rgb(199 210 254);
+}
+
+/* Transaction Card Classes */
+.tx-rose-bg {
+    background-color: var(--tx-rose-bg);
+}
+
+.tx-rose-text {
+    color: var(--tx-rose-text);
+}
+
+.tx-rose-border {
+    border-color: var(--tx-rose-border);
+}
+
+.tx-rose-icon {
+    background-color: var(--tx-rose-icon-bg);
+    color: var(--tx-rose-icon-text);
+}
+
+.tx-emerald-bg {
+    background-color: var(--tx-emerald-bg);
+}
+
+.tx-emerald-text {
+    color: var(--tx-emerald-text);
+}
+
+.tx-emerald-border {
+    border-color: var(--tx-emerald-border);
+}
+
+.tx-emerald-icon {
+    background-color: var(--tx-emerald-icon-bg);
+    color: var(--tx-emerald-icon-text);
+}
+
+.tx-amber-bg {
+    background-color: var(--tx-amber-bg);
+}
+
+.tx-amber-text {
+    color: var(--tx-amber-text);
+}
+
+.tx-amber-border {
+    border-color: var(--tx-amber-border);
+}
+
+.tx-amber-icon {
+    background-color: var(--tx-amber-icon-bg);
+    color: var(--tx-amber-icon-text);
+}
+
+.tx-blue-bg {
+    background-color: var(--tx-blue-bg);
+}
+
+.tx-blue-text {
+    color: var(--tx-blue-text);
+}
+
+.tx-blue-border {
+    border-color: var(--tx-blue-border);
+}
+
+.tx-blue-icon {
+    background-color: var(--tx-blue-icon-bg);
+    color: var(--tx-blue-icon-text);
+}
+
+.tx-orange-bg {
+    background-color: var(--tx-orange-bg);
+}
+
+.tx-orange-text {
+    color: var(--tx-orange-text);
+}
+
+.tx-orange-border {
+    border-color: var(--tx-orange-border);
+}
+
+.tx-orange-icon {
+    background-color: var(--tx-orange-icon-bg);
+    color: var(--tx-orange-icon-text);
+}
+
+.tx-slate-bg {
+    background-color: var(--tx-slate-bg);
+}
+
+.tx-slate-text {
+    color: var(--tx-slate-text);
+}
+
+.tx-slate-border {
+    border-color: var(--tx-slate-border);
+}
+
+.tx-slate-icon {
+    background-color: var(--tx-slate-icon-bg);
+    color: var(--tx-slate-icon-text);
+}
+
+.tx-indigo-bg {
+    background-color: var(--tx-indigo-bg);
+}
+
+.tx-indigo-text {
+    color: var(--tx-indigo-text);
+}
+
+.tx-indigo-border {
+    border-color: var(--tx-indigo-border);
+}
+
+.tx-indigo-icon {
+    background-color: var(--tx-indigo-icon-bg);
+    color: var(--tx-indigo-icon-text);
+}

@@ -4,12 +4,14 @@ import AddTransactionForm from "@features/transactions/components/AddTransaction
 ---
 
 <Layout title="Add Transaction - Portfolio Manager" requireAuth={true}>
-  <div class="space-y-6">
+  <div class="max-w-2xl mx-auto space-y-6">
     <div class="flex justify-between items-center">
-      <h1 class="text-2xl font-semibold text-white">Add Transaction</h1>
+      <h1 class="text-2xl font-semibold text-on-surface">Add Transaction</h1>
     </div>
 
-    <div class="bg-gray-900 shadow rounded-lg p-6">
+    <div
+      class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-6"
+    >
       <AddTransactionForm client:load />
     </div>
   </div>
