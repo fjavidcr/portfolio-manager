@@ -16,8 +16,11 @@
   "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@nanostores/vue": "^1.0.1",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
-    "firebase-admin": "^13.6.0"
+    "firebase": "^12.7.0",
+    "firebase-admin": "^13.6.0",
+    "nanostores": "^1.1.0"
   }
 }

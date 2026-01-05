@@ -1,0 +1,26 @@
+---
+import Layout from "@layouts/Layout.astro";
+import LoginButton from "@features/auth/components/LoginButton.vue";
+---
+
+<Layout title="Login - Portfolio Manager">
+    <div class="min-h-screen flex items-center justify-center bg-gray-950">
+        <div
+            class="max-w-md w-full space-y-8 p-10 bg-gray-900 rounded-xl shadow-lg"
+        >
+            <div class="text-center">
+                <h2 class="mt-6 text-3xl font-extrabold text-white">
+                    Portfolio Manager
+                </h2>
+                <p class="mt-2 text-sm text-gray-400">
+                    Sign in to manage your investments
+                </p>
+            </div>
+            <div class="mt-8 space-y-6">
+                <div class="flex justify-center">
+                    <LoginButton client:load />
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
