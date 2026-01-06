@@ -8,6 +8,7 @@ export interface AssetModel {
     platformId: string;
     description?: string;
     lastUpdated?: Date | Timestamp;
+    isArchived?: boolean;
 }
 
 export interface TransactionModel {
