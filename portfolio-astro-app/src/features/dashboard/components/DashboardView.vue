@@ -12,16 +12,21 @@ const $totalROI = useStore(totalROI);
 const $portfolio = useStore(portfolioStore);
 
 
+
+const formatTransactionDate = (date: any) => {
+    if (!date) return '';
+    if (date.toDate && typeof date.toDate === 'function') {
+        return date.toDate().toLocaleDateString();
+    }
+    return new Date(date).toLocaleDateString();
+};
 </script>
 
 <template>
     <div class="space-y-6">
         <div v-if="$user" class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant">
             <div class="px-6 py-8 flex items-center gap-6">
-                 <img 
-                    v-if="$user.photoURL" 
-                    :src="$user.photoURL" 
-                    alt="User Avatar" 
+                <img v-if="$user.photoURL" :src="$user.photoURL" alt="User Avatar"
                     class="w-20 h-20 rounded-full border-2 border-primary"
                 />
                 <div v-else class="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-3xl font-bold border-2 border-primary">
@@ -54,7 +59,7 @@ const $portfolio = useStore(portfolioStore);
                 </div>
             </div>
         </div>
-        
+
         <!-- General Totals Error (Quota etc) -->
         <div v-else-if="$portfolio.totalsError" class="bg-red-50 border-l-4 border-red-400 p-4 rounded-md shadow-sm">
             <div class="flex">
@@ -110,7 +115,7 @@ const $portfolio = useStore(portfolioStore);
             <ul role="list" class="divide-y divide-outline-variant">
                 <li v-if="$portfolio.loading" class="p-6 text-center text-gray-400">Loading activity...</li>
                 <li v-else-if="$portfolio.transactions.length === 0" class="p-6 text-center text-gray-400">No transactions found.</li>
-                
+
                 <li v-for="transaction in $portfolio.transactions.slice(0, 5)" :key="transaction.id">
                     <div class="px-6 py-5 hover:bg-surface-container-high transition-colors">
                         <div class="flex items-center justify-between">
@@ -125,7 +130,7 @@ const $portfolio = useStore(portfolioStore);
                         </div>
                         <div class="mt-2 sm:flex sm:justify-between">
                             <p class="flex items-center text-xs text-gray-400">
-                                {{ transaction.date?.toDate ? transaction.date.toDate().toLocaleDateString() : new Date(transaction.date).toLocaleDateString() }}
+                                {{ formatTransactionDate(transaction.date) }}
                             </p>
                         </div>
                     </div>
