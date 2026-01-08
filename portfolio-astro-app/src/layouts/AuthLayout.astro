@@ -1,0 +1,130 @@
+---
+import "@styles/global.css";
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Portfolio Manager Authentication" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+
+        <script is:inline>
+            // Theme Init (kept consistent)
+            const getThemePreference = () => {
+                const STORAGE_KEY = 'theme_pref';
+                if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY)) {
+                    return localStorage.getItem(STORAGE_KEY);
+                }
+                return 'system';
+            };
+
+            const applyTheme = () => {
+                const pref = getThemePreference();
+                if (pref === 'dark' || (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            };
+            applyTheme();
+        </script>
+	</head>
+	<body class="bg-surface text-on-surface min-h-screen flex items-center justify-center p-4 relative">
+
+        <!-- Theme Toggle -->
+        <button
+            id="theme-toggle"
+            class="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface focus:outline-none cursor-pointer"
+            title="Toggle Theme"
+        >
+            <!-- Sun (Light) -->
+            <svg id="theme-icon-light" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <!-- Moon (Dark) -->
+            <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <!-- Computer (System) -->
+            <svg id="theme-icon-system" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+        </button>
+
+        <slot />
+
+        <!-- Inverse Auth Guard: If logged in, go to Dashboard -->
+		<script>
+			import { user, authLoading } from "@features/auth/stores/authStore";
+
+			const checkAuth = () => {
+				// If not loading AND we have a user, redirect to home
+				if (!authLoading.get() && user.get()) {
+					window.location.href = "/";
+				}
+			};
+
+			authLoading.subscribe(checkAuth);
+			user.subscribe(checkAuth);
+
+            // Theme Toggle Logic
+            const themeToggleBtn = document.getElementById("theme-toggle");
+            const iconLight = document.getElementById("theme-icon-light");
+            const iconDark = document.getElementById("theme-icon-dark");
+            const iconSystem = document.getElementById("theme-icon-system");
+
+            const updateThemeUI = () => {
+                const STORAGE_KEY = "theme_pref";
+                const stored = localStorage.getItem(STORAGE_KEY) || "system";
+
+                // Hide all
+                iconLight?.classList.add("hidden");
+                iconDark?.classList.add("hidden");
+                iconSystem?.classList.add("hidden");
+
+                if (stored === "light") {
+                    iconLight?.classList.remove("hidden");
+                } else if (stored === "dark") {
+                    iconDark?.classList.remove("hidden");
+                } else {
+                    iconSystem?.classList.remove("hidden");
+                }
+
+                // Apply class
+                const sysDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                const shouldBeDark = stored === "dark" || (stored === "system" && sysDark);
+
+                if (shouldBeDark) {
+                    document.documentElement.classList.add("dark");
+                } else {
+                    document.documentElement.classList.remove("dark");
+                }
+            };
+
+            // Initial check
+            updateThemeUI();
+
+            themeToggleBtn?.addEventListener("click", () => {
+                const STORAGE_KEY = "theme_pref";
+                const current = localStorage.getItem(STORAGE_KEY) || "system";
+                let next = "system";
+                if (current === "system") next = "light";
+                else if (current === "light") next = "dark";
+                else if (current === "dark") next = "system";
+
+                localStorage.setItem(STORAGE_KEY, next);
+                updateThemeUI();
+            });
+		</script>
+	</body>
+</html>
