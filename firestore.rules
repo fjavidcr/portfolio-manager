@@ -1,7 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     // Match any document in the 'users' collection
     match /users/{userId} {
       // Allow read/write only if the request's auth.uid matches the document's userId
@@ -21,6 +21,14 @@ service cloud.firestore {
       match /platforms/{platformId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+    }
+
+    // Global Configuration (Whitelist)
+    match /config/whitelist {
+      // Allow any authenticated user to read (to check if they are allowed)
+      allow read: if request.auth != null;
+      // Only the specific admin email can write (to add/remove users)
+      allow write: if false; // Managed manually via Firebase Console
     }
   }
 }

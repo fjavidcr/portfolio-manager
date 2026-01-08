@@ -6,16 +6,51 @@ import {
     onAuthStateChanged,
     type User
 } from 'firebase/auth';
-import { auth } from '@shared/lib/firebase';
+import { auth, db } from '@shared/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export const user = atom<User | null>(null);
 export const authLoading = atom<boolean>(true);
 export const authError = atom<string | null>(null);
 
+// Check Whitelist Function
+const checkWhitelist = async (user: User): Promise<boolean> => {
+    if (!user.email) return false;
+
+    const whitelistRef = doc(db, 'config', 'whitelist');
+    try {
+        const snapshot = await getDoc(whitelistRef);
+
+        if (!snapshot.exists()) {
+            return false;
+        }
+
+        const data = snapshot.data();
+        const emails = data?.emails || [];
+        return emails.includes(user.email);
+    } catch (e) {
+        console.error("Error checking whitelist:", e);
+        return false;
+    }
+}
+
 // Initialize Auth Listener
 if (typeof window !== 'undefined') {
-    onAuthStateChanged(auth, (currentUser) => {
-        user.set(currentUser);
+    onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+             // Verify whitelist before setting user
+             const isAllowed = await checkWhitelist(currentUser);
+             if (isAllowed) {
+                user.set(currentUser);
+                authError.set(null);
+             } else {
+                await signOut(auth);
+                user.set(null);
+                authError.set("Access Denied: Your email is not whitelisted.");
+             }
+        } else {
+            user.set(null);
+        }
         authLoading.set(false);
     });
 }
