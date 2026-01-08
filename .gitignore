@@ -2,3 +2,4 @@ node_modules/
 account/
 csv/
 .env
+.DS_Store
