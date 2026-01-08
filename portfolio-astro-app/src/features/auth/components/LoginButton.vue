@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue';
-import { user, signInWithGoogle, authLoading, authError } from './../stores/authStore';
-// Wait, ./../stores is confusing. Should be just ../stores if we are in components. 
-// Actually, let's just use @features/auth/stores/authStore for clarity or keep it simple if it's close.
-// User complaint was likely about deep nesting `../../../`.
-// Let's use @features/auth/stores/authStore.
+import { user, signInWithGoogle, authLoading, authError } from '@features/auth/stores/authStore';
 import { watchEffect } from 'vue';
 
 const $user = useStore(user);
@@ -28,10 +24,9 @@ watchEffect(() => {
             <span class="block sm:inline">{{ $error }}</span>
         </div>
 
-        <button 
-            @click="handleLogin" 
+        <button @click="handleLogin"
             :disabled="$loading"
-            class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-white hover:bg-gray-100 md:py-4 md:text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            class="w-full flex items-center justify-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-white hover:bg-gray-100 md:py-4 md:text-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors"
         >
             <span v-if="$loading" class="mr-2">Connecting...</span>
             <span v-else class="flex items-center">

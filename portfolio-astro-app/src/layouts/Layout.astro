@@ -116,13 +116,13 @@ const { title, requireAuth = false } = Astro.props;
                 else if (current === 'dark') next = 'system';
 
                 localStorage.setItem(STORAGE_KEY, next);
-                
+
                 if (next === 'dark' || (next === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.classList.add('dark');
                 } else {
                     document.documentElement.classList.remove('dark');
                 }
-                
+
                 // Dispatch event so Sidebar updates if visible
                 window.dispatchEvent(new Event('storage'));
             });
@@ -130,14 +130,18 @@ const { title, requireAuth = false } = Astro.props;
 
 		{requireAuth && (
 			<script>
-				import { user } from "@features/auth/stores/authStore";
-				user.subscribe((u) => {
-					if (u === null) {
-						setTimeout(() => {
-							if (!user.get()) window.location.href = "/login";
-						}, 500);
+				import { user, authLoading } from "@features/auth/stores/authStore";
+
+				const checkAuth = () => {
+					const isLoginPage = window.location.pathname === '/login';
+
+					if (!authLoading.get() && !user.get() && !isLoginPage) {
+						window.location.href = "/login";
 					}
-				});
+				};
+
+				authLoading.subscribe(checkAuth);
+				user.subscribe(checkAuth);
 			</script>
 		)}
 	</body>
