@@ -17,13 +17,14 @@ import {
 } from 'firebase/firestore';
 import { db } from '@shared/lib/firebase';
 import { user } from '@features/auth/stores/authStore';
-import type { AssetModel, TransactionModel, PlatformModel } from '@shared/types';
+import { type AssetModel, type TransactionModel, type PlatformModel, TransactionTypes } from '@shared/types';
 
 interface PortfolioState {
     assets: AssetModel[];
     transactions: TransactionModel[];
     platforms: PlatformModel[];
     loading: boolean;
+    calculatingTotals: boolean; // Loading state for dashboard totals
     error: string | null;
     lastVisible: DocumentSnapshot | null;
     hasMore: boolean;
@@ -31,13 +32,19 @@ interface PortfolioState {
     transactionCount: number; // Server-side count
     missingIndex: boolean;
     totalsError: string | null;
+    filters: {
+        type: string;
+        assetId: string;
+        searchQuery: string;
+    };
 }
 
 export const portfolioStore = map<PortfolioState>({
     assets: [],
     transactions: [],
     platforms: [],
-    loading: false,
+    loading: true, // Start in loading state to prevent "No data" flash
+    calculatingTotals: true, // Start true to show skeleton on fresh load
     error: null,
     lastVisible: null,
     hasMore: true,
@@ -45,11 +52,15 @@ export const portfolioStore = map<PortfolioState>({
     transactionCount: 0,
     missingIndex: false,
     totalsError: null,
+    filters: {
+        type: '',
+        assetId: '',
+        searchQuery: ''
+    }
 });
 
 let unsubAssets: Unsubscribe | null = null;
 let unsubPlatforms: Unsubscribe | null = null;
-// Removed global transactions listener
 
 // Subscribe/Unsubscribe based on user state
 user.subscribe((currentUser) => {
@@ -86,19 +97,21 @@ user.subscribe((currentUser) => {
             assets: [],
             transactions: [],
             platforms: [],
-            loading: false,
+            loading: true, // Keep loading state while auth initializes
+            calculatingTotals: true, // Keep loading skeleton while auth initializes
             error: null,
             lastVisible: null,
             hasMore: true,
             totalInvested: 0,
             transactionCount: 0,
             missingIndex: false,
-            totalsError: null
+            totalsError: null,
+            filters: { type: '', assetId: '', searchQuery: '' }
         });
     }
 });
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 25;
 
 export const fetchTransactions = async (reset = false) => {
     const currentUser = user.get();
@@ -120,6 +133,16 @@ export const fetchTransactions = async (reset = false) => {
             orderBy('date', 'desc'),
             limit(PAGE_SIZE)
         );
+
+        const currentFilters = portfolioStore.get().filters;
+
+        if (currentFilters.type) {
+            q = query(q, where('type', '==', currentFilters.type));
+        }
+
+        if (currentFilters.assetId) {
+            q = query(q, where('assetId', '==', currentFilters.assetId));
+        }
 
         const lastVisible = portfolioStore.get().lastVisible;
         if (!reset && lastVisible) {
@@ -152,6 +175,12 @@ export const fetchTransactions = async (reset = false) => {
     }
 };
 
+export const setFilters = (filters: Partial<PortfolioState['filters']>) => {
+    const current = portfolioStore.get().filters;
+    portfolioStore.setKey('filters', { ...current, ...filters });
+    fetchTransactions(true);
+};
+
 export const fetchTotals = async () => {
     const currentUser = user.get();
     if (!currentUser) return;
@@ -159,17 +188,16 @@ export const fetchTotals = async () => {
     // Reset errors
     portfolioStore.setKey('totalsError', null);
     portfolioStore.setKey('missingIndex', false);
+    portfolioStore.setKey('calculatingTotals', true);
 
     try {
-        const validTypes = ['Plan', 'Aportación', 'Retirada', 'Dividendo', 'Traspaso', 'Venta'];
-
         // Optimisation: Use server-side aggregation to avoid downloading all documents.
         // We filter by 'type' in validTypes and sum the 'amount'.
         // Note: 'in' operator combined with aggregation requires a composite index.
 
         const q = query(
             collection(db, 'users', currentUser.uid, 'transactions'),
-            where('type', 'in', validTypes)
+            where('type', 'in', TransactionTypes)
         );
 
         const snapshot = await getAggregateFromServer(q, {
@@ -190,6 +218,8 @@ export const fetchTotals = async () => {
             console.warn("Missing Firestore Index. Please verify the console for the index creation link.");
             portfolioStore.setKey('missingIndex', true);
         }
+    } finally {
+        portfolioStore.setKey('calculatingTotals', false);
     }
 }
 
