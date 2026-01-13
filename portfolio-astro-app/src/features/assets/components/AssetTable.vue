@@ -7,6 +7,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@shared/lib/firebase';
 import { user } from '@features/auth/stores/authStore';
 import type { TransactionModel } from '@shared/types';
+import { TransactionTypes } from '@shared/types';
 
 const $portfolio = useStore(portfolioStore);
 const $user = useStore(user);
@@ -38,7 +39,7 @@ import { watch } from 'vue';
 
 const loadAllTransactions = async () => {
     if (!$user.value) return;
-    
+
     try {
         const txSnapshot = await getDocs(collection(db, 'users', $user.value.uid, 'transactions'));
         allTransactions.value = txSnapshot.docs.map(doc => ({
@@ -65,13 +66,11 @@ const hasTransactions = (assetId: string) => {
 
 const getInvested = (assetId: string) => {
     if (allTransactions.value.length === 0) return 0;
-    
-    const validTypes = ['Plan', 'Aportación', 'Retirada', 'Dividendo', 'Traspaso', 'Venta']; 
-    
+
     const matchingTransactions = allTransactions.value.filter(tx => {
-        return tx.assetId === assetId && validTypes.includes(tx.type);
+        return tx.assetId === assetId && TransactionTypes.includes(tx.type as any);
     });
-    
+
     return matchingTransactions.reduce((sum, tx) => sum + tx.amount, 0);
 };
 
@@ -98,7 +97,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 
 const toggleArchive = async (asset: any) => {
     if (!$user.value) return;
-    
+
     try {
         const assetRef = doc(db, 'users', $user.value.uid, 'assets', asset.id);
         await updateDoc(assetRef, {
@@ -141,9 +140,8 @@ const toggleArchive = async (asset: any) => {
     <!-- Active Assets Grid -->
     <div v-else>
       <div v-if="activeAssets.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div 
-          v-for="asset in activeAssets" 
-          :key="asset.id" 
+                <div v-for="asset in activeAssets" :key="asset.id"
+         
           class="bg-surface-container-low border border-outline-variant rounded-xl p-5 hover:bg-surface-container transition-colors shadow-sm flex flex-col justify-between"
         >
           <!-- Header -->
@@ -185,7 +183,11 @@ const toggleArchive = async (asset: any) => {
 
           <!-- Metrics Grid -->
           <div class="grid grid-cols-2 gap-y-3 gap-x-2 border-t border-outline-variant pt-3 text-sm">
-              
+
+
+        
+
+         
               <!-- Invested -->
               <div>
                   <p class="text-[10px] text-secondary uppercase font-bold">Invertido</p>
@@ -221,7 +223,7 @@ const toggleArchive = async (asset: any) => {
       <!-- Archived Assets Section -->
       <div v-if="archivedAssets.length > 0" class="mt-8">
         <!-- Collapsible Header -->
-        <button 
+                <button
           @click="showArchived = !showArchived"
           class="w-full flex items-center justify-between p-4 bg-surface-container-low border border-outline-variant rounded-xl hover:bg-surface-container transition-colors mb-4"
         >
@@ -239,9 +241,8 @@ const toggleArchive = async (asset: any) => {
 
         <!-- Archived Assets Grid (Collapsible) -->
         <div v-show="showArchived" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-75">
-          <div 
-            v-for="asset in archivedAssets" 
-            :key="asset.id" 
+                    <div v-for="asset in archivedAssets" :key="asset.id"
+           
             class="bg-surface-container-low border border-outline-variant rounded-xl p-5 hover:bg-surface-container transition-colors shadow-sm flex flex-col justify-between"
           >
             <!-- Header -->
@@ -283,7 +284,11 @@ const toggleArchive = async (asset: any) => {
 
             <!-- Metrics Grid -->
             <div class="grid grid-cols-2 gap-y-3 gap-x-2 border-t border-outline-variant pt-3 text-sm">
-                
+
+
+          
+
+           
                 <!-- Invested -->
                 <div>
                     <p class="text-[10px] text-secondary uppercase font-bold">Invertido</p>

@@ -5,7 +5,7 @@ import { user } from '@features/auth/stores/authStore';
 import { portfolioStore, updateTransaction, deleteTransaction } from '@shared/stores/portfolioStore';
 import { doc, getDoc, updateDoc, increment, serverTimestamp, setDoc, addDoc, collection } from 'firebase/firestore';
 import { db } from '@shared/lib/firebase';
-import { TransactionTypes } from '@shared/types';
+import { TransactionTypes, TransactionImpact } from '@shared/types';
 
 const props = defineProps<{
     transactionId?: string;
@@ -60,13 +60,13 @@ const loadTransactionData = async () => {
     try {
         // 1. Try store first
         const existing = $portfolio.value.transactions.find(t => t.id === routeId.value);
-        
+
         if (existing) {
             applyTransactionData(existing);
         } else {
             // 2. Fetch from Firestore
             if (!$user.value) {
-                // Wait for auth... watcher will pick it up, 
+                // Wait for auth... watcher will pick it up,
                 // but let's not leave it hanging if auth takes too long or is null
                 // We'll leave loading true until auth resolves or timeout
                  return;
@@ -74,7 +74,7 @@ const loadTransactionData = async () => {
 
             const docRef = doc(db, 'users', $user.value.uid, 'transactions', routeId.value!);
             const docSnap = await getDoc(docRef);
-            
+
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 applyTransactionData({ id: docSnap.id, ...data } as any);
@@ -86,7 +86,7 @@ const loadTransactionData = async () => {
         console.error("Error loading transaction:", e);
         fetchError.value = "Error loading transaction: " + e.message;
     } finally {
-        // Only turn off loading if we actually finished or failed. 
+        // Only turn off loading if we actually finished or failed.
         // If we returned early for auth, keep it loading (or handle in auth watcher)
         if ($user.value) {
              fetchLoading.value = false;
@@ -99,7 +99,7 @@ const applyTransactionData = (data: any) => {
     amount.value = data.amount;
     assetId.value = data.assetId;
     description.value = data.description || '';
-    
+
     if (data.date) {
             const d = data.date.toDate ? data.date.toDate() : new Date(data.date);
             date.value = d.toISOString().split('T')[0];
@@ -110,7 +110,7 @@ const applyTransactionData = (data: any) => {
 
 const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) return;
-    
+
     submitting.value = true;
     try {
         if (routeId.value) {
@@ -132,7 +132,7 @@ const handleSubmit = async () => {
     try {
         const uid = $user.value.uid;
         const txDate = new Date(date.value);
-        
+
         if (routeId.value) {
              // UPDATE MODE
              await updateTransaction(routeId.value, {
@@ -158,26 +158,17 @@ const handleSubmit = async () => {
              if (assetId.value) {
                 const assetRef = doc(db, 'users', uid, 'assets', assetId.value.toUpperCase());
                 const assetSnap = await getDoc(assetRef);
-                
+
                 let valueChange = 0;
-                if (['Plan', 'Aportación', 'Dividendo', 'Traspaso'].includes(type.value)) {
+                 if ((TransactionImpact.Inflow as readonly string[]).includes(type.value)) {
                      valueChange = Number(amount.value);
-                } else if (['Retirada', 'Venta'].includes(type.value)) {
+                 } else if ((TransactionImpact.Outflow as readonly string[]).includes(type.value)) {
                      valueChange = -Number(amount.value);
                 }
 
                 if (assetSnap.exists()) {
                     await updateDoc(assetRef, {
                         currentValue: increment(valueChange),
-                        lastUpdated: serverTimestamp()
-                    });
-                } else {
-                     await setDoc(assetRef, {
-                        id: assetId.value.toUpperCase(),
-                        name: assetId.value.toUpperCase(),
-                        type: 'Stock',
-                        currentValue: Number(amount.value),
-                        platformId: 'Unknown',
                         lastUpdated: serverTimestamp()
                     });
                 }
@@ -212,8 +203,9 @@ const handleSubmit = async () => {
        <button @click="loadTransactionData" class="ml-auto text-sm underline hover:no-underline">Retry</button>
   </div>
 
-  <form v-else @submit.prevent="handleSubmit" class="space-y-8">
-    
+    <form v-else @submit.prevent="handleSubmit" class="space-y-8">
+
+   
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Type -->
         <div class="space-y-2">
@@ -303,7 +295,9 @@ const handleSubmit = async () => {
           </button>
           <button type="submit" :disabled="submitting" class="w-full sm:w-auto inline-flex justify-center items-center py-2.5 px-6 border border-transparent shadow text-sm font-medium rounded-full text-on-primary-container bg-primary-container hover:bg-primary-fixed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95">
              <svg v-if="submitting" class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-             {{ props.transactionId ? 'Update Transaction' : 'Save Transaction' }}
+                    {{ routeId ? 'Update Transaction' : 'Save Transaction' }}
+
+     
           </button>
         </div>
     </div>

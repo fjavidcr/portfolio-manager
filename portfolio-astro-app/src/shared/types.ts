@@ -30,6 +30,11 @@ export const TransactionTypes = [
     'Venta',
 ] as const;
 
+export const TransactionImpact = {
+    Inflow: ['Plan', 'Aportación', 'Dividendo', 'Traspaso'],
+    Outflow: ['Retirada', 'Venta']
+} as const;
+
 export interface PlatformModel {
     id: string;
     name: string;
