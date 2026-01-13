@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue';
-import { portfolioStore, fetchTransactions } from '@shared/stores/portfolioStore';
+import { portfolioStore, fetchTransactions, setFilters } from '@shared/stores/portfolioStore';
+import { TransactionTypes } from '@shared/types';
 import { watch, onMounted, ref, onUnmounted, computed } from 'vue';
 import TransactionCard from './TransactionCard.vue';
 
@@ -11,6 +12,16 @@ const observerTarget = ref<HTMLElement | null>(null);
 const searchQuery = ref('');
 const selectedType = ref('');
 const selectedAsset = ref('');
+
+// Watch filters to ensure we have all data loaded
+// Watch filters and trigger server-side fetch
+watch([selectedType, selectedAsset], ([type, asset]) => {
+  setFilters({
+    type: type,
+    assetId: asset
+  });
+});
+
 
 // Filtered Transactions
 const filteredTransactions = computed(() => {
@@ -31,31 +42,19 @@ const filteredTransactions = computed(() => {
         });
     }
 
-    // Apply type filter
-    if (selectedType.value) {
-        result = result.filter(tx => tx.type === selectedType.value);
-    }
-
-    // Apply asset filter
-    if (selectedAsset.value) {
-        result = result.filter(tx => tx.assetId === selectedAsset.value);
-    }
-
-    return result;
+  return result;
 });
 
-// Get unique transaction types
-const transactionTypes = computed(() => {
-    const types = new Set($portfolio.value.transactions.map(tx => tx.type));
-    return Array.from(types).sort();
-});
+// transactionTypes is imported from @shared/types
 
-// Debug: Log transactions (keeping for verification)
-watch(() => $portfolio.value.transactions, (newTransactions) => {
-    if (newTransactions && newTransactions.length > 0) {
-        // console.log("Transaction Data Debug:", newTransactions[0]);
-    }
-}, { immediate: true });
+// Compute counts for each transaction type based on loaded transactions
+const typeCounts = computed(() => {
+  const counts: Record<string, number> = {};
+  $portfolio.value.transactions.forEach(tx => {
+    counts[tx.type] = (counts[tx.type] || 0) + 1;
+  });
+  return counts;
+});
 
 onMounted(() => {
     // Setup Intersection Observer for Infinite Scroll
@@ -72,7 +71,7 @@ onMounted(() => {
     if (observerTarget.value) {
         observer.observe(observerTarget.value);
     }
-    
+
     // Initial fetch handled by store subscription but ensure check
     if ($portfolio.value.transactions.length === 0) {
         fetchTransactions(true);
@@ -88,7 +87,8 @@ onMounted(() => {
 <template>
   <div class="space-y-6">
     <!-- Search and Filters -->
-    <div class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-6 mb-6">
+    <div
+      class="sticky top-4 z-20 bg-surface-container-low shadow-lg rounded-2xl border border-outline-variant p-6 mb-6 backdrop-blur-sm">
       <!-- Search Bar -->
       <div class="mb-4">
         <div class="relative">
@@ -117,7 +117,9 @@ onMounted(() => {
             class="block w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
           >
             <option value="">All Types</option>
-            <option v-for="type in transactionTypes" :key="type" :value="type">{{ type }}</option>
+            <option v-for="type in TransactionTypes" :key="type" :value="type">
+              {{ type }} ({{ typeCounts[type] || 0 }})
+            </option>
           </select>
         </div>
 
@@ -146,6 +148,11 @@ onMounted(() => {
           </button>
         </div>
       </div>
+
+      <!-- Results Count Footer -->
+      <div class="mt-4 pt-4 flex justify-between items-center text-sm text-secondary">
+        <span>Showing {{ filteredTransactions.length }} results</span>
+      </div>
     </div>
 
     <!-- Initial Loading State (Only when empty) -->
@@ -164,14 +171,26 @@ onMounted(() => {
         No transactions match your filters. Try adjusting your search or filters.
     </div>
 
+    <!-- Error State -->
+    <div v-if="$portfolio.error"
+      class="bg-error-container text-on-error-container p-4 rounded-lg mb-6 flex items-start gap-3">
+      <svg class="h-5 w-5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <div>
+        <h3 class="font-medium">Error loading transactions</h3>
+        <p class="text-sm opacity-90">{{ $portfolio.error }}</p>
+        <p v-if="$portfolio.missingIndex" class="text-sm mt-2 underline">
+          <a href="#" class="hover:text-white">Check console for index creation link</a>
+        </p>
+      </div>
+    </div>
     <!-- Transaction List (Always show if we have data) -->
     <div v-else>
         <!-- Unified Responsive Grid Layout -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <TransactionCard 
-                v-for="transaction in filteredTransactions" 
-                :key="transaction.id" 
-                :transaction="transaction" 
+        <TransactionCard v-for="transaction in filteredTransactions" :key="transaction.id" :transaction="transaction"
             />
         </div>
     </div>

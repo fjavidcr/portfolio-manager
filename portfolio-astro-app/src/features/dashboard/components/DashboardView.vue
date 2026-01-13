@@ -78,7 +78,15 @@ const formatTransactionDate = (date: any) => {
         </div>
 
         <!-- KPI Grid -->
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+        <div v-if="$portfolio.calculatingTotals" class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <div v-for="i in 3" :key="i"
+                class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-6 animate-pulse">
+                <div class="h-4 bg-gray-700/50 rounded w-1/3 mb-4"></div>
+                <div class="h-8 bg-gray-700/50 rounded w-2/3"></div>
+            </div>
+        </div>
+
+        <div v-else class="grid grid-cols-1 gap-5 sm:grid-cols-3">
             <!-- Net Invested -->
             <div class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-6">
                 <dt class="text-sm font-medium text-gray-400 truncate">Net Invested</dt>
@@ -113,10 +121,20 @@ const formatTransactionDate = (date: any) => {
         <h2 class="text-xl font-bold text-on-surface mt-8">Recent Activity</h2>
         <div class="bg-surface-container-low shadow overflow-hidden rounded-2xl border border-outline-variant">
             <ul role="list" class="divide-y divide-outline-variant">
-                <li v-if="$portfolio.loading" class="p-6 text-center text-gray-400">Loading activity...</li>
+                <template v-if="$portfolio.loading">
+                    <li v-for="i in 5" :key="i" class="px-6 py-5 animate-pulse">
+                        <div class="flex items-center justify-between">
+                            <div class="h-4 bg-gray-700/50 rounded w-1/3"></div>
+                            <div class="h-5 bg-gray-700/50 rounded-full w-20"></div>
+                        </div>
+                        <div class="mt-2 flex justify-between">
+                            <div class="h-3 bg-gray-700/30 rounded w-1/4"></div>
+                        </div>
+                    </li>
+                </template>
                 <li v-else-if="$portfolio.transactions.length === 0" class="p-6 text-center text-gray-400">No transactions found.</li>
 
-                <li v-for="transaction in $portfolio.transactions.slice(0, 5)" :key="transaction.id">
+                <li v-else v-for="transaction in $portfolio.transactions.slice(0, 5)" :key="transaction.id">
                     <div class="px-6 py-5 hover:bg-surface-container-high transition-colors">
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-medium text-primary truncate">
