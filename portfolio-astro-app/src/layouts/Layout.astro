@@ -22,29 +22,40 @@ const { title, requireAuth = false } = Astro.props;
 		<title>{title}</title>
 
         <script is:inline>
-            // Theme Init
-            const getThemePreference = () => {
-                const STORAGE_KEY = 'theme_pref';
-                if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY)) {
-                    return localStorage.getItem(STORAGE_KEY);
-                }
-                return 'system';
+            // Theme Init - Multi-Theme Support
+            const getThemePreferences = () => {
+                const STORAGE_KEY_COLOR = 'color_theme';
+                const STORAGE_KEY_MODE = 'theme_mode';
+
+                const colorTheme = localStorage.getItem(STORAGE_KEY_COLOR) || 'default';
+                const mode = localStorage.getItem(STORAGE_KEY_MODE) || 'system';
+
+                return { colorTheme, mode };
             };
 
             const applyTheme = () => {
-                const pref = getThemePreference();
-                if (pref === 'dark' || (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
+                const { colorTheme, mode } = getThemePreferences();
+
+                // Determine if dark mode
+                const isDark = mode === 'dark' ||
+                               (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+                // Combine: "blue-light", "green-dark", etc.
+                const fullTheme = `${colorTheme}-${isDark ? 'dark' : 'light'}`;
+
+                // Set data-theme attribute
+                document.documentElement.setAttribute('data-theme', fullTheme);
+
+                // Keep .dark class for backward compatibility
+                document.documentElement.classList.toggle('dark', isDark);
             };
 
             applyTheme();
 
             // Listen for system changes
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-                if (getThemePreference() === 'system') applyTheme();
+                const { mode } = getThemePreferences();
+                if (mode === 'system') applyTheme();
             });
         </script>
 	</head>
@@ -103,25 +114,30 @@ const { title, requireAuth = false } = Astro.props;
 				overlay?.classList.remove("hidden");
 			});
 
-            // Mobile Theme Toggle
+            // Mobile Theme Toggle - Mode only (Light/Dark/System)
             const mobileBtn = document.getElementById('theme-toggle-mobile');
 
             // Using the same 3-state logic for mobile button click
             mobileBtn?.addEventListener('click', () => {
-                const STORAGE_KEY = 'theme_pref';
-                const current = localStorage.getItem(STORAGE_KEY) || 'system';
+                const STORAGE_KEY_MODE = 'theme_mode';
+                const STORAGE_KEY_COLOR = 'color_theme';
+
+                const current = localStorage.getItem(STORAGE_KEY_MODE) || 'system';
                 let next = 'system';
                 if (current === 'system') next = 'light';
                 else if (current === 'light') next = 'dark';
                 else if (current === 'dark') next = 'system';
 
-                localStorage.setItem(STORAGE_KEY, next);
+                localStorage.setItem(STORAGE_KEY_MODE, next);
 
-                if (next === 'dark' || (next === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
+                // Re-apply theme
+                const colorTheme = localStorage.getItem(STORAGE_KEY_COLOR) || 'default';
+                const isDark = next === 'dark' ||
+                               (next === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                const fullTheme = `${colorTheme}-${isDark ? 'dark' : 'light'}`;
+
+                document.documentElement.setAttribute('data-theme', fullTheme);
+                document.documentElement.classList.toggle('dark', isDark);
 
                 // Dispatch event so Sidebar updates if visible
                 window.dispatchEvent(new Event('storage'));
