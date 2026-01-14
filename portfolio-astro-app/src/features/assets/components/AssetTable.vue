@@ -156,6 +156,12 @@ const toggleArchive = async (asset: AssetModel) => {
     console.error('Error toggling archive status:', error)
   }
 }
+
+const clearFilters = () => {
+  searchQuery.value = ''
+  selectedType.value = ''
+  selectedPlatform.value = ''
+}
 </script>
 
 <template>
@@ -235,11 +241,7 @@ const toggleArchive = async (asset: AssetModel) => {
         <div class="flex items-end">
           <button
             class="w-full px-4 py-2 bg-surface-container-high hover:bg-surface-container transition-colors text-on-surface rounded-lg text-sm font-medium border border-outline-variant"
-            @click="
-              searchQuery = ''
-              selectedType = ''
-              selectedPlatform = ''
-            "
+            @click="clearFilters"
           >
             Clear Filters
           </button>
