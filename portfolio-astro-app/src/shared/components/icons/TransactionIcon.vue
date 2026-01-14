@@ -8,7 +8,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 'md'
+  size: 'md',
+  class: ''
 })
 
 const sizeClasses = {
@@ -17,9 +18,10 @@ const sizeClasses = {
   lg: 'h-5 w-5'
 }
 
-const computedClass = typeof props.size === 'string' && props.size in sizeClasses
-  ? sizeClasses[props.size as keyof typeof sizeClasses]
-  : props.size
+const computedClass =
+  typeof props.size === 'string' && props.size in sizeClasses
+    ? sizeClasses[props.size as keyof typeof sizeClasses]
+    : props.size
 
 const getIconPath = (type: string) => {
   switch (type) {
@@ -47,10 +49,6 @@ const getIconPath = (type: string) => {
     viewBox="0 0 24 24"
     stroke-width="2"
   >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      :d="getIconPath(type)"
-    ></path>
+    <path stroke-linecap="round" stroke-linejoin="round" :d="getIconPath(type)"></path>
   </svg>
 </template>

@@ -4,13 +4,14 @@ import { portfolioStore } from '@shared/stores/portfolioStore'
 import { formatCurrency, formatDate } from '@shared/lib/utils'
 import type { AssetModel } from '@shared/types'
 import EditIcon from '@shared/components/icons/EditIcon.vue'
+import ArchiveIcon from '@shared/components/icons/ArchiveIcon.vue'
 
 interface Props {
   asset: AssetModel
   onArchive?: (asset: AssetModel) => void
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const $portfolio = useStore(portfolioStore)
 
 const getPlatformName = (platformId: string) => {
@@ -54,10 +55,7 @@ const getRoiPercent = (asset: AssetModel) => {
         <h3 class="text-lg font-semibold text-on-surface truncate" :title="asset.name">
           {{ asset.name }}
         </h3>
-        <p
-          class="text-xs text-secondary font-medium tracking-wide truncate"
-          :title="asset.id"
-        >
+        <p class="text-xs text-secondary font-medium tracking-wide truncate" :title="asset.id">
           {{ asset.id }}
         </p>
         <div class="mt-2 flex gap-2 flex-wrap">
@@ -89,14 +87,7 @@ const getRoiPercent = (asset: AssetModel) => {
           title="Archivar"
           @click="onArchive(asset)"
         >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-            ></path>
-          </svg>
+          <ArchiveIcon size="sm" />
         </button>
         <a
           :href="`/edit-asset?id=${asset.id}`"
@@ -117,9 +108,7 @@ const getRoiPercent = (asset: AssetModel) => {
     </div>
 
     <!-- Metrics Grid -->
-    <div
-      class="grid grid-cols-2 gap-y-3 gap-x-2 border-t border-outline-variant pt-3 text-sm"
-    >
+    <div class="grid grid-cols-2 gap-y-3 gap-x-2 border-t border-outline-variant pt-3 text-sm">
       <!-- Invested -->
       <div>
         <p class="text-[10px] text-secondary uppercase font-bold">Invertido</p>

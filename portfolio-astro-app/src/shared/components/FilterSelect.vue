@@ -12,7 +12,7 @@ interface Props {
   allLabel?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   allLabel: 'All'
 })
 

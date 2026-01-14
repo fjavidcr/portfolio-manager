@@ -5,7 +5,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 'md'
+  size: 'md',
+  class: ''
 })
 
 const sizeClasses = {
@@ -14,9 +15,10 @@ const sizeClasses = {
   lg: 'h-5 w-5'
 }
 
-const computedClass = typeof props.size === 'string' && props.size in sizeClasses
-  ? sizeClasses[props.size as keyof typeof sizeClasses]
-  : props.size
+const computedClass =
+  typeof props.size === 'string' && props.size in sizeClasses
+    ? sizeClasses[props.size as keyof typeof sizeClasses]
+    : props.size
 </script>
 
 <template>
