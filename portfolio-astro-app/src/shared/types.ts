@@ -18,7 +18,7 @@ export interface TransactionModel {
   description: string
   assetId: string
   date: Date | Timestamp
-  type: string // 'Plan', 'Aportación', 'Retirada', 'Dividendo', 'Traspaso', 'Venta'
+  type: TransactionType
 }
 
 export const TransactionTypes = [
@@ -29,6 +29,8 @@ export const TransactionTypes = [
   'Traspaso',
   'Venta'
 ] as const
+
+export type TransactionType = typeof TransactionTypes[number]
 
 export const TransactionImpact = {
   Inflow: ['Plan', 'Aportación', 'Dividendo', 'Traspaso'],

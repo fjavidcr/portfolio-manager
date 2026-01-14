@@ -4,6 +4,9 @@ import { portfolioStore, fetchTransactions, setFilters } from '@shared/stores/po
 import { TransactionTypes } from '@shared/types'
 import { watch, onMounted, ref, onUnmounted, computed } from 'vue'
 import TransactionCard from './TransactionCard.vue'
+import FilterCard from '@shared/components/FilterCard.vue'
+import FilterSelect, { type FilterOption } from '@shared/components/FilterSelect.vue'
+import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
 
 const $portfolio = useStore(portfolioStore)
 const observerTarget = ref<HTMLElement | null>(null)
@@ -55,6 +58,23 @@ const typeCounts = computed(() => {
   return counts
 })
 
+// Prepare options for FilterSelect components
+const typeFilterOptions = computed<FilterOption[]>(() => {
+  return TransactionTypes.map(type => ({
+    value: type,
+    label: type,
+    count: typeCounts.value[type] || 0
+  }))
+})
+
+const assetFilterOptions = computed<FilterOption[]>(() => {
+  return $portfolio.value.assets.map(asset => ({
+    value: asset.id,
+    label: `${asset.name} (${asset.id})`,
+    count: undefined
+  }))
+})
+
 onMounted(() => {
   // Setup Intersection Observer for Infinite Scroll
   const observer = new IntersectionObserver(
@@ -95,114 +115,26 @@ const clearFilters = () => {
 <template>
   <div class="space-y-6">
     <!-- Search and Filters -->
-    <div
-      class="sticky top-4 z-20 bg-surface-container-low shadow-lg rounded-2xl border border-outline-variant p-6 mb-6 backdrop-blur-sm"
+    <FilterCard v-model:search-query="searchQuery" :result-count="filteredTransactions.length"
+      search-placeholder="Search transactions..." @clear="clearFilters"
     >
-      <!-- Search Bar -->
-      <div class="mb-4">
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg
-              class="h-5 w-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
-          </div>
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search transactions..."
-            class="block w-full pl-10 pr-3 py-3 bg-surface border border-outline-variant rounded-full text-on-surface placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
-          />
-        </div>
-      </div>
-
-      <!-- Filters -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <template #filters>
         <!-- Type Filter -->
-        <div>
-          <label for="type-filter" class="block text-xs font-medium text-secondary mb-2"
-            >Type</label
-          >
-          <select
-            id="type-filter"
-            v-model="selectedType"
-            class="block w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
-          >
-            <option value="">All Types</option>
-            <option v-for="type in TransactionTypes" :key="type" :value="type">
-              {{ type }} ({{ typeCounts[type] || 0 }})
-            </option>
-          </select>
-        </div>
+        <FilterSelect id="type-filter" v-model="selectedType" label="Type" :options="typeFilterOptions"
+          all-label="All Types" />
 
         <!-- Asset Filter -->
-        <div>
-          <label for="asset-filter" class="block text-xs font-medium text-secondary mb-2"
-            >Asset</label
-          >
-          <select
-            id="asset-filter"
-            v-model="selectedAsset"
-            class="block w-full px-3 py-2 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
-          >
-            <option value="">All Assets</option>
-            <option v-for="asset in $portfolio.assets" :key="asset.id" :value="asset.id">
-              {{ asset.name }} ({{ asset.id }})
-            </option>
-          </select>
-        </div>
-
-        <!-- Clear Filters Button -->
-        <div class="flex items-end">
-          <button
-            class="w-full px-4 py-2 bg-surface-container-high hover:bg-surface-container transition-colors text-on-surface rounded-lg text-sm font-medium border border-outline-variant"
-            @click="clearFilters"
-          >
-            Clear Filters
-          </button>
-        </div>
-      </div>
-
-      <!-- Results Count Footer -->
-      <div class="mt-4 pt-4 flex justify-between items-center text-sm text-secondary">
-        <span>Showing {{ filteredTransactions.length }} results</span>
-      </div>
-    </div>
+        <FilterSelect id="asset-filter" v-model="selectedAsset" label="Asset" :options="assetFilterOptions"
+          all-label="All Assets" />
+      </template>
+    </FilterCard>
 
     <!-- Initial Loading State (Only when empty) -->
     <div
       v-if="$portfolio.loading && $portfolio.transactions.length === 0"
       class="text-center py-10"
     >
-      <svg
-        class="animate-spin h-8 w-8 text-primary mx-auto"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
+      <LoadingSpinner size="lg" class="text-primary mx-auto" />
       <p class="mt-2 text-sm text-secondary">Loading transactions...</p>
     </div>
 
@@ -263,26 +195,7 @@ const clearFilters = () => {
         v-if="$portfolio.loading"
         class="flex items-center justify-center gap-2 text-secondary text-sm"
       >
-        <svg
-          class="animate-spin h-5 w-5 text-primary"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
+        <LoadingSpinner class="text-primary" />
         Loading more...
       </div>
       <div

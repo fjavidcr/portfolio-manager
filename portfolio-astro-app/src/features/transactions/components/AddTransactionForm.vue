@@ -13,7 +13,8 @@ import {
   collection
 } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
-import { TransactionTypes, TransactionImpact, type TransactionModel } from '@shared/types'
+import { TransactionTypes, TransactionImpact, type TransactionModel, type TransactionType } from '@shared/types'
+import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
 
 const props = defineProps<{
   transactionId?: string
@@ -22,7 +23,7 @@ const props = defineProps<{
 const $user = useStore(user)
 const $portfolio = useStore(portfolioStore)
 
-const type = ref('Plan')
+const type = ref<TransactionType>('Plan')
 const amount = ref('')
 const assetId = ref('')
 
@@ -107,7 +108,7 @@ const loadTransactionData = async () => {
 }
 
 const applyTransactionData = (data: Partial<TransactionModel>) => {
-  type.value = data.type ?? ''
+  type.value = (data.type ?? 'Plan') as TransactionType
   amount.value = String(data.amount ?? '')
   assetId.value = data.assetId ?? ''
   description.value = data.description || ''
@@ -203,26 +204,7 @@ const handleSubmit = async () => {
 <template>
   <!-- Loading State -->
   <div v-if="fetchLoading" class="flex justify-center items-center py-10">
-    <svg
-      class="animate-spin h-8 w-8 text-primary"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        class="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        stroke-width="4"
-      ></circle>
-      <path
-        class="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      ></path>
-    </svg>
+    <LoadingSpinner size="lg" class="text-primary" />
     <span class="ml-2 text-secondary">Loading transaction...</span>
   </div>
 
@@ -450,27 +432,7 @@ const handleSubmit = async () => {
           :disabled="submitting"
           class="w-full sm:w-auto inline-flex justify-center items-center py-2.5 px-6 border border-transparent shadow text-sm font-medium rounded-full text-on-primary-container bg-primary-container hover:bg-primary-fixed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
         >
-          <svg
-            v-if="submitting"
-            class="animate-spin -ml-1 mr-2 h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              class="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              stroke-width="4"
-            ></circle>
-            <path
-              class="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
+          <LoadingSpinner v-if="submitting" size="sm" class="-ml-1 mr-2" />
           {{ routeId ? 'Update Transaction' : 'Save Transaction' }}
         </button>
       </div>

@@ -4,6 +4,8 @@ import { portfolioStore } from '@shared/stores/portfolioStore'
 import { formatCurrency } from '@shared/lib/utils'
 import type { TransactionModel, AssetModel } from '@shared/types'
 import type { Timestamp } from 'firebase/firestore'
+import EditIcon from '@shared/components/icons/EditIcon.vue'
+import TransactionIcon from '@shared/components/icons/TransactionIcon.vue'
 
 defineProps<{
   transaction: TransactionModel
@@ -80,24 +82,6 @@ const getActionStyle = (type: string) => {
       }
   }
 }
-
-// Improved icons (Lucide-like)
-const getModernIcon = (type: string) => {
-  switch (type) {
-    case 'Aportación':
-    case 'Plan':
-      return `<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.307a11.95 11.95 0 0 1 5.814-5.519l2.74-1.22m0 0-5.94-2.28m5.94 2.28-2.28 5.941" />`
-    case 'Venta':
-    case 'Retirada':
-      return `<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 11.854 5.963m0 0-.916 6.32M25.14 14.427 18.82 13.51" />`
-    case 'Dividendo':
-      return `<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />`
-    case 'Traspaso':
-      return `<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />`
-    default:
-      return `<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />`
-  }
-}
 </script>
 
 <template>
@@ -116,32 +100,17 @@ const getModernIcon = (type: string) => {
       class="absolute top-2 right-2 p-1.5 rounded-full bg-surface-container-highest/50 text-secondary hover:text-primary hover:bg-surface-container-highest transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10"
       title="Edit Transaction"
     >
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-        ></path>
-      </svg>
+      <EditIcon size="sm" />
     </a>
 
     <!-- Header: Type, Date & Amount -->
     <div class="flex justify-between items-center pt-1 px-1 gap-2">
       <div class="flex items-center gap-2 min-w-0 flex-1">
-        <!-- Icon Box (smaller padding) -->
         <div
           class="p-2 rounded-lg flex items-center justify-center shrink-0"
           :class="getActionStyle(transaction.type).iconBg"
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            v-html="getModernIcon(transaction.type)"
-          ></svg>
+          <TransactionIcon :type="transaction.type" />
         </div>
 
         <div class="min-w-0 flex-1 flex flex-col justify-center">
