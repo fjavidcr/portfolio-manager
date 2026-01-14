@@ -12,6 +12,7 @@
     --color-surface-container-high: oklch(92% 0 0); /* base-300 */
 
     --color-primary: oklch(85% 0.199 91.936); /* primary */
+    --color-on-primary: oklch(20% 0.095 57.708); /* primary-content (dark) */
     --color-primary-container: color-mix(in oklab, var(--color-primary), white 60%);
     --color-on-primary-container: oklch(42% 0.095 57.708); /* primary-content */
 
@@ -80,6 +81,7 @@
     --color-surface-container-high: oklch(30% 0 0);
 
     --color-primary: oklch(85% 0.199 91.936);
+    --color-on-primary: oklch(20% 0.095 57.708); /* primary-content (dark) */
     --color-primary-container: color-mix(in oklab, var(--color-primary), black 60%);
     --color-on-primary-container: oklch(95% 0.05 90);
 

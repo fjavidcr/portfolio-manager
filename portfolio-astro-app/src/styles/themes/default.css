@@ -12,6 +12,7 @@
     --color-surface-container-high: #ececef;
 
     --color-primary: #2b5ea7;
+    --color-on-primary: #ffffff;
     --color-primary-container: #d6e3ff;
     --color-on-primary-container: #001b3d;
 
@@ -81,6 +82,7 @@
     --color-surface-container-high: #2b2b2b;
 
     --color-primary: #448aff;
+    --color-on-primary: #000000;
     --color-primary-container: color-mix(in oklab, var(--color-primary), black 60%);
     --color-on-primary-container: color-mix(in oklab, var(--color-primary), white 80%);
 
