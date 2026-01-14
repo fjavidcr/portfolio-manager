@@ -61,8 +61,8 @@ export const signInWithGoogle = async () => {
   try {
     const provider = new GoogleAuthProvider()
     await signInWithPopup(auth, provider)
-  } catch (error: any) {
-    authError.set(error.message)
+  } catch (error) {
+    authError.set(error instanceof Error ? error.message : 'An error occurred')
     authLoading.set(false)
   }
 }
@@ -71,8 +71,8 @@ export const logout = async () => {
   authLoading.set(true)
   try {
     await signOut(auth)
-  } catch (error: any) {
-    authError.set(error.message)
+  } catch (error) {
+    authError.set(error instanceof Error ? error.message : 'An error occurred')
   } finally {
     authLoading.set(false)
   }

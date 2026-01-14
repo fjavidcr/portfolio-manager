@@ -179,9 +179,9 @@ export const fetchTransactions = async (reset = false) => {
     } else {
       portfolioStore.setKey('transactions', [...portfolioStore.get().transactions, ...newTxs])
     }
-  } catch (e: any) {
+  } catch (e) {
     console.error('Error fetching transactions:', e)
-    portfolioStore.setKey('error', e.message)
+    portfolioStore.setKey('error', e instanceof Error ? e.message : 'Unknown error')
   } finally {
     portfolioStore.setKey('loading', false)
   }
@@ -220,16 +220,19 @@ export const fetchTotals = async () => {
     const data = snapshot.data()
     portfolioStore.setKey('totalInvested', data.totalInvested || 0)
     portfolioStore.setKey('transactionCount', data.count || 0)
-  } catch (e: any) {
+  } catch (e) {
     console.error('Error calculating totals:', e)
     // Expose error to UI
-    portfolioStore.setKey('totalsError', e.message || 'Unknown error')
+    portfolioStore.setKey('totalsError', e instanceof Error ? e.message : 'Unknown error')
 
-    if (e.code === 'failed-precondition') {
-      console.warn(
-        'Missing Firestore Index. Please verify the console for the index creation link.'
-      )
-      portfolioStore.setKey('missingIndex', true)
+    if (e instanceof Error && 'code' in e) {
+      const firebaseError = e as { code?: string }
+      if (firebaseError.code === 'failed-precondition') {
+        console.warn(
+          'Missing Firestore Index. Please verify the console for the index creation link.'
+        )
+        portfolioStore.setKey('missingIndex', true)
+      }
     }
   } finally {
     portfolioStore.setKey('calculatingTotals', false)

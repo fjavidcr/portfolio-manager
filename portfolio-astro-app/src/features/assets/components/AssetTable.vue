@@ -6,7 +6,7 @@ import { formatCurrency, formatDate } from '@shared/lib/utils'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
 import { user } from '@features/auth/stores/authStore'
-import type { TransactionModel } from '@shared/types'
+import type { TransactionModel, AssetModel } from '@shared/types'
 import { TransactionTypes } from '@shared/types'
 
 const $portfolio = useStore(portfolioStore)
@@ -91,18 +91,18 @@ const getInvested = (assetId: string) => {
   if (allTransactions.value.length === 0) return 0
 
   const matchingTransactions = allTransactions.value.filter((tx) => {
-    return tx.assetId === assetId && TransactionTypes.includes(tx.type as any)
+    return tx.assetId === assetId && TransactionTypes.includes(tx.type as typeof TransactionTypes[number])
   })
 
   return matchingTransactions.reduce((sum, tx) => sum + tx.amount, 0)
 }
 
-const getProfit = (asset: any) => {
+const getProfit = (asset: AssetModel) => {
   const invested = getInvested(asset.id)
   return asset.currentValue - invested
 }
 
-const getRoiPercent = (asset: any) => {
+const getRoiPercent = (asset: AssetModel) => {
   const invested = getInvested(asset.id)
   if (invested === 0) return 0
   const profit = asset.currentValue - invested
@@ -144,7 +144,7 @@ const platformCounts = computed(() => {
 // Archive/Unarchive functions
 import { doc, updateDoc } from 'firebase/firestore'
 
-const toggleArchive = async (asset: any) => {
+const toggleArchive = async (asset: AssetModel) => {
   if (!$user.value) return
 
   try {

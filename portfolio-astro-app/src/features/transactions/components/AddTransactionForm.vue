@@ -13,7 +13,7 @@ import {
   collection
 } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
-import { TransactionTypes, TransactionImpact } from '@shared/types'
+import { TransactionTypes, TransactionImpact, type TransactionModel } from '@shared/types'
 
 const props = defineProps<{
   transactionId?: string
@@ -88,15 +88,15 @@ const loadTransactionData = async () => {
       const docSnap = await getDoc(docRef)
 
       if (docSnap.exists()) {
-        const data = docSnap.data()
-        applyTransactionData({ id: docSnap.id, ...data } as any)
+        const txData = docSnap.data()
+        applyTransactionData({ id: docSnap.id, ...txData } as TransactionModel)
       } else {
         fetchError.value = 'Transaction not found. It may have been deleted.'
       }
     }
-  } catch (e: any) {
+  } catch (e) {
     console.error('Error loading transaction:', e)
-    fetchError.value = 'Error loading transaction: ' + e.message
+    fetchError.value = 'Error loading transaction: ' + (e instanceof Error ? e.message : 'Unknown error')
   } finally {
     // Only turn off loading if we actually finished or failed.
     // If we returned early for auth, keep it loading (or handle in auth watcher)
@@ -106,14 +106,16 @@ const loadTransactionData = async () => {
   }
 }
 
-const applyTransactionData = (data: any) => {
-  type.value = data.type
-  amount.value = data.amount
-  assetId.value = data.assetId
+const applyTransactionData = (data: Partial<TransactionModel>) => {
+  type.value = data.type ?? ''
+  amount.value = String(data.amount ?? '')
+  assetId.value = data.assetId ?? ''
   description.value = data.description || ''
 
   if (data.date) {
-    const d = data.date.toDate ? data.date.toDate() : new Date(data.date)
+    const d = 'toDate' in data.date && typeof data.date.toDate === 'function'
+      ? data.date.toDate()
+      : data.date as Date
     date.value = d.toISOString().split('T')[0]
   }
   fetchLoading.value = false // Ensure loading is off
