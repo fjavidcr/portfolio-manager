@@ -11,8 +11,7 @@ import {
   deleteDoc,
   serverTimestamp,
   collection,
-  getDocs,
-  query
+  getDocs
 } from 'firebase/firestore'
 import type { PlatformModel } from '@shared/types'
 

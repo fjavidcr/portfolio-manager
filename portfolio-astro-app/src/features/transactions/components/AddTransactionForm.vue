@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useStore } from '@nanostores/vue'
 import { user } from '@features/auth/stores/authStore'
 import { portfolioStore, updateTransaction, deleteTransaction } from '@shared/stores/portfolioStore'
@@ -9,7 +9,6 @@ import {
   updateDoc,
   increment,
   serverTimestamp,
-  setDoc,
   addDoc,
   collection
 } from 'firebase/firestore'
