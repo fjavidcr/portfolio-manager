@@ -8,6 +8,7 @@ import {
 } from '@shared/stores/portfolioStore'
 import { user } from '@features/auth/stores/authStore'
 import { formatCurrency } from '@shared/lib/utils'
+import type { Timestamp } from 'firebase/firestore'
 
 const $user = useStore(user)
 const $netInvested = useStore(netInvested)
@@ -15,12 +16,12 @@ const $currentValue = useStore(currentPortfolioValue)
 const $totalROI = useStore(totalROI)
 const $portfolio = useStore(portfolioStore)
 
-const formatTransactionDate = (date: any) => {
+const formatTransactionDate = (date: Date | Timestamp | null) => {
   if (!date) return ''
-  if (date.toDate && typeof date.toDate === 'function') {
+  if ('toDate' in date && typeof date.toDate === 'function') {
     return date.toDate().toLocaleDateString()
   }
-  return new Date(date).toLocaleDateString()
+  return (date as Date).toLocaleDateString()
 }
 </script>
 

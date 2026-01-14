@@ -151,10 +151,12 @@ const fetchPlatforms = async () => {
       'AddAssetForm: Platforms loaded',
       platforms.value.map((p) => `${p.name} (${p.id})`)
     )
-  } catch (e: any) {
+  } catch (e) {
     console.error('AddAssetForm: Error fetching platforms:', e)
-    // Explicitly log the code to see if it's 'permission-denied'
-    if (e.code) console.error('Error Code:', e.code)
+    if (e instanceof Error && 'code' in e) {
+      const firebaseError = e as { code?: string }
+      console.error('Error Code:', firebaseError.code)
+    }
   }
 }
 
