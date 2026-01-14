@@ -86,10 +86,6 @@ watch(
   { immediate: true }
 )
 
-const hasTransactions = (assetId: string) => {
-  if (allTransactions.value.length === 0) return false
-  return allTransactions.value.some((tx) => tx.assetId === assetId)
-}
 
 const getInvested = (assetId: string) => {
   if (allTransactions.value.length === 0) return 0

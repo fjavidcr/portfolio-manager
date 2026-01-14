@@ -4,7 +4,7 @@ import { portfolioStore } from '@shared/stores/portfolioStore'
 import { formatCurrency } from '@shared/lib/utils'
 import type { TransactionModel } from '@shared/types'
 
-const props = defineProps<{
+defineProps<{
   transaction: TransactionModel
 }>()
 
