@@ -5,18 +5,27 @@ import eslintPluginVue from 'eslint-plugin-vue';
 import vueParser from 'vue-eslint-parser';
 import astroParser from 'astro-eslint-parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 export default [
   // Base JavaScript/TypeScript config
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
 
+  // Global settings - browser environment
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+  },
+
   // Vue files
+  ...eslintPluginVue.configs['flat/recommended'],
   {
     files: ['**/*.vue'],
-    plugins: {
-      vue: eslintPluginVue,
-    },
     languageOptions: {
       parser: vueParser,
       parserOptions: {
@@ -26,7 +35,10 @@ export default [
       },
     },
     rules: {
-      ...eslintPluginVue.configs['vue3-recommended'].rules,
+      // Relax some Vue formatting rules
+      'vue/first-attribute-linebreak': 'off',
+      'vue/attributes-order': 'warn',
+      'vue/no-v-html': 'warn',
     },
   },
 
@@ -51,6 +63,10 @@ export default [
       parserOptions: {
         project: './tsconfig.json',
       },
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     },
   },
 
