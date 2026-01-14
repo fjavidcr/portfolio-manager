@@ -146,18 +146,18 @@ const { title, requireAuth = false } = Astro.props;
 
 		{requireAuth && (
 			<script>
-				import { user, authLoading } from "@features/auth/stores/authStore";
+				import { user, authLoading } from '@features/auth/stores/authStore'
 
 				const checkAuth = () => {
-					const isLoginPage = window.location.pathname === '/login';
+					const isLoginPage = window.location.pathname === '/login'
 
 					if (!authLoading.get() && !user.get() && !isLoginPage) {
-						window.location.href = "/login";
+						window.location.href = '/login'
 					}
-				};
+				}
 
-				authLoading.subscribe(checkAuth);
-				user.subscribe(checkAuth);
+				authLoading.subscribe(checkAuth)
+				user.subscribe(checkAuth)
 			</script>
 		)}
 	</body>
