@@ -10,8 +10,9 @@
     --color-surface-container-low: #dcfce7;
     --color-surface-container-high: #bbf7d0;
 
-    --color-primary: #059669;
-    --color-primary-container: #a7f3d0;
+    --color-primary: #047857;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #d1fae5;
     --color-on-primary-container: #064e3b;
 
     --color-secondary: #065f46;
@@ -78,7 +79,8 @@
     --color-surface-container-low: #14532d;
     --color-surface-container-high: #166534;
 
-    --color-primary: #34d399;
+    --color-primary: #10b981;
+    --color-on-primary: #000000;
     --color-primary-container: color-mix(in oklab, var(--color-primary), black 60%);
     --color-on-primary-container: color-mix(in oklab, var(--color-primary), white 80%);
 
