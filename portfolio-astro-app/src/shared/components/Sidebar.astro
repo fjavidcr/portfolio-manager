@@ -1,5 +1,5 @@
 ---
-import UserProfile from "@features/auth/components/UserProfile.vue";
+import UserProfile from '@features/auth/components/UserProfile.vue'
 ---
 
 <aside
@@ -103,8 +103,28 @@ import UserProfile from "@features/auth/components/UserProfile.vue";
         </div>
     </nav>
 
-    <!-- Bottom Actions -->
+    <!-- Bottom Actions ---->
     <div class="p-4 mt-auto space-y-4">
+        <!-- Color Theme Selector -->
+        <div>
+            <label
+                for="color-theme-select"
+                class="block text-xs font-medium mb-2 text-on-surface opacity-70"
+            >
+                Color Theme
+            </label>
+            <select
+                id="color-theme-select"
+                class="w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors bg-surface-container-high text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+                <option value="default">⚪ Default</option>
+                <option value="blue">🔵 Blue</option>
+                <option value="green">🟢 Green</option>
+                <option value="purple">🟣 Purple</option>
+            </select>
+        </div>
+
+        <!-- Light/Dark Mode Toggle -->
         <button
             id="theme-toggle"
             class="flex items-center w-full px-4 py-3 text-sm font-medium rounded-2xl transition-colors hover:bg-surface-container-high focus:outline-none text-on-surface"
@@ -169,98 +189,111 @@ import UserProfile from "@features/auth/components/UserProfile.vue";
 
 <script>
     // Highlight current link
-    const path = window.location.pathname;
+    const path = window.location.pathname
     const links = {
-        "/": "nav-dashboard",
-        "/assets": "nav-assets",
-        "/transactions": "nav-transactions",
-    };
+        '/': 'nav-dashboard',
+        '/assets': 'nav-assets',
+        '/transactions': 'nav-transactions'
+    }
 
     // Simple matching logic
-    let activeId = links["/"]; // Default
-    if (path.includes("assets")) activeId = links["/assets"];
-    else if (path.includes("transactions")) activeId = links["/transactions"];
+    let activeId = links['/'] // Default
+    if (path.includes('assets')) activeId = links['/assets']
+    else if (path.includes('transactions')) activeId = links['/transactions']
 
     document
         .getElementById(activeId)
-        ?.classList.add(
-            "bg-secondary-container",
-            "text-on-secondary-container",
-        );
+        ?.classList.add('bg-secondary-container', 'text-on-secondary-container')
 
     // Mobile Overlay
-    const overlay = document.getElementById("sidebar-overlay");
-    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById('sidebar-overlay')
+    const sidebar = document.getElementById('sidebar')
 
-    overlay?.addEventListener("click", () => {
-        sidebar?.classList.remove("translate-x-0");
-        sidebar?.classList.add("-translate-x-full");
-        overlay.classList.add("hidden");
-    });
+    overlay?.addEventListener('click', () => {
+        sidebar?.classList.remove('translate-x-0')
+        sidebar?.classList.add('-translate-x-full')
+        overlay.classList.add('hidden')
+    })
 
-    // Theme Toggle Logic
-    const themeToggleBtn = document.getElementById("theme-toggle");
-    const iconLight = document.getElementById("theme-icon-light");
-    const iconDark = document.getElementById("theme-icon-dark");
-    const iconSystem = document.getElementById("theme-icon-system");
-    const themeText = document.getElementById("theme-toggle-text");
+    // Theme Toggle Logic - Multi-Theme Support
+    const colorSelect = document.getElementById(
+        'color-theme-select'
+    ) as HTMLSelectElement | null
+    const themeToggleBtn = document.getElementById('theme-toggle')
+    const iconLight = document.getElementById('theme-icon-light')
+    const iconDark = document.getElementById('theme-icon-dark')
+    const iconSystem = document.getElementById('theme-icon-system')
+    const themeText = document.getElementById('theme-toggle-text')
 
-    const STORAGE_KEY = "theme_pref";
+    const STORAGE_KEY_COLOR = 'color_theme'
+    const STORAGE_KEY_MODE = 'theme_mode'
 
     const updateThemeUI = () => {
-        const stored = localStorage.getItem(STORAGE_KEY) || "system";
+        const colorTheme = localStorage.getItem(STORAGE_KEY_COLOR) || 'default'
+        const mode = localStorage.getItem(STORAGE_KEY_MODE) || 'system'
 
-        // Hide all
-        iconLight?.classList.add("hidden");
-        iconDark?.classList.add("hidden");
-        iconSystem?.classList.add("hidden");
+        // Update color selector
+        if (colorSelect) colorSelect.value = colorTheme
 
-        if (stored === "light") {
-            iconLight?.classList.remove("hidden");
-            if (themeText) themeText.textContent = "Light Mode";
-        } else if (stored === "dark") {
-            iconDark?.classList.remove("hidden");
-            if (themeText) themeText.textContent = "Dark Mode";
+        // Update mode icons
+        iconLight?.classList.add('hidden')
+        iconDark?.classList.add('hidden')
+        iconSystem?.classList.add('hidden')
+
+        if (mode === 'light') {
+            iconLight?.classList.remove('hidden')
+            if (themeText) themeText.textContent = 'Light Mode'
+        } else if (mode === 'dark') {
+            iconDark?.classList.remove('hidden')
+            if (themeText) themeText.textContent = 'Dark Mode'
         } else {
-            iconSystem?.classList.remove("hidden");
-            if (themeText) themeText.textContent = "System Default";
+            iconSystem?.classList.remove('hidden')
+            if (themeText) themeText.textContent = 'System Default'
         }
 
-        // Apply class
+        // Apply theme
         const sysDark = window.matchMedia(
-            "(prefers-color-scheme: dark)",
-        ).matches;
-        const shouldBeDark =
-            stored === "dark" || (stored === "system" && sysDark);
+            '(prefers-color-scheme: dark)'
+        ).matches
+        const isDark = mode === 'dark' || (mode === 'system' && sysDark)
+        const fullTheme = `${colorTheme}-${isDark ? 'dark' : 'light'}`
 
-        if (shouldBeDark) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
+        document.documentElement.setAttribute('data-theme', fullTheme)
+        document.documentElement.classList.toggle('dark', isDark)
 
         console.log(
-            `Theme Debug: Pref: ${stored} | SysDark: ${sysDark} | Active: ${shouldBeDark ? "Dark" : "Light"}`,
-        );
-    };
+            `Theme: ${colorTheme} | Mode: ${mode} (${sysDark ? 'SysDark' : 'SysLight'}) | Active: ${fullTheme}`
+        )
+    }
 
     // Initial check
-    updateThemeUI();
+    updateThemeUI()
 
-    themeToggleBtn?.addEventListener("click", () => {
-        const current = localStorage.getItem(STORAGE_KEY) || "system";
-        let next = "system";
-        if (current === "system") next = "light";
-        else if (current === "light") next = "dark";
-        else if (current === "dark") next = "system";
+    // Color theme selector
+    colorSelect?.addEventListener('change', (e) => {
+        const target = e.target as HTMLSelectElement
+        if (!target) return
+        console.log('Color theme changed to:', target.value)
+        localStorage.setItem(STORAGE_KEY_COLOR, target.value)
+        updateThemeUI()
+    })
 
-        localStorage.setItem(STORAGE_KEY, next);
-        updateThemeUI();
-    });
+    // Mode toggle button
+    themeToggleBtn?.addEventListener('click', () => {
+        const current = localStorage.getItem(STORAGE_KEY_MODE) || 'system'
+        let next = 'system'
+        if (current === 'system') next = 'light'
+        else if (current === 'light') next = 'dark'
+        else if (current === 'dark') next = 'system'
+
+        console.log('Mode changed from', current, 'to', next)
+        localStorage.setItem(STORAGE_KEY_MODE, next)
+        updateThemeUI()
+    })
 
     // Sync with other tabs/windows or system changes
-    window.addEventListener("storage", updateThemeUI);
+    window.addEventListener('storage', updateThemeUI)
     window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", updateThemeUI);
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', updateThemeUI)
 </script>

@@ -1,167 +1,43 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
 
 @theme {
     --color-surface: var(--color-surface);
-    --color-surface-container-low: var(--color-surface-container-low);
-    --color-surface-container-high: var(--color-surface-container-high);
     --color-on-surface: var(--color-on-surface);
+
     --color-primary: var(--color-primary);
     --color-primary-container: var(--color-primary-container);
     --color-on-primary-container: var(--color-on-primary-container);
+
     --color-secondary: var(--color-secondary);
     --color-secondary-container: var(--color-secondary-container);
     --color-on-secondary-container: var(--color-on-secondary-container);
+
     --color-tertiary-container: var(--color-tertiary-container);
     --color-on-tertiary-container: var(--color-on-tertiary-container);
+
     --color-outline-variant: var(--color-outline-variant);
+
     --color-error: var(--color-error);
     --color-error-container: var(--color-error-container);
     --color-on-error-container: var(--color-on-error-container);
 }
 
-/* Light Mode (Default) */
-:root {
-    --color-surface: #fbf8fd;
-    --color-surface-container-low: #f3f3f6;
-    --color-surface-container-high: #ececef;
-    --color-on-surface: #1b1b1f;
+/* ============================================
+   THEME IMPORTS
+   Each theme is in a separate file for maintainability
+   ============================================ */
 
-    --color-primary: #2b5ea7;
-    --color-primary-container: #d6e3ff;
-    --color-on-primary-container: #001b3d;
-
-    --color-secondary: #555f71;
-    --color-secondary-container: #d9e3f9;
-    --color-on-secondary-container: #121c2b;
-
-    --color-tertiary-container: #ffd8e4;
-    --color-on-tertiary-container: #31111d;
-
-    --color-outline-variant: #c4c6d0;
-
-    --color-error: #ba1a1a;
-    --color-error-container: #ffdad6;
-    --color-on-error-container: #410002;
-}
-
-/* Dark Mode */
-.dark {
-    --color-surface: #121212;
-    --color-surface-container-low: #1e1e1e;
-    --color-surface-container-high: #2b2b2b;
-    --color-on-surface: #e6e6e6;
-
-    --color-primary: #448aff;
-    --color-primary-container: #004b9e;
-    --color-on-primary-container: #d6e3ff;
-
-    --color-secondary: #bfc6dc;
-    --color-secondary-container: #3e4759;
-    --color-on-secondary-container: #dae2f9;
-
-    --color-tertiary-container: #633b48;
-    --color-on-tertiary-container: #ffd8e4;
-
-    --color-outline-variant: #44474f;
-
-    --color-error: #ffb4ab;
-    --color-error-container: #93000a;
-    --color-on-error-container: #ffdad6;
-}
+@import "./themes/default.css";
+@import "./themes/blue.css";
+@import "./themes/green.css";
+@import "./themes/purple.css";
 
 body {
     background-color: var(--color-surface);
     color: var(--color-on-surface);
     @apply transition-colors duration-300;
-}
-
-/* Transaction Card Colors - Using CSS Variables */
-:root {
-    --tx-rose-bg: rgb(254 242 242);
-    --tx-rose-text: rgb(185 28 28);
-    --tx-rose-border: rgb(254 205 211);
-    --tx-rose-icon-bg: rgb(254 242 242);
-    --tx-rose-icon-text: rgb(185 28 28);
-
-    --tx-emerald-bg: rgb(236 253 245);
-    --tx-emerald-text: rgb(4 120 87);
-    --tx-emerald-border: rgb(167 243 208);
-    --tx-emerald-icon-bg: rgb(236 253 245);
-    --tx-emerald-icon-text: rgb(4 120 87);
-
-    --tx-amber-bg: rgb(254 252 232);
-    --tx-amber-text: rgb(161 98 7);
-    --tx-amber-border: rgb(253 230 138);
-    --tx-amber-icon-bg: rgb(254 252 232);
-    --tx-amber-icon-text: rgb(161 98 7);
-
-    --tx-blue-bg: rgb(239 246 255);
-    --tx-blue-text: rgb(29 78 216);
-    --tx-blue-border: rgb(191 219 254);
-    --tx-blue-icon-bg: rgb(239 246 255);
-    --tx-blue-icon-text: rgb(29 78 216);
-
-    --tx-orange-bg: rgb(255 247 237);
-    --tx-orange-text: rgb(194 65 12);
-    --tx-orange-border: rgb(254 215 170);
-    --tx-orange-icon-bg: rgb(255 247 237);
-    --tx-orange-icon-text: rgb(194 65 12);
-
-    --tx-slate-bg: rgb(248 250 252);
-    --tx-slate-text: rgb(51 65 85);
-    --tx-slate-border: rgb(226 232 240);
-    --tx-slate-icon-bg: rgb(248 250 252);
-    --tx-slate-icon-text: rgb(51 65 85);
-
-    --tx-indigo-bg: rgb(238 242 255);
-    --tx-indigo-text: rgb(67 56 202);
-    --tx-indigo-border: rgb(199 210 254);
-    --tx-indigo-icon-bg: rgb(238 242 255);
-    --tx-indigo-icon-text: rgb(67 56 202);
-}
-
-.dark {
-    --tx-rose-bg: rgb(244 63 94 / 0.1);
-    --tx-rose-text: rgb(254 205 211);
-    --tx-rose-border: rgb(244 63 94 / 0.2);
-    --tx-rose-icon-bg: rgb(244 63 94 / 0.2);
-    --tx-rose-icon-text: rgb(254 205 211);
-
-    --tx-emerald-bg: rgb(16 185 129 / 0.1);
-    --tx-emerald-text: rgb(167 243 208);
-    --tx-emerald-border: rgb(16 185 129 / 0.2);
-    --tx-emerald-icon-bg: rgb(16 185 129 / 0.2);
-    --tx-emerald-icon-text: rgb(167 243 208);
-
-    --tx-amber-bg: rgb(245 158 11 / 0.1);
-    --tx-amber-text: rgb(253 230 138);
-    --tx-amber-border: rgb(245 158 11 / 0.2);
-    --tx-amber-icon-bg: rgb(245 158 11 / 0.2);
-    --tx-amber-icon-text: rgb(253 230 138);
-
-    --tx-blue-bg: rgb(59 130 246 / 0.1);
-    --tx-blue-text: rgb(191 219 254);
-    --tx-blue-border: rgb(59 130 246 / 0.2);
-    --tx-blue-icon-bg: rgb(59 130 246 / 0.2);
-    --tx-blue-icon-text: rgb(191 219 254);
-
-    --tx-orange-bg: rgb(249 115 22 / 0.1);
-    --tx-orange-text: rgb(254 215 170);
-    --tx-orange-border: rgb(249 115 22 / 0.2);
-    --tx-orange-icon-bg: rgb(249 115 22 / 0.2);
-    --tx-orange-icon-text: rgb(254 215 170);
-
-    --tx-slate-bg: rgb(148 163 184 / 0.1);
-    --tx-slate-text: rgb(226 232 240);
-    --tx-slate-border: rgb(148 163 184 / 0.2);
-    --tx-slate-icon-bg: rgb(148 163 184 / 0.2);
-    --tx-slate-icon-text: rgb(226 232 240);
-
-    --tx-indigo-bg: rgb(99 102 241 / 0.1);
-    --tx-indigo-text: rgb(199 210 254);
-    --tx-indigo-border: rgb(99 102 241 / 0.2);
-    --tx-indigo-icon-bg: rgb(99 102 241 / 0.2);
-    --tx-indigo-icon-text: rgb(199 210 254);
 }
 
 /* Transaction Card Classes */
