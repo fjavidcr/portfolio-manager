@@ -13,7 +13,12 @@ import {
   collection
 } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
-import { TransactionTypes, TransactionImpact, type TransactionModel, type TransactionType } from '@shared/types'
+import {
+  TransactionTypes,
+  TransactionImpact,
+  type TransactionModel,
+  type TransactionType
+} from '@shared/types'
 import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
 
 const props = defineProps<{
@@ -97,7 +102,8 @@ const loadTransactionData = async () => {
     }
   } catch (e) {
     console.error('Error loading transaction:', e)
-    fetchError.value = 'Error loading transaction: ' + (e instanceof Error ? e.message : 'Unknown error')
+    fetchError.value =
+      'Error loading transaction: ' + (e instanceof Error ? e.message : 'Unknown error')
   } finally {
     // Only turn off loading if we actually finished or failed.
     // If we returned early for auth, keep it loading (or handle in auth watcher)
@@ -114,9 +120,10 @@ const applyTransactionData = (data: Partial<TransactionModel>) => {
   description.value = data.description || ''
 
   if (data.date) {
-    const d = 'toDate' in data.date && typeof data.date.toDate === 'function'
-      ? data.date.toDate()
-      : data.date as Date
+    const d =
+      'toDate' in data.date && typeof data.date.toDate === 'function'
+        ? data.date.toDate()
+        : (data.date as Date)
     date.value = d.toISOString().split('T')[0]
   }
   fetchLoading.value = false // Ensure loading is off

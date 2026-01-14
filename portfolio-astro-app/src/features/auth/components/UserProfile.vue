@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
+import LogoutIcon from '@shared/components/icons/LogoutIcon.vue'
 import { user, logout } from '../stores/authStore'
 
 const $user = useStore(user)
@@ -36,14 +37,7 @@ const handleLogout = async () => {
       class="flex w-full items-center px-4 py-3 text-sm font-medium rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors"
       @click="handleLogout"
     >
-      <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-        ></path>
-      </svg>
+      <LogoutIcon class="mr-3" />
       Logout
     </button>
   </div>

@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useStore } from '@nanostores/vue'
 import { portfolioStore } from '@shared/stores/portfolioStore'
-import { formatCurrency, formatDate } from '@shared/lib/utils'
+
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
 import { user } from '@features/auth/stores/authStore'
@@ -11,6 +11,7 @@ import { TransactionTypes } from '@shared/types'
 import FilterCard from '@shared/components/FilterCard.vue'
 import FilterSelect, { type FilterOption } from '@shared/components/FilterSelect.vue'
 import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
+import ChevronRightIcon from '@shared/components/icons/ChevronRightIcon.vue'
 import AssetCard from './AssetCard.vue'
 
 const $portfolio = useStore(portfolioStore)
@@ -90,33 +91,17 @@ watch(
   { immediate: true }
 )
 
-
 const getInvested = (assetId: string) => {
   if (allTransactions.value.length === 0) return 0
 
   const matchingTransactions = allTransactions.value.filter((tx) => {
-    return tx.assetId === assetId && TransactionTypes.includes(tx.type as typeof TransactionTypes[number])
+    return (
+      tx.assetId === assetId &&
+      TransactionTypes.includes(tx.type as (typeof TransactionTypes)[number])
+    )
   })
 
   return matchingTransactions.reduce((sum, tx) => sum + tx.amount, 0)
-}
-
-const getProfit = (asset: AssetModel) => {
-  const invested = getInvested(asset.id)
-  return asset.currentValue - invested
-}
-
-const getRoiPercent = (asset: AssetModel) => {
-  const invested = getInvested(asset.id)
-  if (invested === 0) return 0
-  const profit = asset.currentValue - invested
-  return (profit / invested) * 100
-}
-
-const getPlatformName = (platformId: string) => {
-  if (!$portfolio.value.platforms) return platformId
-  const platform = $portfolio.value.platforms.find((p) => p.id === platformId)
-  return platform ? platform.name : platformId
 }
 
 // Get unique asset types and their counts
@@ -147,7 +132,7 @@ const platformCounts = computed(() => {
 
 // Prepare options for FilterSelect components
 const typeOptions = computed<FilterOption[]>(() => {
-  return assetTypes.value.map(type => ({
+  return assetTypes.value.map((type) => ({
     value: type,
     label: type,
     count: typeCounts.value[type] || 0
@@ -155,7 +140,7 @@ const typeOptions = computed<FilterOption[]>(() => {
 })
 
 const platformOptions = computed<FilterOption[]>(() => {
-  return $portfolio.value.platforms.map(platform => ({
+  return $portfolio.value.platforms.map((platform) => ({
     value: platform.id,
     label: platform.name,
     count: platformCounts.value[platform.id] || 0
@@ -188,17 +173,30 @@ const clearFilters = () => {
 <template>
   <div class="space-y-6">
     <!-- Search and Filters -->
-    <FilterCard v-model:search-query="searchQuery" :result-count="filteredAssets.length"
-      search-placeholder="Search assets..." @clear="clearFilters"
+    <FilterCard
+      v-model:search-query="searchQuery"
+      :result-count="filteredAssets.length"
+      search-placeholder="Search assets..."
+      @clear="clearFilters"
     >
       <template #filters>
         <!-- Type Filter -->
-        <FilterSelect id="type-filter" v-model="selectedType" label="Type" :options="typeOptions"
-          all-label="All Types" />
+        <FilterSelect
+          id="type-filter"
+          v-model="selectedType"
+          label="Type"
+          :options="typeOptions"
+          all-label="All Types"
+        />
 
         <!-- Platform Filter -->
-        <FilterSelect id="platform-filter" v-model="selectedPlatform" label="Platform" :options="platformOptions"
-          all-label="All Platforms" />
+        <FilterSelect
+          id="platform-filter"
+          v-model="selectedPlatform"
+          label="Platform"
+          :options="platformOptions"
+          all-label="All Platforms"
+        />
       </template>
     </FilterCard>
 
@@ -225,7 +223,9 @@ const clearFilters = () => {
         <AssetCard
           v-for="asset in activeAssets"
           :key="asset.id"
-:asset="asset" :on-archive="toggleArchive" />
+          :asset="asset"
+          :on-archive="toggleArchive"
+        />
       </div>
 
       <!-- Archived Assets Section -->
@@ -236,20 +236,10 @@ const clearFilters = () => {
           @click="showArchived = !showArchived"
         >
           <div class="flex items-center gap-3">
-            <svg
-              class="w-5 h-5 text-secondary transition-transform"
+            <ChevronRightIcon
               :class="{ 'rotate-90': showArchived }"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              ></path>
-            </svg>
+              class="text-secondary transition-transform"
+            />
             <h2 class="text-lg font-semibold text-on-surface">Archivados</h2>
             <span
               class="px-2 py-0.5 text-xs font-medium rounded-full bg-secondary-container text-on-secondary-container"

@@ -60,7 +60,7 @@ const typeCounts = computed(() => {
 
 // Prepare options for FilterSelect components
 const typeFilterOptions = computed<FilterOption[]>(() => {
-  return TransactionTypes.map(type => ({
+  return TransactionTypes.map((type) => ({
     value: type,
     label: type,
     count: typeCounts.value[type] || 0
@@ -68,7 +68,7 @@ const typeFilterOptions = computed<FilterOption[]>(() => {
 })
 
 const assetFilterOptions = computed<FilterOption[]>(() => {
-  return $portfolio.value.assets.map(asset => ({
+  return $portfolio.value.assets.map((asset) => ({
     value: asset.id,
     label: `${asset.name} (${asset.id})`,
     count: undefined
@@ -115,17 +115,30 @@ const clearFilters = () => {
 <template>
   <div class="space-y-6">
     <!-- Search and Filters -->
-    <FilterCard v-model:search-query="searchQuery" :result-count="filteredTransactions.length"
-      search-placeholder="Search transactions..." @clear="clearFilters"
+    <FilterCard
+      v-model:search-query="searchQuery"
+      :result-count="filteredTransactions.length"
+      search-placeholder="Search transactions..."
+      @clear="clearFilters"
     >
       <template #filters>
         <!-- Type Filter -->
-        <FilterSelect id="type-filter" v-model="selectedType" label="Type" :options="typeFilterOptions"
-          all-label="All Types" />
+        <FilterSelect
+          id="type-filter"
+          v-model="selectedType"
+          label="Type"
+          :options="typeFilterOptions"
+          all-label="All Types"
+        />
 
         <!-- Asset Filter -->
-        <FilterSelect id="asset-filter" v-model="selectedAsset" label="Asset" :options="assetFilterOptions"
-          all-label="All Assets" />
+        <FilterSelect
+          id="asset-filter"
+          v-model="selectedAsset"
+          label="Asset"
+          :options="assetFilterOptions"
+          all-label="All Assets"
+        />
       </template>
     </FilterCard>
 

@@ -30,7 +30,7 @@ export const TransactionTypes = [
   'Venta'
 ] as const
 
-export type TransactionType = typeof TransactionTypes[number]
+export type TransactionType = (typeof TransactionTypes)[number]
 
 export const TransactionImpact = {
   Inflow: ['Plan', 'Aportación', 'Dividendo', 'Traspaso'],
