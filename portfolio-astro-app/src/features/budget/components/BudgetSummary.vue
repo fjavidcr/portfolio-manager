@@ -26,7 +26,7 @@ const formatCurrency = (val: number) => {
 </script>
 
 <template>
-  <div class="bg-surface rounded-3xl p-6 md:p-8 border border-outline-variant/30 mb-8">
+  <div class="bg-surface rounded-3xl p-6 md:p-8 border border-outline-variant/30">
     <div class="flex flex-col space-y-8">
       <!-- Header & Total -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -95,18 +95,24 @@ const formatCurrency = (val: number) => {
             </div>
           </div>
 
-          <input
-            class="w-full accent-tertiary h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer"
-            type="range"
-            min="0"
-            :max="maxAllocation > 0 ? maxAllocation : 1000"
-            step="50"
-            :value="investmentTarget"
-            :disabled="loading"
-            @input="
-              emit('update:investmentTarget', Number(($event.target as HTMLInputElement).value))
-            "
-          />
+          <div class="flex items-center gap-4">
+            <span class="text-xs font-medium text-secondary min-w-12">0 €</span>
+            <input
+              class="w-full accent-tertiary h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer"
+              type="range"
+              min="0"
+              :max="maxAllocation > 0 ? maxAllocation : 1000"
+              step="1"
+              :value="investmentTarget"
+              :disabled="loading"
+              @input="
+                emit('update:investmentTarget', Number(($event.target as HTMLInputElement).value))
+              "
+            />
+            <span class="text-xs font-medium text-secondary min-w-12 text-right">{{
+              formatCurrency(maxAllocation > 0 ? maxAllocation : 1000)
+            }}</span>
+          </div>
         </div>
       </div>
     </div>

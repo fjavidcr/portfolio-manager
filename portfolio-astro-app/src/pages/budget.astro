@@ -4,6 +4,8 @@ import BudgetControls from '../features/budget/components/BudgetControls.vue'
 import BudgetSummaryConnected from '../features/budget/components/BudgetSummaryConnected.vue'
 import BudgetIncomeList from '../features/budget/components/BudgetIncomeList.vue'
 import BudgetExpenseList from '../features/budget/components/BudgetExpenseList.vue'
+import BudgetAnnualProjection from '../features/budget/components/BudgetAnnualProjection.vue'
+import FinancialHealthCard from '../features/budget/components/FinancialHealthCard.vue'
 import PlusIcon from '../shared/components/icons/PlusIcon.vue'
 import MinusIcon from '../shared/components/icons/MinusIcon.vue'
 ---
@@ -20,40 +22,50 @@ import MinusIcon from '../shared/components/icons/MinusIcon.vue'
       <BudgetControls client:load />
     </div>
 
-    <div class="animate-fade-in">
+    <div class="flex flex-col gap-8 animate-fade-in">
       <!-- Top Summary -->
       <BudgetSummaryConnected client:load />
 
-      <!-- Comparison Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Income Column -->
-        <div class="space-y-6">
-          <div class="flex items-center gap-2 mb-2">
-            <div
-              class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center"
-            >
-              <PlusIcon class="w-4 h-4" />
-            </div>
-            <h2 class="text-xl font-bold text-on-surface">Inflow</h2>
-          </div>
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <!-- Left Column: Projection & Inflow -->
+        <div class="flex flex-col gap-8">
+          <BudgetAnnualProjection client:load />
 
-          <BudgetIncomeList client:load />
+          <!-- Inflow -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <div
+                class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center"
+              >
+                <PlusIcon class="w-4 h-4" />
+              </div>
+              <h2 class="text-xl font-bold text-on-surface">Inflow</h2>
+            </div>
+            <BudgetIncomeList client:load />
+          </div>
         </div>
 
-        <!-- Expense Column -->
-        <div class="space-y-6">
-          <div class="flex items-center gap-2 mb-2">
-            <div
-              class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center"
-            >
-              <MinusIcon class="w-4 h-4" />
-            </div>
-            <h2 class="text-xl font-bold text-on-surface">Outflow</h2>
+        <!-- Right Column: Financial Health -->
+        <div class="h-full">
+           <FinancialHealthCard client:load class="h-full" />
+        </div>
+      </div>
+
+      <!-- Outflow Section -->
+      <div>
+        <div class="flex items-center gap-2 mb-2">
+          <div
+            class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center"
+          >
+            <MinusIcon class="w-4 h-4" />
           </div>
-          <div class="flex flex-col gap-4">
-            <BudgetExpenseList category="common" title="Common Expenses" client:load />
-            <BudgetExpenseList category="personal" title="Personal Expenses" client:load />
-          </div>
+          <h2 class="text-xl font-bold text-on-surface">Outflow</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <BudgetExpenseList category="common" title="Common Expenses" client:load />
+          <BudgetExpenseList category="personal" title="Personal Expenses" client:load />
         </div>
       </div>
     </div>
