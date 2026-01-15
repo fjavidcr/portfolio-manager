@@ -95,7 +95,7 @@ const removeItem = (id: string) => {
         </div>
       </div>
 
-      <div v-else-if="items.length > 0">
+      <div class="flex flex-col gap-3" v-else-if="items.length > 0">
         <div
           v-for="item in items"
           :key="item.id"
