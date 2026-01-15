@@ -20,6 +20,8 @@
     --color-secondary-container: color-mix(in oklab, var(--color-secondary), white 40%);
     --color-on-secondary-container: oklch(40% 0.123 38.172); /* secondary-content */
 
+    --color-tertiary: oklch(25% 0 0);
+    --color-on-tertiary: oklch(100% 0 0);
     --color-tertiary-container: oklch(0% 0 0); /* accent */
     --color-on-tertiary-container: oklch(100% 0 0); /* accent-content */
 
@@ -89,6 +91,8 @@
     --color-secondary-container: color-mix(in oklab, var(--color-secondary), black 60%);
     --color-on-secondary-container: oklch(95% 0.05 55);
 
+    --color-tertiary: oklch(90% 0 0);
+    --color-on-tertiary: oklch(0% 0 0);
     --color-tertiary-container: oklch(100% 0 0); /* Inverted accent for dark mode visibility */
     --color-on-tertiary-container: oklch(0% 0 0);
 
