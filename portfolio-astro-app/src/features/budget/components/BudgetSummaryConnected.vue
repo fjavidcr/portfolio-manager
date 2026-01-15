@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
-import { budgetStore, totalIncome, totalExpenses, updateTargets, budgetStatus } from '../stores/budgetStore'
+import {
+  budgetStore,
+  totalIncome,
+  totalExpenses,
+  updateTargets,
+  budgetStatus
+} from '../stores/budgetStore'
 import BudgetSummary from './BudgetSummary.vue'
 
 const $budget = useStore(budgetStore)

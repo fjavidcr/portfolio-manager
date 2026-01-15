@@ -67,7 +67,10 @@ const removeItem = (id: string) => {
       <h3 class="text-lg font-bold text-on-surface">{{ title }}</h3>
       <span class="text-sm font-medium text-secondary">
         Total:
-        <span v-if="loading" class="inline-block w-20 h-5 bg-surface-container-high animate-pulse rounded align-middle ml-1"></span>
+        <span
+          v-if="loading"
+          class="inline-block w-20 h-5 bg-surface-container-high animate-pulse rounded align-middle ml-1"
+        ></span>
         <span v-else :class="type === 'income' ? 'text-green-500' : 'text-red-500'">{{
           totalMonthly.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
         }}</span>
@@ -77,15 +80,18 @@ const removeItem = (id: string) => {
 
     <!-- List -->
     <div class="space-y-3 mb-6">
-
       <!-- Skeleton Loading -->
       <div v-if="loading">
-        <div v-for="i in 3" :key="i" class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl">
-           <div class="flex-1 space-y-2">
-              <div class="h-4 w-32 bg-surface-container-high animate-pulse rounded"></div>
-              <div class="h-3 w-20 bg-surface-container animate-pulse rounded"></div>
-           </div>
-           <div class="h-5 w-24 bg-surface-container-high animate-pulse rounded"></div>
+        <div
+          v-for="i in 3"
+          :key="i"
+          class="flex items-center justify-between p-3 bg-surface-container-low rounded-xl"
+        >
+          <div class="flex-1 space-y-2">
+            <div class="h-4 w-32 bg-surface-container-high animate-pulse rounded"></div>
+            <div class="h-3 w-20 bg-surface-container animate-pulse rounded"></div>
+          </div>
+          <div class="h-5 w-24 bg-surface-container-high animate-pulse rounded"></div>
         </div>
       </div>
 
