@@ -196,6 +196,14 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
 <div class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden hidden" id="sidebar-overlay"></div>
 
 <script>
+  import {
+    initThemeListeners,
+    setThemeColor,
+    cycleThemeMode,
+    getThemePreferences,
+    subscribe
+  } from '@shared/controllers/themeController'
+
   // Highlight current link
   const path = window.location.pathname
   const links = {
@@ -233,15 +241,11 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
   const iconSystem = document.getElementById('theme-icon-system')
   const themeText = document.getElementById('theme-toggle-text')
 
-  const STORAGE_KEY_COLOR = 'color_theme'
-  const STORAGE_KEY_MODE = 'theme_mode'
-
-  const updateThemeUI = () => {
-    const colorTheme = localStorage.getItem(STORAGE_KEY_COLOR) || 'default'
-    const mode = localStorage.getItem(STORAGE_KEY_MODE) || 'system'
+  const updateUI = () => {
+    const { color, mode } = getThemePreferences()
 
     // Update color selector
-    if (colorSelect) colorSelect.value = colorTheme
+    if (colorSelect) colorSelect.value = color
 
     // Update mode icons
     iconLight?.classList.add('hidden')
@@ -258,46 +262,25 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
       iconSystem?.classList.remove('hidden')
       if (themeText) themeText.textContent = 'System Default'
     }
-
-    // Apply theme
-    const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const isDark = mode === 'dark' || (mode === 'system' && sysDark)
-    const fullTheme = `${colorTheme}-${isDark ? 'dark' : 'light'}`
-
-    document.documentElement.setAttribute('data-theme', fullTheme)
-    document.documentElement.classList.toggle('dark', isDark)
-
-    console.log(
-      `Theme: ${colorTheme} | Mode: ${mode} (${sysDark ? 'SysDark' : 'SysLight'}) | Active: ${fullTheme}`
-    )
   }
 
-  // Initial check
-  updateThemeUI()
+  // Init Theme Listeners
+  initThemeListeners()
+  subscribe(updateUI)
+  // Initial UI update
+  updateUI()
 
   // Color theme selector
   colorSelect?.addEventListener('change', (e) => {
     const target = e.target as HTMLSelectElement
     if (!target) return
     console.log('Color theme changed to:', target.value)
-    localStorage.setItem(STORAGE_KEY_COLOR, target.value)
-    updateThemeUI()
+    setThemeColor(target.value)
   })
 
   // Mode toggle button
   themeToggleBtn?.addEventListener('click', () => {
-    const current = localStorage.getItem(STORAGE_KEY_MODE) || 'system'
-    let next = 'system'
-    if (current === 'system') next = 'light'
-    else if (current === 'light') next = 'dark'
-    else if (current === 'dark') next = 'system'
-
-    console.log('Mode changed from', current, 'to', next)
-    localStorage.setItem(STORAGE_KEY_MODE, next)
-    updateThemeUI()
+    const next = cycleThemeMode()
+    console.log('Mode changed to', next)
   })
-
-  // Sync with other tabs/windows or system changes
-  window.addEventListener('storage', updateThemeUI)
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeUI)
 </script>
