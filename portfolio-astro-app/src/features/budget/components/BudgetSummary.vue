@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import BudgetDistributionBar from './BudgetDistributionBar.vue'
 
 const props = defineProps<{
   totalIncome: number
-  totalExpenses: number
+  personalExpenses: number
+  commonExpenses: number
   investmentTarget: number
   savingsTarget: number
   loading?: boolean
@@ -11,124 +13,101 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:investmentTarget', val: number): void
-  (e: 'update:savingsTarget', val: number): void
 }>()
 
-const remaining = computed(() => props.totalIncome - props.totalExpenses)
-const unallocated = computed(() => remaining.value - props.investmentTarget - props.savingsTarget)
+// Calculate totals and remainders
+const totalExpenses = computed(() => props.personalExpenses + props.commonExpenses)
+const remaining = computed(() => props.totalIncome - totalExpenses.value)
+const maxAllocation = computed(() => Math.max(0, remaining.value))
 
 const formatCurrency = (val: number) => {
   return val.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
 }
-
-const expensePercent = computed(() =>
-  props.totalIncome > 0 ? (props.totalExpenses / props.totalIncome) * 100 : 0
-)
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <!-- Big Totals Card -->
-    <div
-      class="bg-primary-container text-on-primary-container rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden"
-    >
-      <!-- Decorative circles -->
-      <div class="absolute -right-12 -top-12 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-
-      <div>
-        <p class="text-sm font-medium opacity-80 uppercase tracking-wider mb-1">
-          Monthly Remaining
-        </p>
-        <div v-if="loading" class="h-12 w-48 bg-white/20 animate-pulse rounded-lg"></div>
-        <h2 v-else class="text-5xl font-bold tracking-tight">
-          {{ formatCurrency(remaining) }}
-        </h2>
-      </div>
-
-      <div class="mt-8 space-y-4">
+  <div class="bg-surface rounded-3xl p-6 md:p-8 border border-outline-variant/30 mb-8">
+    <div class="flex flex-col space-y-8">
+      <!-- Header & Total -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <div class="flex justify-between text-sm mb-1 font-medium">
-            <span>Expenses Ratio</span>
-            <div v-if="loading" class="h-4 w-8 bg-white/20 animate-pulse rounded"></div>
-            <span v-else>{{ Math.round(expensePercent) }}%</span>
+          <h2 class="text-xl font-bold text-on-surface">Budget Distribution</h2>
+          <p class="text-sm text-secondary">Breakdown of your monthly income</p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs uppercase tracking-wider text-secondary font-medium">Total Income</p>
+          <div v-if="loading" class="h-8 w-32 bg-surface-container-high animate-pulse rounded ml-auto"></div>
+          <h3 v-else class="text-2xl font-bold text-on-surface">{{ formatCurrency(totalIncome) }}</h3>
+        </div>
+      </div>
+
+      <!-- Segmented Bar Visualization -->
+      <BudgetDistributionBar
+        :total-income="totalIncome"
+        :common-expenses="commonExpenses"
+        :personal-expenses="personalExpenses"
+        :investment-target="investmentTarget"
+        :savings-target="savingsTarget"
+        :loading="loading"
+      />
+
+      <!-- Controls -->
+      <div class="pt-6 border-t border-outline-variant/30">
+        <label class="text-sm font-medium text-secondary mb-4 block">Adjust Allocation</label>
+
+        <div class="bg-surface-container-low p-4 rounded-xl">
+          <div class="flex justify-between mb-4 items-center">
+            <div class="flex items-center gap-2">
+              <div class="p-2 bg-tertiary/10 rounded-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5 text-tertiary"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div>
+                <span class="text-sm font-bold block text-on-surface">Investment Target</span>
+                <span class="text-xs text-secondary">Remaining funds go to savings</span>
+              </div>
+            </div>
+
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-sm">€</span>
+              <input
+                type="number"
+                min="0"
+                :max="maxAllocation"
+                step="50"
+                :value="investmentTarget"
+                @input="
+                  emit('update:investmentTarget', Number(($event.target as HTMLInputElement).value))
+                "
+                class="w-28 pl-6 pr-3 py-1.5 text-right bg-surface border border-outline-variant/50 rounded-lg text-sm font-bold text-primary focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors"
+              />
+            </div>
           </div>
-          <div class="h-3 bg-surface/20 rounded-full overflow-hidden">
-            <div
-              class="h-full rounded-full transition-all duration-500"
-              :class="expensePercent > 80 ? 'bg-error' : 'bg-primary'"
-              :style="{ width: `${Math.min(expensePercent, 100)}%` }"
-            ></div>
-          </div>
+
+          <input
+            class="w-full accent-tertiary h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer"
+            type="range"
+            min="0"
+            :max="maxAllocation > 0 ? maxAllocation : 1000"
+            step="50"
+            :value="investmentTarget"
+            :disabled="loading"
+            @input="
+              emit('update:investmentTarget', Number(($event.target as HTMLInputElement).value))
+            "
+          />
         </div>
-      </div>
-    </div>
-
-    <!-- Allocation Controls -->
-    <div
-      class="bg-surface rounded-3xl p-8 border border-outline-variant/30 flex flex-col justify-center space-y-6"
-    >
-      <h3 class="text-xl font-bold text-on-surface">Allocation Plan</h3>
-
-      <!-- Investment Input -->
-      <div>
-        <div class="flex justify-between mb-2">
-          <label class="text-sm font-medium text-secondary">Investment Target</label>
-          <div
-            v-if="loading"
-            class="h-5 w-20 bg-surface-container-high animate-pulse rounded"
-          ></div>
-          <span v-else class="text-sm font-bold text-primary">{{
-            formatCurrency(investmentTarget)
-          }}</span>
-        </div>
-        <input
-          class="w-full accent-primary h-2 bg-gray-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer"
-          type="range"
-          min="0"
-          :max="remaining > 0 ? remaining : 1000"
-          step="50"
-          :value="investmentTarget"
-          :disabled="loading"
-          @input="
-            emit('update:investmentTarget', Number(($event.target as HTMLInputElement).value))
-          "
-        />
-      </div>
-
-      <!-- Savings Input -->
-      <div>
-        <div class="flex justify-between mb-2">
-          <label class="text-sm font-medium text-secondary">Savings Target</label>
-          <div
-            v-if="loading"
-            class="h-5 w-20 bg-surface-container-high animate-pulse rounded"
-          ></div>
-          <span v-else class="text-sm font-bold text-tertiary">{{
-            formatCurrency(savingsTarget)
-          }}</span>
-        </div>
-        <input
-          class="w-full accent-tertiary h-2 bg-gray-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer"
-          type="range"
-          min="0"
-          :max="remaining > 0 ? remaining : 1000"
-          step="50"
-          :value="savingsTarget"
-          :disabled="loading"
-          @input="emit('update:savingsTarget', Number(($event.target as HTMLInputElement).value))"
-        />
-      </div>
-
-      <div class="pt-4 border-t border-outline-variant/50 flex justify-between items-center">
-        <span class="text-sm text-secondary">Unallocated</span>
-        <div v-if="loading" class="h-5 w-24 bg-surface-container-high animate-pulse rounded"></div>
-        <span
-          v-else
-          class="font-mono font-medium"
-          :class="unallocated < 0 ? 'text-error' : 'text-on-surface'"
-        >
-          {{ formatCurrency(unallocated) }}
-        </span>
       </div>
     </div>
   </div>
