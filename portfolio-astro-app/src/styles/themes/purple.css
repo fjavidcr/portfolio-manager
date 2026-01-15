@@ -19,6 +19,8 @@
     --color-secondary-container: #ede9fe;
     --color-on-secondary-container: #4c1d95;
 
+    --color-tertiary: #7d5260;
+    --color-on-tertiary: #ffffff;
     --color-tertiary-container: #fbcfe8;
     --color-on-tertiary-container: #831843;
 
@@ -88,6 +90,8 @@
     --color-secondary-container: #4c1d95;
     --color-on-secondary-container: #ede9fe;
 
+    --color-tertiary: #efb8c8;
+    --color-on-tertiary: #492532;
     --color-tertiary-container: #831843;
     --color-on-tertiary-container: #fbcfe8;
 

@@ -20,6 +20,8 @@
     --color-secondary-container: color-mix(in oklab, var(--color-secondary), white 40%);
     --color-on-secondary-container: oklch(44% 0.119 151.328); /* secondary-content */
 
+    --color-tertiary: oklch(55% 0.162 75.834);
+    --color-on-tertiary: oklch(100% 0 0);
     --color-tertiary-container: oklch(68% 0.162 75.834); /* accent */
     --color-on-tertiary-container: oklch(41% 0.112 45.904); /* accent-content */
 
