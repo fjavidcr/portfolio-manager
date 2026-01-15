@@ -73,8 +73,13 @@ const expensePercent = computed(() =>
       <div>
         <div class="flex justify-between mb-2">
           <label class="text-sm font-medium text-secondary">Investment Target</label>
-          <div v-if="loading" class="h-5 w-20 bg-surface-container-high animate-pulse rounded"></div>
-          <span v-else class="text-sm font-bold text-primary">{{ formatCurrency(investmentTarget) }}</span>
+          <div
+            v-if="loading"
+            class="h-5 w-20 bg-surface-container-high animate-pulse rounded"
+          ></div>
+          <span v-else class="text-sm font-bold text-primary">{{
+            formatCurrency(investmentTarget)
+          }}</span>
         </div>
         <input
           class="w-full accent-primary h-2 bg-gray-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer"
@@ -94,8 +99,13 @@ const expensePercent = computed(() =>
       <div>
         <div class="flex justify-between mb-2">
           <label class="text-sm font-medium text-secondary">Savings Target</label>
-          <div v-if="loading" class="h-5 w-20 bg-surface-container-high animate-pulse rounded"></div>
-          <span v-else class="text-sm font-bold text-tertiary">{{ formatCurrency(savingsTarget) }}</span>
+          <div
+            v-if="loading"
+            class="h-5 w-20 bg-surface-container-high animate-pulse rounded"
+          ></div>
+          <span v-else class="text-sm font-bold text-tertiary">{{
+            formatCurrency(savingsTarget)
+          }}</span>
         </div>
         <input
           class="w-full accent-tertiary h-2 bg-gray-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer"
