@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro'
+import BudgetControls from '../features/budget/components/BudgetControls.vue'
+import BudgetSummaryConnected from '../features/budget/components/BudgetSummaryConnected.vue'
+import BudgetIncomeList from '../features/budget/components/BudgetIncomeList.vue'
+import BudgetExpenseList from '../features/budget/components/BudgetExpenseList.vue'
+import PlusIcon from '../shared/components/icons/PlusIcon.vue'
+import MinusIcon from '../shared/components/icons/MinusIcon.vue'
+---
+
+<Layout title="Budget | Portfolio Manager" requireAuth={true}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-on-surface">Budget Planning</h1>
+        <p class="text-secondary mt-1">Manage your income, expenses, and savings goals.</p>
+      </div>
+
+      <BudgetControls client:load />
+    </div>
+
+    <div class="animate-fade-in">
+      <!-- Top Summary -->
+      <BudgetSummaryConnected client:load />
+
+      <!-- Comparison Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Income Column -->
+        <div class="space-y-6">
+          <div class="flex items-center gap-2 mb-2">
+            <div
+              class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center"
+            >
+              <PlusIcon class="w-4 h-4" />
+            </div>
+            <h2 class="text-xl font-bold text-on-surface">Inflow</h2>
+          </div>
+
+          <BudgetIncomeList client:load />
+        </div>
+
+        <!-- Expense Column -->
+        <div class="space-y-6">
+          <div class="flex items-center gap-2 mb-2">
+            <div
+              class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center"
+            >
+              <MinusIcon class="w-4 h-4" />
+            </div>
+            <h2 class="text-xl font-bold text-on-surface">Outflow</h2>
+          </div>
+          <div class="flex flex-col gap-4">
+            <BudgetExpenseList category="common" title="Common Expenses" client:load />
+            <BudgetExpenseList category="personal" title="Personal Expenses" client:load />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

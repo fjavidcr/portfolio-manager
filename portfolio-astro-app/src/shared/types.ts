@@ -42,3 +42,24 @@ export interface PlatformModel {
   name: string
   iconUrl: string
 }
+
+export type BudgetFrequency = 'Monthly' | 'Annual'
+
+export interface BudgetItem {
+  id: string
+  name: string
+  amount: number
+  frequency: BudgetFrequency
+  share?: number // Percentage paid by user (default 100)
+}
+
+export interface BudgetModel {
+  income: BudgetItem[]
+  personalExpenses: BudgetItem[]
+  commonExpenses: BudgetItem[]
+  savingsParams: {
+    investmentTarget: number // Percentage or amount, to be decided by logic, but simply storing values for now
+    savingsTarget: number
+  }
+  lastUpdated?: Date | Timestamp
+}
