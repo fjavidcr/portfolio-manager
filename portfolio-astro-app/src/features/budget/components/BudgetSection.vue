@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { BudgetItem, BudgetFrequency } from '@shared/types'
 import TrashIcon from '@shared/components/icons/TrashIcon.vue'
 import PlusIcon from '@shared/components/icons/PlusIcon.vue'
+import { formatCurrency } from '@shared/lib/utils'
 
 const props = defineProps<{
   title: string
@@ -72,7 +73,7 @@ const removeItem = (id: string) => {
           class="inline-block w-20 h-5 bg-surface-container-high animate-pulse rounded align-middle ml-1"
         ></span>
         <span v-else :class="type === 'income' ? 'text-green-500' : 'text-red-500'">{{
-          totalMonthly.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+          formatCurrency(totalMonthly)
         }}</span>
         <span v-if="!loading"> / mo</span>
       </span>
@@ -116,18 +117,13 @@ const removeItem = (id: string) => {
           <div class="flex items-center gap-4">
             <div class="text-right">
               <span class="font-semibold text-on-surface-variant block">
-                {{
-                  (item.amount * ((allowShare ? item.share || 100 : 100) / 100)).toLocaleString(
-                    'es-ES',
-                    { style: 'currency', currency: 'EUR' }
-                  )
-                }}
+                {{ formatCurrency(item.amount * ((allowShare ? item.share || 100 : 100) / 100)) }}
               </span>
               <span
                 v-if="allowShare && item.share && item.share !== 100"
                 class="text-xs text-secondary line-through"
               >
-                {{ item.amount.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) }}
+                {{ formatCurrency(item.amount) }}
               </span>
             </div>
 

@@ -1,11 +1,19 @@
 import type { Timestamp } from 'firebase/firestore'
 
-export const formatCurrency = (value: number, currency: string = 'EUR') => {
+export const formatCurrency = (value: number, options?: Intl.NumberFormatOptions) => {
   return new Intl.NumberFormat('es-ES', {
     style: 'currency',
-    currency: currency,
-    useGrouping: true
+    currency: 'EUR',
+    useGrouping: true,
+    ...options
   }).format(value)
+}
+
+export const formatCurrencyClean = (value: number) => {
+  return formatCurrency(value, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  })
 }
 
 export const formatDate = (date: Date | Timestamp | { seconds: number } | null | undefined) => {
