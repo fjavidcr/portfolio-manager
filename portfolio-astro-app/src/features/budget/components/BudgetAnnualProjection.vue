@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { computed } from 'vue'
-import {
-  budgetStore,
-  totalIncome,
-  totalExpenses
-} from '../stores/budgetStore'
+import { budgetStore } from '../stores/budgetStore'
+import { totalIncome } from '../stores/budgetStore'
+import { formatCurrencyClean } from '@shared/lib/utils'
 
 const $budget = useStore(budgetStore)
 const $totalIncome = useStore(totalIncome)
-const $totalExpenses = useStore(totalExpenses)
 
 const annualIncome = computed(() => $totalIncome.value * 12)
-const annualExpenses = computed(() => $totalExpenses.value * 12)
 const annualSavings = computed(() => {
     const monthlySavings = $budget.value.savingsParams.savingsTarget
     return monthlySavings * 12
@@ -21,10 +17,6 @@ const annualInvestments = computed(() => {
     const monthlyInvestments = $budget.value.savingsParams.investmentTarget
     return monthlyInvestments * 12
 })
-
-const formatCurrency = (val: number) => {
-  return val.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
-}
 </script>
 
 <template>
@@ -39,22 +31,18 @@ const formatCurrency = (val: number) => {
         </div>
      </div>
 
-     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="flex flex-col items-center justify-center bg-surface-container-low px-2 py-3 rounded-xl">
-           <p class="text-center text-xs font-medium text-secondary uppercase tracking-wider mb-1">Total Income</p>
-           <p class="text-center text-lg font-bold text-on-surface">{{ formatCurrency(annualIncome) }}</p>
-        </div>
-        <div class="flex flex-col items-center justify-center bg-surface-container-low px-2 py-3 rounded-xl">
-           <p class="text-center text-xs font-medium text-secondary uppercase tracking-wider mb-1">Est. Expenses</p>
-           <p class="text-center text-lg font-bold text-on-surface">{{ formatCurrency(annualExpenses) }}</p>
+           <p class="text-center text-xs font-bold text-secondary uppercase tracking-wider mb-1">Income</p>
+           <p class="text-center text-xl font-bold text-on-surface">{{ formatCurrencyClean(annualIncome) }}</p>
         </div>
         <div class="flex flex-col items-center justify-center bg-tertiary/10 px-2 py-3 rounded-xl border border-tertiary/20">
-           <p class="text-center text-xs font-bold text-tertiary uppercase tracking-wider mb-1">Projected Investments</p>
-           <p class="text-center text-xl font-bold text-tertiary">{{ formatCurrency(annualInvestments) }}</p>
+           <p class="text-center text-xs font-bold text-tertiary uppercase tracking-wider mb-1">Investment</p>
+           <p class="text-center text-xl font-bold text-tertiary">{{ formatCurrencyClean(annualInvestments) }}</p>
         </div>
         <div class="flex flex-col items-center justify-center bg-emerald-500/10 px-2 py-3 rounded-xl border border-emerald-500/20">
-           <p class="text-center text-xs font-bold text-emerald-500 uppercase tracking-wider mb-1">Projected Savings</p>
-           <p class="text-center text-xl font-bold text-emerald-500">{{ formatCurrency(annualSavings) }}</p>
+           <p class="text-center text-xs font-bold text-emerald-500 uppercase tracking-wider mb-1">Savings</p>
+           <p class="text-center text-xl font-bold text-emerald-500">{{ formatCurrencyClean(annualSavings) }}</p>
         </div>
      </div>
   </div>
