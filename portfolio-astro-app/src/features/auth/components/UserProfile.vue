@@ -19,6 +19,7 @@ const handleLogout = async () => {
         :src="$user.photoURL"
         alt="User Avatar"
         class="w-10 h-10 rounded-full border border-outline-variant"
+        referrerpolicy="no-referrer"
       />
       <div
         v-else

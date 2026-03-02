@@ -37,6 +37,7 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
           :src="$user.photoURL"
           alt="User Avatar"
           class="w-20 h-20 rounded-full border-2 border-primary"
+          referrerpolicy="no-referrer"
         />
         <div
           v-else
