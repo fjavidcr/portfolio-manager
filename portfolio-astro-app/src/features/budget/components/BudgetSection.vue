@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import type { BudgetItem, BudgetFrequency } from '@shared/types'
 import TrashIcon from '@shared/components/icons/TrashIcon.vue'
+import EditIcon from '@shared/components/icons/EditIcon.vue'
 import PlusIcon from '@shared/components/icons/PlusIcon.vue'
 import { formatCurrency } from '@shared/lib/utils'
 
@@ -18,9 +19,10 @@ const emit = defineEmits<{
 }>()
 
 const newItemName = ref('')
-const newItemAmount = ref('')
+const newItemAmount = ref<number | ''>('')
 const newItemFrequency = ref<BudgetFrequency>('Monthly')
-const newItemShare = ref(100)
+const newItemShare = ref<number>(100)
+const editingItemId = ref<string | null>(null)
 
 const totalMonthly = computed(() => {
   return props.items.reduce((sum, item) => {
@@ -35,25 +37,52 @@ const totalMonthly = computed(() => {
   }, 0)
 })
 
-const addItem = () => {
-  if (!newItemName.value || !newItemAmount.value) return
+const editItem = (item: BudgetItem) => {
+  editingItemId.value = item.id
+  newItemName.value = item.name
+  newItemAmount.value = item.amount
+  newItemFrequency.value = item.frequency
+  newItemShare.value = item.share ?? 100
+}
 
-  const newItem: BudgetItem = {
-    id: crypto.randomUUID(),
-    name: newItemName.value,
-    amount: Number(newItemAmount.value),
-    frequency: newItemFrequency.value,
-    share: props.allowShare ? newItemShare.value : 100
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emit('update:items', [...props.items, newItem] as any)
-
-  // Reset form
+const cancelEdit = () => {
+  editingItemId.value = null
   newItemName.value = ''
   newItemAmount.value = ''
   newItemFrequency.value = 'Monthly'
   newItemShare.value = 100
+}
+
+const addItem = () => {
+  if (!newItemName.value || !newItemAmount.value) return
+
+  if (editingItemId.value) {
+    const updatedItems = props.items.map((i) => {
+      if (i.id === editingItemId.value) {
+        return {
+          ...i,
+          name: newItemName.value,
+          amount: Number(newItemAmount.value),
+          frequency: newItemFrequency.value,
+          share: props.allowShare ? newItemShare.value : 100
+        }
+      }
+      return i
+    })
+    emit('update:items', updatedItems as any)
+  } else {
+    const newItem: BudgetItem = {
+      id: crypto.randomUUID(),
+      name: newItemName.value,
+      amount: Number(newItemAmount.value),
+      frequency: newItemFrequency.value,
+      share: props.allowShare ? newItemShare.value : 100
+    }
+    emit('update:items', [...props.items, newItem] as any)
+  }
+
+  // Reset form
+  cancelEdit()
 }
 
 const removeItem = (id: string) => {
@@ -126,10 +155,17 @@ const removeItem = (id: string) => {
                 {{ formatCurrency(item.amount) }}
               </span>
             </div>
-
+            <button
+              class="text-secondary hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity p-1"
+              @click="editItem(item)"
+              title="Edit"
+            >
+              <EditIcon size="md" />
+            </button>
             <button
               class="text-secondary hover:text-error opacity-0 group-hover:opacity-100 transition-opacity p-1"
               @click="removeItem(item.id)"
+              title="Delete"
             >
               <TrashIcon size="md" />
             </button>
@@ -142,11 +178,14 @@ const removeItem = (id: string) => {
     </div>
 
     <!-- Add Form -->
-    <div class="flex flex-col sm:flex-row gap-2 pt-4 border-t border-outline-variant/50">
+    <div
+      class="flex flex-col sm:flex-row gap-2 pt-4 border-t border-outline-variant/50 transition-colors"
+      :class="editingItemId ? 'bg-primary/5 -mx-6 px-6 pb-2 rounded-b-2xl border-t-primary/20' : ''"
+    >
       <input
         v-model="newItemName"
         type="text"
-        :placeholder="type === 'income' ? 'Name (e.g. Salary)' : 'Name (e.g. Groceries)'"
+        :placeholder="editingItemId ? 'Edit Name' : type === 'income' ? 'Name (e.g. Salary)' : 'Name (e.g. Groceries)'"
         class="flex-1 bg-surface-container-high border-0 border-b-2 border-outline-variant/50 focus:border-primary focus:ring-0 rounded-xl px-4 transition-colors text-sm"
         @keyup.enter="addItem"
       />
@@ -180,15 +219,28 @@ const removeItem = (id: string) => {
           v-model="newItemAmount"
           type="number"
           placeholder="€"
-          class="w-24 h-full bg-surface-container-high border-0 border-b-2 border-outline-variant/50 focus:border-primary focus:ring-0 px-4 rounded-xl transition-colors text-sm"
+          class="w-28 h-full bg-surface-container-high border-0 border-b-2 border-outline-variant/50 focus:border-primary focus:ring-0 px-4 rounded-xl transition-colors text-sm"
           @keyup.enter="addItem"
         />
         <button
-          class="bg-primary/10 text-primary hover:bg-primary/20 p-2.5 rounded-xl transition-colors shrink-0"
+          v-if="editingItemId"
+          class="text-secondary hover:bg-surface-container p-2.5 rounded-xl transition-colors shrink-0 font-medium text-sm"
+          @click="cancelEdit"
+        >
+          Cancel
+        </button>
+        <button
+          class="p-2.5 rounded-xl transition-colors shrink-0 flex items-center justify-center min-w-[40px]"
+          :class="
+            editingItemId
+              ? 'bg-primary text-on-primary hover:bg-primary/90'
+              : 'bg-primary/10 text-primary hover:bg-primary/20'
+          "
           :disabled="!newItemName || !newItemAmount"
           @click="addItem"
         >
-          <PlusIcon size="h-5 w-5" />
+          <span v-if="editingItemId" class="text-sm font-medium px-2">Save</span>
+          <PlusIcon v-else size="h-5 w-5" />
         </button>
       </div>
     </div>

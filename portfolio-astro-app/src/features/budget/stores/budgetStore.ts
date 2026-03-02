@@ -106,11 +106,12 @@ export const saveBudget = async () => {
   }
 }
 
-export const updateSection = (
+export const updateSection = async (
   section: 'income' | 'personalExpenses' | 'commonExpenses',
   items: BudgetItem[]
 ) => {
   budgetStore.setKey(section, items)
+  await saveBudget()
 }
 
 export const updateTargets = (investment: number, savings: number) => {
