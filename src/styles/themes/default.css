@@ -1,0 +1,148 @@
+/* ============================================
+   DEFAULT THEME
+   White background with blue accents
+   ============================================ */
+
+/* Default - Light Mode */
+:root,
+[data-theme="default-light"] {
+    --color-surface: #ffffff;
+    --color-on-surface: #1b1b1f;
+    --color-surface-container-low: #f5f5f5;
+    --color-surface-container-high: #ececef;
+
+    --color-primary: #2b5ea7;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #d6e3ff;
+    --color-on-primary-container: #001b3d;
+
+    --color-secondary: #555f71;
+    --color-secondary-container: #d9e3f9;
+    --color-on-secondary-container: #121c2b;
+
+    --color-tertiary: #7d5260;
+    --color-on-tertiary: #ffffff;
+    --color-tertiary-container: #ffd8e4;
+    --color-on-tertiary-container: #31111d;
+
+    --color-outline-variant: #c4c6d0;
+
+    --color-error: #ba1a1a;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #410002;
+
+    /* Transaction Colors (Light) */
+    --tx-rose-bg: color-mix(in oklab, var(--color-error), white 90%);
+    --tx-rose-text: var(--color-error);
+    --tx-rose-border: color-mix(in oklab, var(--color-error), white 70%);
+    --tx-rose-icon-bg: color-mix(in oklab, var(--color-error), white 90%);
+    --tx-rose-icon-text: var(--color-error);
+
+    --tx-emerald-bg: color-mix(in oklab, #047857, white 90%);
+    --tx-emerald-text: #047857;
+    --tx-emerald-border: color-mix(in oklab, #047857, white 70%);
+    --tx-emerald-icon-bg: color-mix(in oklab, #047857, white 90%);
+    --tx-emerald-icon-text: #047857;
+
+    --tx-amber-bg: color-mix(in oklab, #a16207, white 90%);
+    --tx-amber-text: #a16207;
+    --tx-amber-border: color-mix(in oklab, #a16207, white 70%);
+    --tx-amber-icon-bg: color-mix(in oklab, #a16207, white 90%);
+    --tx-amber-icon-text: #a16207;
+
+    --tx-blue-bg: color-mix(in oklab, var(--color-primary), white 90%);
+    --tx-blue-text: var(--color-primary);
+    --tx-blue-border: color-mix(in oklab, var(--color-primary), white 70%);
+    --tx-blue-icon-bg: color-mix(in oklab, var(--color-primary), white 90%);
+    --tx-blue-icon-text: var(--color-primary);
+
+    --tx-orange-bg: color-mix(in oklab, #a16207, white 80%);
+    --tx-orange-text: color-mix(in oklab, #a16207, black 20%);
+    --tx-orange-border: color-mix(in oklab, #a16207, white 60%);
+    --tx-orange-icon-bg: color-mix(in oklab, #a16207, white 80%);
+    --tx-orange-icon-text: color-mix(in oklab, #a16207, black 20%);
+
+    --tx-slate-bg: var(--color-surface-container-low);
+    --tx-slate-text: var(--color-on-surface);
+    --tx-slate-border: var(--color-surface-container-high);
+    --tx-slate-icon-bg: var(--color-surface-container-low);
+    --tx-slate-icon-text: var(--color-on-surface);
+
+    --tx-indigo-bg: color-mix(in oklab, var(--color-primary), white 90%);
+    --tx-indigo-text: var(--color-primary);
+    --tx-indigo-border: color-mix(in oklab, var(--color-primary), white 70%);
+    --tx-indigo-icon-bg: color-mix(in oklab, var(--color-primary), white 90%);
+    --tx-indigo-icon-text: var(--color-primary);
+}
+
+/* Default - Dark Mode */
+.dark,
+[data-theme="default-dark"] {
+    --color-surface: #121212;
+    --color-on-surface: #e6e6e6;
+    --color-surface-container-low: #1e1e1e;
+    --color-surface-container-high: #2b2b2b;
+
+    --color-primary: #448aff;
+    --color-on-primary: #000000;
+    --color-primary-container: color-mix(in oklab, var(--color-primary), black 60%);
+    --color-on-primary-container: color-mix(in oklab, var(--color-primary), white 80%);
+
+    --color-secondary: #bfc6dc;
+    --color-secondary-container: #3e4759;
+    --color-on-secondary-container: #e3e3e3;
+
+    --color-tertiary: #efb8c8;
+    --color-on-tertiary: #492532;
+    --color-tertiary-container: #633b48;
+    --color-on-tertiary-container: #ffd8e4;
+
+    --color-outline-variant: #44474f;
+
+    --color-error: #ffb4ab;
+    --color-error-container: #93000a;
+    --color-on-error-container: #ffdad6;
+
+    /* Transaction Colors (Dark) */
+    --tx-rose-bg: color-mix(in oklab, var(--color-error), black 80%);
+    --tx-rose-text: color-mix(in oklab, var(--color-error), white 20%);
+    --tx-rose-border: color-mix(in oklab, var(--color-error), black 60%);
+    --tx-rose-icon-bg: color-mix(in oklab, var(--color-error), black 80%);
+    --tx-rose-icon-text: color-mix(in oklab, var(--color-error), white 20%);
+
+    --tx-emerald-bg: color-mix(in oklab, #10b981, black 80%);
+    --tx-emerald-text: #10b981;
+    --tx-emerald-border: color-mix(in oklab, #10b981, black 60%);
+    --tx-emerald-icon-bg: color-mix(in oklab, #10b981, black 80%);
+    --tx-emerald-icon-text: #10b981;
+
+    --tx-amber-bg: color-mix(in oklab, #f59e0b, black 80%);
+    --tx-amber-text: #f59e0b;
+    --tx-amber-border: color-mix(in oklab, #f59e0b, black 60%);
+    --tx-amber-icon-bg: color-mix(in oklab, #f59e0b, black 80%);
+    --tx-amber-icon-text: #f59e0b;
+
+    --tx-blue-bg: color-mix(in oklab, var(--color-primary), black 80%);
+    --tx-blue-text: var(--color-primary);
+    --tx-blue-border: color-mix(in oklab, var(--color-primary), black 60%);
+    --tx-blue-icon-bg: color-mix(in oklab, var(--color-primary), black 80%);
+    --tx-blue-icon-text: var(--color-primary);
+
+    --tx-orange-bg: color-mix(in oklab, #f59e0b, black 70%);
+    --tx-orange-text: color-mix(in oklab, #f59e0b, white 30%);
+    --tx-orange-border: color-mix(in oklab, #f59e0b, black 50%);
+    --tx-orange-icon-bg: color-mix(in oklab, #f59e0b, black 70%);
+    --tx-orange-icon-text: color-mix(in oklab, #f59e0b, white 30%);
+
+    --tx-slate-bg: var(--color-surface-container-low);
+    --tx-slate-text: var(--color-on-surface);
+    --txslate-border: var(--color-surface-container-high);
+    --tx-slate-icon-bg: var(--color-surface-container-low);
+    --tx-slate-icon-text: var(--color-on-surface);
+
+    --tx-indigo-bg: color-mix(in oklab, var(--color-primary), black 80%);
+    --tx-indigo-text: color-mix(in oklab, var(--color-primary), white 20%);
+    --tx-indigo-border: color-mix(in oklab, var(--color-primary), black 60%);
+    --tx-indigo-icon-bg: color-mix(in oklab, var(--color-primary), black 80%);
+    --tx-indigo-icon-text: color-mix(in oklab, var(--color-primary), white 20%);
+}

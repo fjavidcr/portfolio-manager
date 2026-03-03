@@ -1,0 +1,22 @@
+---
+import Layout from '@layouts/Layout.astro'
+import AddAssetForm from '@features/assets/components/AddAssetForm.vue'
+
+// En Astro, podemos obtener los query params en el frontmatter si es SSR,
+// pero esta app parece ser estática o híbrida.
+// Como AddAssetForm necesita el id en el cliente, lo extraeremos allí.
+// Sin embargo, podemos pasarle el id si lo tenemos aquí.
+const assetId = Astro.url.searchParams.get('id') || undefined
+---
+
+<Layout title="Editar Asset - Portfolio Manager" requireAuth={true}>
+  <div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-white">Editar Asset</h1>
+    </div>
+
+    <div class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-6">
+      <AddAssetForm client:load assetId={assetId} />
+    </div>
+  </div>
+</Layout>
