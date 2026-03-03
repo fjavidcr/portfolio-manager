@@ -7,14 +7,31 @@ import TransactionCard from './TransactionCard.vue'
 import FilterCard from '@shared/components/FilterCard.vue'
 import FilterSelect, { type FilterOption } from '@shared/components/FilterSelect.vue'
 import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
+import GridIcon from '@shared/components/icons/GridIcon.vue'
+import ListIcon from '@shared/components/icons/ListIcon.vue'
+import TransactionListItem from './TransactionListItem.vue'
 
 const $portfolio = useStore(portfolioStore)
 const observerTarget = ref<HTMLElement | null>(null)
 
-// Search and Filter State
 const searchQuery = ref('')
 const selectedType = ref('')
 const selectedAsset = ref('')
+
+// View Mode (Grid vs List)
+const viewMode = ref<'grid' | 'list'>('grid')
+
+onMounted(() => {
+  const savedMode = localStorage.getItem('transaction_view_mode')
+  if (savedMode === 'list' || savedMode === 'grid') {
+    viewMode.value = savedMode
+  }
+})
+
+const setViewMode = (mode: 'grid' | 'list') => {
+  viewMode.value = mode
+  localStorage.setItem('transaction_view_mode', mode)
+}
 
 // Watch filters to ensure we have all data loaded
 // Watch filters and trigger server-side fetch
@@ -140,6 +157,26 @@ const clearFilters = () => {
           all-label="All Assets"
         />
       </template>
+      <template #actions>
+        <div class="flex bg-surface-container rounded-lg p-1 border border-outline-variant shadow-inner">
+          <button
+            class="p-1.5 rounded-md transition-all duration-200"
+            :class="viewMode === 'grid' ? 'bg-primary text-on-primary shadow-sm' : 'text-secondary hover:text-on-surface'"
+            title="Grid View"
+            @click="setViewMode('grid')"
+          >
+            <GridIcon />
+          </button>
+          <button
+            class="p-1.5 rounded-md transition-all duration-200"
+            :class="viewMode === 'list' ? 'bg-primary text-on-primary shadow-sm' : 'text-secondary hover:text-on-surface'"
+            title="List View"
+            @click="setViewMode('list')"
+          >
+            <ListIcon />
+          </button>
+        </div>
+      </template>
     </FilterCard>
 
     <!-- Initial Loading State (Only when empty) -->
@@ -192,9 +229,18 @@ const clearFilters = () => {
     </div>
     <!-- Transaction List (Always show if we have data) -->
     <div v-else>
-      <!-- Unified Responsive Grid Layout -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Grid Mode -->
+      <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <TransactionCard
+          v-for="transaction in filteredTransactions"
+          :key="transaction.id"
+          :transaction="transaction"
+        />
+      </div>
+
+      <!-- List Mode -->
+      <div v-else class="flex flex-col gap-3">
+        <TransactionListItem
           v-for="transaction in filteredTransactions"
           :key="transaction.id"
           :transaction="transaction"
@@ -208,7 +254,7 @@ const clearFilters = () => {
         v-if="$portfolio.loading"
         class="flex items-center justify-center gap-2 text-secondary text-sm"
       >
-        <LoadingSpinner class="text-primary" />
+        <LoadingSpinner class="text-primary shrink-0" />
         Loading more...
       </div>
       <div
