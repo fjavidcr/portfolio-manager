@@ -69,7 +69,7 @@ const addItem = () => {
       }
       return i
     })
-    emit('update:items', updatedItems as any)
+    emit('update:items', updatedItems)
   } else {
     const newItem: BudgetItem = {
       id: crypto.randomUUID(),
@@ -78,7 +78,7 @@ const addItem = () => {
       frequency: newItemFrequency.value,
       share: props.allowShare ? newItemShare.value : 100
     }
-    emit('update:items', [...props.items, newItem] as any)
+    emit('update:items', [...props.items, newItem])
   }
 
   // Reset form
@@ -86,8 +86,7 @@ const addItem = () => {
 }
 
 const removeItem = (id: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  emit('update:items', props.items.filter((i) => i.id !== id) as any)
+  emit('update:items', props.items.filter((i) => i.id !== id))
 }
 </script>
 
@@ -125,7 +124,7 @@ const removeItem = (id: string) => {
         </div>
       </div>
 
-      <div class="flex flex-col gap-3" v-else-if="items.length > 0">
+      <div v-else-if="items.length > 0" class="flex flex-col gap-3">
         <div
           v-for="item in items"
           :key="item.id"
@@ -157,15 +156,15 @@ const removeItem = (id: string) => {
             </div>
             <button
               class="text-secondary hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity p-1"
-              @click="editItem(item)"
               title="Edit"
+              @click="editItem(item)"
             >
               <EditIcon size="md" />
             </button>
             <button
               class="text-secondary hover:text-error opacity-0 group-hover:opacity-100 transition-opacity p-1"
-              @click="removeItem(item.id)"
               title="Delete"
+              @click="removeItem(item.id)"
             >
               <TrashIcon size="md" />
             </button>

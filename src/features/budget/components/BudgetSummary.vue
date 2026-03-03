@@ -87,10 +87,10 @@ const formatCurrency = (val: number) => {
                 :max="maxAllocation"
                 step="50"
                 :value="investmentTarget"
+                class="w-28 pl-6 pr-3 py-1.5 text-right bg-surface border border-outline-variant/50 rounded-lg text-sm font-bold text-primary focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors"
                 @input="
                   emit('update:investmentTarget', Number(($event.target as HTMLInputElement).value))
                 "
-                class="w-28 pl-6 pr-3 py-1.5 text-right bg-surface border border-outline-variant/50 rounded-lg text-sm font-bold text-primary focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary transition-colors"
               />
             </div>
           </div>

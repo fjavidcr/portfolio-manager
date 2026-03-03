@@ -75,6 +75,6 @@ export default [
 
   // Global ignores
   {
-    ignores: ['dist/**', 'node_modules/**', '.astro/**', 'public/**']
+    ignores: ['dist/**', 'node_modules/**', '.astro/**', 'public/**', 'scripts/**']
   }
 ]
