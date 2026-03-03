@@ -1,65 +1,69 @@
 # Portfolio Manager
 
-A personal investment portfolio management application built with **Flutter** and **Firebase**.
+A personal investment portfolio management application built with **Astro**, **Vue**, **DaisyUI**, and **Firebase**.
 
 ## 🚀 Features
 
-*   **Google Authentication** (Web & Mobile).
+*   **Google Authentication**.
 *   **Real-time Database** (Cloud Firestore).
-*   **Clean Architecture**: Separated Logic (`services`) and UI (`screens`).
-*   **Data Seeding**: Scripts to import CSV transaction history.
+*   **Astro + Vue**: High performance SSR/SSG with interactive Vue components.
+*   **Data Seeding**: Scripts to import CSV transaction history into Firestore.
 
 ## 🛠️ Prerequisites
 
-*   **Node.js** (for seeding scripts).
-*   **Flutter SDK** (v3.10+).
+*   **Node.js** (v24.0.0+).
 *   **Firebase Project** (with Auth and Firestore enabled).
 
 ## 📂 Project Structure
 
-*   **/portfolio_app**: The main Flutter application.
-*   **/scripts**: Utility scripts (e.g., seeding database).
+*   **/src**: The main Astro and Vue application logic.
+*   **/scripts**: Utility scripts (e.g., seeding database, migrations, lists).
 *   **/csv**: Data files for seeding.
 *   **/account**: Service account keys for admin operations.
+*   **/dist**: The generated build output (Firebase Hosting public directory).
 
 ## ⚙️ Setup
 
 ### 1. Install Dependencies
 
-**Root (Scripts):**
 ```bash
 npm install
 ```
 
-**Flutter App:**
-```bash
-cd portfolio_app
-flutter pub get
-```
-
 ### 2. Configuration
 
-You need to configure your Firebase credentials in two places:
+You need to configure your Firebase credentials via environment variables:
 
-1.  **Flutter Config**: Edit `portfolio_app/lib/firebase_options.dart` with your API Keys.
-2.  **Web Config**: Edit `portfolio_app/web/index.html` and enable the `google-signin-client_id` meta tag.
+1.  Copy the sample `.env.example` (or create one) to `.env`.
+2.  Add your `PUBLIC_FIREBASE_*` variables for the frontend.
+3.  Add the `USER_ID` variable for the database seeding scripts.
 
 ### 3. Seed Database (Optional)
 
 If you have transaction history in CSV format:
 
-1.  Place your CSV in `csv/`.
-2.  Update `scripts/seed_database.js` with your specific **User UID** and file path.
+1.  Place your CSV files in `csv/`.
+2.  Update your `USER_ID` in `.env`.
 3.  Run the seed script:
     ```bash
-    node scripts/seed_database.js
+    npm run seed
     ```
 
 ## ▶️ Running the App
 
-To start the development server (Web):
+To start the development server:
 
 ```bash
-cd portfolio_app
-flutter run -d chrome
+npm run dev
 ```
+
+## 🚀 Deployment Scripts
+
+The `package.json` includes several scripts for deploying specific parts of the project to Firebase:
+
+*   `npm run deploy:app`: Builds the Astro app and deploys **only** to Firebase Hosting.
+*   `npm run deploy:db:rules`: Deploys **only** the Firestore security rules (`firestore.rules`).
+*   `npm run deploy:db:indexes`: Deploys **only** the Firestore indexes (`firestore.indexes.json`).
+*   `npm run deploy:storage`: Deploys **only** the Firebase Storage rules (`firebase.storage.rules`).
+    *   *Note: Firebase Storage is not actively used in this project, but its configuration file is kept here securely in version control.*
+*   `npm run deploy:all`: Builds the Astro app and deploys **everything** (app, database rules/indexes, and storage rules) to Firebase.

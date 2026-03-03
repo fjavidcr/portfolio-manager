@@ -1,0 +1,170 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+@theme {
+    --color-surface: var(--color-surface);
+    --color-on-surface: var(--color-on-surface);
+    --color-surface-container-low: var(--color-surface-container-low);
+    --color-surface-container-high: var(--color-surface-container-high);
+
+    --color-primary: var(--color-primary);
+    --color-on-primary: var(--color-on-primary);
+    --color-primary-container: var(--color-primary-container);
+    --color-on-primary-container: var(--color-on-primary-container);
+
+    --color-secondary: var(--color-secondary);
+    --color-secondary-container: var(--color-secondary-container);
+    --color-on-secondary-container: var(--color-on-secondary-container);
+
+    --color-tertiary: var(--color-tertiary);
+    --color-on-tertiary: var(--color-on-tertiary);
+    --color-tertiary-container: var(--color-tertiary-container);
+    --color-on-tertiary-container: var(--color-on-tertiary-container);
+
+    --color-outline-variant: var(--color-outline-variant);
+
+    --color-error: var(--color-error);
+    --color-error-container: var(--color-error-container);
+    --color-on-error-container: var(--color-on-error-container);
+}
+
+/* ============================================
+   THEME IMPORTS
+   Each theme is in a separate file for maintainability
+   ============================================ */
+
+@import "./themes/default.css";
+@import "./themes/blue.css";
+@import "./themes/green.css";
+@import "./themes/purple.css";
+@import "./themes/retro.css";
+@import "./themes/bumblebee.css";
+
+body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    @apply transition-colors duration-300;
+}
+
+/* Transaction Card Classes */
+.tx-rose-bg {
+    background-color: var(--tx-rose-bg);
+}
+
+.tx-rose-text {
+    color: var(--tx-rose-text);
+}
+
+.tx-rose-border {
+    border-color: var(--tx-rose-border);
+}
+
+.tx-rose-icon {
+    background-color: var(--tx-rose-icon-bg);
+    color: var(--tx-rose-icon-text);
+}
+
+.tx-emerald-bg {
+    background-color: var(--tx-emerald-bg);
+}
+
+.tx-emerald-text {
+    color: var(--tx-emerald-text);
+}
+
+.tx-emerald-border {
+    border-color: var(--tx-emerald-border);
+}
+
+.tx-emerald-icon {
+    background-color: var(--tx-emerald-icon-bg);
+    color: var(--tx-emerald-icon-text);
+}
+
+.tx-amber-bg {
+    background-color: var(--tx-amber-bg);
+}
+
+.tx-amber-text {
+    color: var(--tx-amber-text);
+}
+
+.tx-amber-border {
+    border-color: var(--tx-amber-border);
+}
+
+.tx-amber-icon {
+    background-color: var(--tx-amber-icon-bg);
+    color: var(--tx-amber-icon-text);
+}
+
+.tx-blue-bg {
+    background-color: var(--tx-blue-bg);
+}
+
+.tx-blue-text {
+    color: var(--tx-blue-text);
+}
+
+.tx-blue-border {
+    border-color: var(--tx-blue-border);
+}
+
+.tx-blue-icon {
+    background-color: var(--tx-blue-icon-bg);
+    color: var(--tx-blue-icon-text);
+}
+
+.tx-orange-bg {
+    background-color: var(--tx-orange-bg);
+}
+
+.tx-orange-text {
+    color: var(--tx-orange-text);
+}
+
+.tx-orange-border {
+    border-color: var(--tx-orange-border);
+}
+
+.tx-orange-icon {
+    background-color: var(--tx-orange-icon-bg);
+    color: var(--tx-orange-icon-text);
+}
+
+.tx-slate-bg {
+    background-color: var(--tx-slate-bg);
+}
+
+.tx-slate-text {
+    color: var(--tx-slate-text);
+}
+
+.tx-slate-border {
+    border-color: var(--tx-slate-border);
+}
+
+.tx-slate-icon {
+    background-color: var(--tx-slate-icon-bg);
+    color: var(--tx-slate-icon-text);
+}
+
+.tx-indigo-bg {
+    background-color: var(--tx-indigo-bg);
+}
+
+.tx-indigo-text {
+    color: var(--tx-indigo-text);
+}
+
+.tx-indigo-border {
+    border-color: var(--tx-indigo-border);
+}
+
+.tx-indigo-icon {
+    background-color: var(--tx-indigo-icon-bg);
+    color: var(--tx-indigo-icon-text);
+}

@@ -1,0 +1,147 @@
+/* ============================================
+   BUMBLEBEE THEME
+   High contrast yellow and black
+   Based on daisyUI "bumblebee" theme
+   ============================================ */
+
+/* Bumblebee - Light Mode */
+[data-theme="bumblebee-light"] {
+    --color-surface: oklch(100% 0 0); /* base-100 */
+    --color-on-surface: oklch(20% 0 0); /* base-content */
+    --color-surface-container-low: oklch(97% 0 0); /* base-200 */
+    --color-surface-container-high: oklch(92% 0 0); /* base-300 */
+
+    --color-primary: oklch(85% 0.199 91.936); /* primary */
+    --color-on-primary: oklch(20% 0.095 57.708); /* primary-content (dark) */
+    --color-primary-container: color-mix(in oklab, var(--color-primary), white 60%);
+    --color-on-primary-container: oklch(42% 0.095 57.708); /* primary-content */
+
+    --color-secondary: oklch(75% 0.183 55.934); /* secondary */
+    --color-secondary-container: color-mix(in oklab, var(--color-secondary), white 40%);
+    --color-on-secondary-container: oklch(40% 0.123 38.172); /* secondary-content */
+
+    --color-tertiary: oklch(25% 0 0);
+    --color-on-tertiary: oklch(100% 0 0);
+    --color-tertiary-container: oklch(0% 0 0); /* accent */
+    --color-on-tertiary-container: oklch(100% 0 0); /* accent-content */
+
+    --color-outline-variant: oklch(70% 0.01 67.558); /* neutral (adapted for outline) */
+
+    --color-error: oklch(70% 0.191 22.216); /* error */
+    --color-error-container: color-mix(in oklab, var(--color-error), white 80%);
+    --color-on-error-container: oklch(39% 0.141 25.723); /* error-content */
+
+    /* Transaction Colors (Light) */
+    --tx-rose-bg: color-mix(in oklab, var(--color-error), white 90%);
+    --tx-rose-text: var(--color-error);
+    --tx-rose-border: color-mix(in oklab, var(--color-error), white 70%);
+    --tx-rose-icon-bg: color-mix(in oklab, var(--color-error), white 90%);
+    --tx-rose-icon-text: var(--color-error);
+
+    --tx-emerald-bg: color-mix(in oklab, oklch(76% 0.177 163.223), white 90%); /* success */
+    --tx-emerald-text: oklch(66% 0.177 163.223); /* darkened for text readability */
+    --tx-emerald-border: color-mix(in oklab, oklch(76% 0.177 163.223), white 70%);
+    --tx-emerald-icon-bg: color-mix(in oklab, oklch(76% 0.177 163.223), white 90%);
+    --tx-emerald-icon-text: oklch(66% 0.177 163.223);
+
+    --tx-amber-bg: color-mix(in oklab, oklch(82% 0.189 84.429), white 90%); /* warning */
+    --tx-amber-text: oklch(62% 0.189 84.429); /* darkened for text readability */
+    --tx-amber-border: color-mix(in oklab, oklch(82% 0.189 84.429), white 70%);
+    --tx-amber-icon-bg: color-mix(in oklab, oklch(82% 0.189 84.429), white 90%);
+    --tx-amber-icon-text: oklch(62% 0.189 84.429);
+
+    --tx-blue-bg: color-mix(in oklab, oklch(74% 0.16 232.661), white 90%); /* info */
+    --tx-blue-text: oklch(54% 0.16 232.661); /* darkened for text readability */
+    --tx-blue-border: color-mix(in oklab, oklch(74% 0.16 232.661), white 70%);
+    --tx-blue-icon-bg: color-mix(in oklab, oklch(74% 0.16 232.661), white 90%);
+    --tx-blue-icon-text: oklch(54% 0.16 232.661);
+
+    --tx-orange-bg: color-mix(in oklab, var(--color-primary), white 80%);
+    --tx-orange-text: color-mix(in oklab, var(--color-primary), black 20%);
+    --tx-orange-border: color-mix(in oklab, var(--color-primary), white 60%);
+    --tx-orange-icon-bg: color-mix(in oklab, var(--color-primary), white 80%);
+    --tx-orange-icon-text: color-mix(in oklab, var(--color-primary), black 20%);
+
+    --tx-slate-bg: var(--color-surface-container-low);
+    --tx-slate-text: var(--color-on-surface);
+    --tx-slate-border: var(--color-surface-container-high);
+    --tx-slate-icon-bg: var(--color-surface-container-low);
+    --tx-slate-icon-text: var(--color-on-surface);
+
+    --tx-indigo-bg: color-mix(in oklab, var(--color-secondary), white 80%);
+    --tx-indigo-text: color-mix(in oklab, var(--color-secondary), black 20%);
+    --tx-indigo-border: color-mix(in oklab, var(--color-secondary), white 60%);
+    --tx-indigo-icon-bg: color-mix(in oklab, var(--color-secondary), white 80%);
+    --tx-indigo-icon-text: color-mix(in oklab, var(--color-secondary), black 20%);
+}
+
+/* Bumblebee - Dark Mode (Derived) */
+[data-theme="bumblebee-dark"] {
+    --color-surface: oklch(20% 0 0);
+    --color-on-surface: oklch(95% 0 0);
+    --color-surface-container-low: oklch(25% 0 0);
+    --color-surface-container-high: oklch(30% 0 0);
+
+    --color-primary: oklch(85% 0.199 91.936);
+    --color-on-primary: oklch(20% 0.095 57.708); /* primary-content (dark) */
+    --color-primary-container: color-mix(in oklab, var(--color-primary), black 60%);
+    --color-on-primary-container: oklch(95% 0.05 90);
+
+    --color-secondary: oklch(75% 0.183 55.934);
+    --color-secondary-container: color-mix(in oklab, var(--color-secondary), black 60%);
+    --color-on-secondary-container: oklch(95% 0.05 55);
+
+    --color-tertiary: oklch(90% 0 0);
+    --color-on-tertiary: oklch(0% 0 0);
+    --color-tertiary-container: oklch(100% 0 0); /* Inverted accent for dark mode visibility */
+    --color-on-tertiary-container: oklch(0% 0 0);
+
+    --color-outline-variant: oklch(50% 0 0);
+
+    --color-error: oklch(70% 0.191 22.216);
+    --color-error-container: color-mix(in oklab, var(--color-error), black 80%);
+    --color-on-error-container: oklch(90% 0.05 20);
+
+    /* Transaction Colors (Dark) */
+    --tx-rose-bg: color-mix(in oklab, var(--color-error), black 80%);
+    --tx-rose-text: color-mix(in oklab, var(--color-error), white 20%);
+    --tx-rose-border: color-mix(in oklab, var(--color-error), black 60%);
+    --tx-rose-icon-bg: color-mix(in oklab, var(--color-error), black 80%);
+    --tx-rose-icon-text: color-mix(in oklab, var(--color-error), white 20%);
+
+    --tx-emerald-bg: color-mix(in oklab, oklch(76% 0.177 163.223), black 80%);
+    --tx-emerald-text: oklch(76% 0.177 163.223);
+    --tx-emerald-border: color-mix(in oklab, oklch(76% 0.177 163.223), black 60%);
+    --tx-emerald-icon-bg: color-mix(in oklab, oklch(76% 0.177 163.223), black 80%);
+    --tx-emerald-icon-text: oklch(76% 0.177 163.223);
+
+    --tx-amber-bg: color-mix(in oklab, oklch(82% 0.189 84.429), black 80%);
+    --tx-amber-text: oklch(82% 0.189 84.429);
+    --tx-amber-border: color-mix(in oklab, oklch(82% 0.189 84.429), black 60%);
+    --tx-amber-icon-bg: color-mix(in oklab, oklch(82% 0.189 84.429), black 80%);
+    --tx-amber-icon-text: oklch(82% 0.189 84.429);
+
+    --tx-blue-bg: color-mix(in oklab, oklch(74% 0.16 232.661), black 80%);
+    --tx-blue-text: oklch(74% 0.16 232.661);
+    --tx-blue-border: color-mix(in oklab, oklch(74% 0.16 232.661), black 60%);
+    --tx-blue-icon-bg: color-mix(in oklab, oklch(74% 0.16 232.661), black 80%);
+    --tx-blue-icon-text: oklch(74% 0.16 232.661);
+
+    --tx-orange-bg: color-mix(in oklab, var(--color-primary), black 70%);
+    --tx-orange-text: color-mix(in oklab, var(--color-primary), white 30%);
+    --tx-orange-border: color-mix(in oklab, var(--color-primary), black 50%);
+    --tx-orange-icon-bg: color-mix(in oklab, var(--color-primary), black 70%);
+    --tx-orange-icon-text: color-mix(in oklab, var(--color-primary), white 30%);
+
+    --tx-slate-bg: var(--color-surface-container-low);
+    --tx-slate-text: var(--color-on-surface);
+    --tx-slate-border: var(--color-surface-container-high);
+    --tx-slate-icon-bg: var(--color-surface-container-low);
+    --tx-slate-icon-text: var(--color-on-surface);
+
+    --tx-indigo-bg: color-mix(in oklab, var(--color-secondary), black 80%);
+    --tx-indigo-text: color-mix(in oklab, var(--color-secondary), white 20%);
+    --tx-indigo-border: color-mix(in oklab, var(--color-secondary), black 60%);
+    --tx-indigo-icon-bg: color-mix(in oklab, var(--color-secondary), black 80%);
+    --tx-indigo-icon-text: color-mix(in oklab, var(--color-secondary), white 20%);
+}
