@@ -1,0 +1,147 @@
+/* ============================================
+   RETRO THEME
+   Warm beige background with vintage accents
+   Based on daisyUI "retro" theme
+   ============================================ */
+
+/* Retro - Light Mode */
+[data-theme="retro-light"] {
+    --color-surface: oklch(91.637% 0.034 90.515); /* base-100 */
+    --color-on-surface: oklch(41% 0.112 45.904); /* base-content */
+    --color-surface-container-low: oklch(88.272% 0.049 91.774); /* base-200 */
+    --color-surface-container-high: oklch(84.133% 0.065 90.856); /* base-300 */
+
+    --color-primary: oklch(80% 0.114 19.571); /* primary */
+    --color-on-primary: oklch(20% 0.141 25.723); /* primary-content (dark) */
+    --color-primary-container: color-mix(in oklab, var(--color-primary), white 60%);
+    --color-on-primary-container: oklch(39% 0.141 25.723); /* primary-content */
+
+    --color-secondary: oklch(92% 0.084 155.995); /* secondary */
+    --color-secondary-container: color-mix(in oklab, var(--color-secondary), white 40%);
+    --color-on-secondary-container: oklch(44% 0.119 151.328); /* secondary-content */
+
+    --color-tertiary: oklch(55% 0.162 75.834);
+    --color-on-tertiary: oklch(100% 0 0);
+    --color-tertiary-container: oklch(68% 0.162 75.834); /* accent */
+    --color-on-tertiary-container: oklch(41% 0.112 45.904); /* accent-content */
+
+    --color-outline-variant: oklch(44% 0.011 73.639); /* neutral */
+
+    --color-error: oklch(70% 0.191 22.216); /* error */
+    --color-error-container: color-mix(in oklab, var(--color-error), white 80%);
+    --color-on-error-container: oklch(40% 0.123 38.172); /* error-content */
+
+    /* Transaction Colors (Light) */
+    --tx-rose-bg: color-mix(in oklab, var(--color-error), white 90%);
+    --tx-rose-text: var(--color-error);
+    --tx-rose-border: color-mix(in oklab, var(--color-error), white 70%);
+    --tx-rose-icon-bg: color-mix(in oklab, var(--color-error), white 90%);
+    --tx-rose-icon-text: var(--color-error);
+
+    --tx-emerald-bg: color-mix(in oklab, oklch(51% 0.096 186.391), white 90%); /* success */
+    --tx-emerald-text: oklch(51% 0.096 186.391);
+    --tx-emerald-border: color-mix(in oklab, oklch(51% 0.096 186.391), white 70%);
+    --tx-emerald-icon-bg: color-mix(in oklab, oklch(51% 0.096 186.391), white 90%);
+    --tx-emerald-icon-text: oklch(51% 0.096 186.391);
+
+    --tx-amber-bg: color-mix(in oklab, oklch(64% 0.222 41.116), white 90%); /* warning */
+    --tx-amber-text: oklch(64% 0.222 41.116);
+    --tx-amber-border: color-mix(in oklab, oklch(64% 0.222 41.116), white 70%);
+    --tx-amber-icon-bg: color-mix(in oklab, oklch(64% 0.222 41.116), white 90%);
+    --tx-amber-icon-text: oklch(64% 0.222 41.116);
+
+    --tx-blue-bg: color-mix(in oklab, oklch(58% 0.158 241.966), white 90%); /* info */
+    --tx-blue-text: oklch(58% 0.158 241.966);
+    --tx-blue-border: color-mix(in oklab, oklch(58% 0.158 241.966), white 70%);
+    --tx-blue-icon-bg: color-mix(in oklab, oklch(58% 0.158 241.966), white 90%);
+    --tx-blue-icon-text: oklch(58% 0.158 241.966);
+
+    /* Using Primary/Secondary/Accent for other variants to stay on theme */
+    --tx-orange-bg: color-mix(in oklab, var(--color-primary), white 80%);
+    --tx-orange-text: color-mix(in oklab, var(--color-primary), black 20%);
+    --tx-orange-border: color-mix(in oklab, var(--color-primary), white 60%);
+    --tx-orange-icon-bg: color-mix(in oklab, var(--color-primary), white 80%);
+    --tx-orange-icon-text: color-mix(in oklab, var(--color-primary), black 20%);
+
+    --tx-slate-bg: var(--color-surface-container-low);
+    --tx-slate-text: var(--color-on-surface);
+    --tx-slate-border: var(--color-surface-container-high);
+    --tx-slate-icon-bg: var(--color-surface-container-low);
+    --tx-slate-icon-text: var(--color-on-surface);
+
+    --tx-indigo-bg: color-mix(in oklab, var(--color-tertiary-container), white 80%);
+    --tx-indigo-text: color-mix(in oklab, var(--color-tertiary-container), black 20%);
+    --tx-indigo-border: color-mix(in oklab, var(--color-tertiary-container), white 60%);
+    --tx-indigo-icon-bg: color-mix(in oklab, var(--color-tertiary-container), white 80%);
+    --tx-indigo-icon-text: color-mix(in oklab, var(--color-tertiary-container), black 20%);
+}
+
+/* Retro - Dark Mode (Inverted/Adapted) */
+[data-theme="retro-dark"] {
+    /* Inverting base colors for dark mode while keeping the warm vintage feel */
+    --color-surface: oklch(20% 0.02 90);
+    --color-on-surface: oklch(90% 0.05 90);
+    --color-surface-container-low: oklch(25% 0.02 90);
+    --color-surface-container-high: oklch(30% 0.02 90);
+
+    --color-primary: oklch(80% 0.114 19.571);
+    --color-on-primary: oklch(20% 0.141 25.723); /* primary-content (dark) */
+    --color-primary-container: color-mix(in oklab, var(--color-primary), black 60%);
+    --color-on-primary-container: oklch(95% 0.05 90);
+
+    --color-secondary: oklch(92% 0.084 155.995);
+    --color-secondary-container: color-mix(in oklab, var(--color-secondary), black 60%);
+    --color-on-secondary-container: oklch(95% 0.05 150);
+
+    --color-tertiary-container: oklch(68% 0.162 75.834);
+    --color-on-tertiary-container: oklch(95% 0.05 75);
+
+    --color-outline-variant: oklch(50% 0.02 90);
+
+    --color-error: oklch(70% 0.191 22.216);
+    --color-error-container: color-mix(in oklab, var(--color-error), black 80%);
+    --color-on-error-container: oklch(90% 0.05 20);
+
+    /* Transaction Colors (Dark) */
+    --tx-rose-bg: color-mix(in oklab, var(--color-error), black 80%);
+    --tx-rose-text: color-mix(in oklab, var(--color-error), white 20%);
+    --tx-rose-border: color-mix(in oklab, var(--color-error), black 60%);
+    --tx-rose-icon-bg: color-mix(in oklab, var(--color-error), black 80%);
+    --tx-rose-icon-text: color-mix(in oklab, var(--color-error), white 20%);
+
+    --tx-emerald-bg: color-mix(in oklab, oklch(51% 0.096 186.391), black 80%);
+    --tx-emerald-text: oklch(60% 0.096 186.391);
+    --tx-emerald-border: color-mix(in oklab, oklch(51% 0.096 186.391), black 60%);
+    --tx-emerald-icon-bg: color-mix(in oklab, oklch(51% 0.096 186.391), black 80%);
+    --tx-emerald-icon-text: oklch(60% 0.096 186.391);
+
+    --tx-amber-bg: color-mix(in oklab, oklch(64% 0.222 41.116), black 80%);
+    --tx-amber-text: oklch(75% 0.222 41.116);
+    --tx-amber-border: color-mix(in oklab, oklch(64% 0.222 41.116), black 60%);
+    --tx-amber-icon-bg: color-mix(in oklab, oklch(64% 0.222 41.116), black 80%);
+    --tx-amber-icon-text: oklch(75% 0.222 41.116);
+
+    --tx-blue-bg: color-mix(in oklab, oklch(58% 0.158 241.966), black 80%);
+    --tx-blue-text: oklch(70% 0.158 241.966);
+    --tx-blue-border: color-mix(in oklab, oklch(58% 0.158 241.966), black 60%);
+    --tx-blue-icon-bg: color-mix(in oklab, oklch(58% 0.158 241.966), black 80%);
+    --tx-blue-icon-text: oklch(70% 0.158 241.966);
+
+    --tx-orange-bg: color-mix(in oklab, var(--color-primary), black 70%);
+    --tx-orange-text: color-mix(in oklab, var(--color-primary), white 30%);
+    --tx-orange-border: color-mix(in oklab, var(--color-primary), black 50%);
+    --tx-orange-icon-bg: color-mix(in oklab, var(--color-primary), black 70%);
+    --tx-orange-icon-text: color-mix(in oklab, var(--color-primary), white 30%);
+
+    --tx-slate-bg: var(--color-surface-container-low);
+    --tx-slate-text: var(--color-on-surface);
+    --tx-slate-border: var(--color-surface-container-high);
+    --tx-slate-icon-bg: var(--color-surface-container-low);
+    --tx-slate-icon-text: var(--color-on-surface);
+
+    --tx-indigo-bg: color-mix(in oklab, var(--color-tertiary-container), black 80%);
+    --tx-indigo-text: color-mix(in oklab, var(--color-tertiary-container), white 20%);
+    --tx-indigo-border: color-mix(in oklab, var(--color-tertiary-container), black 60%);
+    --tx-indigo-icon-bg: color-mix(in oklab, var(--color-tertiary-container), black 80%);
+    --tx-indigo-icon-text: color-mix(in oklab, var(--color-tertiary-container), white 20%);
+}

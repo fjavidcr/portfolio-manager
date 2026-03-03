@@ -1,0 +1,48 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with subtle gradient -->
+  <rect width="256" height="256" rx="64" fill="url(#bg-gradient)"/>
+
+  <!-- Outer glowing ring -->
+  <rect x="16" y="16" width="224" height="224" rx="52" stroke="white" stroke-opacity="0.1" stroke-width="8"/>
+  <rect x="24" y="24" width="208" height="208" rx="44" stroke="url(#ring-gradient)" stroke-opacity="0.2" stroke-width="4"/>
+
+  <!-- Main Chart Line / Trend Line -->
+  <path d="M56 184 L104 120 L144 144 L200 64" stroke="url(#line-gradient)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Trend Line Shadow / Glow -->
+  <path d="M56 184 L104 120 L144 144 L200 64" stroke="#4ADE80" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#glow)"/>
+
+  <!-- Data Points (Dots on the line) -->
+  <circle cx="56" cy="184" r="14" fill="#22C55E"/>
+  <circle cx="104" cy="120" r="14" fill="#22C55E"/>
+  <circle cx="144" cy="144" r="14" fill="#22C55E"/>
+
+  <!-- Final Highlight Point -->
+  <circle cx="200" cy="64" r="18" fill="white"/>
+  <circle cx="200" cy="64" r="10" fill="#4ADE80"/>
+
+  <defs>
+    <!-- Background Gradient (Dark Modern Theme) -->
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A"/> <!-- Slate 900 -->
+      <stop offset="100%" stop-color="#1E293B"/> <!-- Slate 800 -->
+    </linearGradient>
+
+    <!-- Ring Gradient -->
+    <linearGradient id="ring-gradient" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4ADE80"/> <!-- Green 400 -->
+      <stop offset="100%" stop-color="#3B82F6"/> <!-- Blue 500 -->
+    </linearGradient>
+
+    <!-- Chart Line Gradient (Green upward trend) -->
+    <linearGradient id="line-gradient" x1="56" y1="184" x2="200" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#22C55E"/> <!-- Green 500 -->
+      <stop offset="100%" stop-color="#4ADE80"/> <!-- Green 400 -->
+    </linearGradient>
+
+    <!-- Glow Filter for the line -->
+    <filter id="glow" x="36" y="44" width="184" height="160" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+    </filter>
+  </defs>
+</svg>
