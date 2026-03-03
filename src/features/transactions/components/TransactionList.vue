@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { portfolioStore, fetchTransactions, setFilters } from '@shared/stores/portfolioStore'
-import { TransactionTypes } from '@shared/types'
+import { TransactionTypes, type TransactionModel } from '@shared/types'
 import { watch, onMounted, ref, onUnmounted, computed } from 'vue'
 import TransactionCard from './TransactionCard.vue'
 import FilterCard from '@shared/components/FilterCard.vue'
@@ -62,6 +62,27 @@ const filteredTransactions = computed(() => {
   }
 
   return result
+})
+
+// Grouped Transactions for List View
+const groupedTransactions = computed(() => {
+  const groups: Record<string, TransactionModel[]> = {}
+
+  filteredTransactions.value.forEach((tx) => {
+    const date = tx.date instanceof Date ? tx.date : (tx.date as any).toDate()
+    const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' })
+    if (!groups[monthYear]) {
+      groups[monthYear] = []
+    }
+    groups[monthYear].push(tx)
+  })
+
+  // Sort months chronologically (most recent first)
+  return Object.entries(groups).sort((a, b) => {
+    const dateA = new Date(a[1][0].date instanceof Date ? a[1][0].date : (a[1][0].date as any).toDate())
+    const dateB = new Date(b[1][0].date instanceof Date ? b[1][0].date : (b[1][0].date as any).toDate())
+    return dateB.getTime() - dateA.getTime()
+  })
 })
 
 // transactionTypes is imported from @shared/types
@@ -207,7 +228,7 @@ const clearFilters = () => {
       class="bg-error-container text-on-error-container p-4 rounded-lg mb-6 flex items-start gap-3"
     >
       <svg
-        class="h-5 w-5 mt-0.5 flex-shrink-0"
+        class="h-5 w-5 mt-0.5 shrink-0"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -228,23 +249,37 @@ const clearFilters = () => {
       </div>
     </div>
     <!-- Transaction List (Always show if we have data) -->
-    <div v-else>
-      <!-- Grid Mode -->
-      <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <TransactionCard
-          v-for="transaction in filteredTransactions"
-          :key="transaction.id"
-          :transaction="transaction"
-        />
-      </div>
+    <!-- Transaction List (Always show if we have data) -->
+    <div v-else class="space-y-10">
+      <div v-for="[monthYear, transactions] in groupedTransactions" :key="monthYear" class="space-y-4">
+        <!-- Month Header -->
+        <div class="flex items-center gap-4">
+          <h2 class="text-sm font-bold uppercase tracking-[0.2em] text-secondary/60">
+            {{ monthYear }}
+          </h2>
+          <div class="h-px bg-outline-variant/30 flex-1"></div>
+        </div>
 
-      <!-- List Mode -->
-      <div v-else class="flex flex-col gap-3">
-        <TransactionListItem
-          v-for="transaction in filteredTransactions"
-          :key="transaction.id"
-          :transaction="transaction"
-        />
+        <!-- Content -->
+        <div>
+          <!-- Grid Mode -->
+          <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <TransactionCard
+              v-for="transaction in transactions"
+              :key="transaction.id"
+              :transaction="transaction"
+            />
+          </div>
+
+          <!-- List Mode -->
+          <div v-else class="flex flex-col gap-3">
+            <TransactionListItem
+              v-for="transaction in transactions"
+              :key="transaction.id"
+              :transaction="transaction"
+            />
+          </div>
+        </div>
       </div>
     </div>
 

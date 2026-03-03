@@ -79,7 +79,20 @@ const getActionStyle = (type: string) => {
   <div
     class="bg-surface-container-low rounded-xl border border-outline-variant p-3 sm:p-4 hover:bg-surface-container transition-colors shadow-sm group flex flex-col sm:flex-row items-start sm:items-center gap-4"
   >
-    <!-- Left: Icon & Type -->
+    <!-- Left: Date Highlight -->
+    <div class="shrink-0 flex flex-col items-center justify-center bg-surface-container-high rounded-xl p-2 min-w-[70px] border border-outline-variant/50">
+      <span class="text-[10px] uppercase font-bold text-secondary tracking-widest leading-none mb-1">
+        {{ new Date(transaction.date instanceof Date ? transaction.date : (transaction.date as any).toDate()).toLocaleString('default', { month: 'short' }) }}
+      </span>
+      <span class="text-xl font-black text-on-surface leading-none">
+        {{ new Date(transaction.date instanceof Date ? transaction.date : (transaction.date as any).toDate()).getDate() }}
+      </span>
+      <span class="text-[10px] font-medium text-secondary/60 mt-1">
+        {{ new Date(transaction.date instanceof Date ? transaction.date : (transaction.date as any).toDate()).getFullYear() }}
+      </span>
+    </div>
+
+    <!-- Icon & Type -->
     <div class="flex items-center gap-3 shrink-0">
       <div
         class="p-2.5 rounded-xl flex items-center justify-center"
@@ -94,7 +107,6 @@ const getActionStyle = (type: string) => {
         >
           {{ transaction.type }}
         </span>
-        <span class="text-xs text-secondary mt-0.5">{{ formatDate(transaction.date) }}</span>
       </div>
     </div>
 
