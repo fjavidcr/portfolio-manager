@@ -3,3 +3,4 @@ account/
 csv/
 .env
 .DS_Store
+.firebase/
