@@ -21,7 +21,8 @@ import {
   type AssetModel,
   type TransactionModel,
   type PlatformModel,
-  TransactionTypes
+  TransactionTypes,
+  TransactionImpact
 } from '@shared/types'
 
 interface PortfolioState {
@@ -37,6 +38,7 @@ interface PortfolioState {
   transactionCount: number // Server-side count
   missingIndex: boolean
   totalsError: string | null
+  assetInvestedMap: Record<string, number>
   filters: {
     type: string
     assetId: string
@@ -57,6 +59,7 @@ export const portfolioStore = map<PortfolioState>({
   transactionCount: 0,
   missingIndex: false,
   totalsError: null,
+  assetInvestedMap: {},
   filters: {
     type: '',
     assetId: '',
@@ -116,6 +119,7 @@ user.subscribe((currentUser) => {
       transactionCount: 0,
       missingIndex: false,
       totalsError: null,
+      assetInvestedMap: {},
       filters: { type: '', assetId: '', searchQuery: '' }
     })
   }
@@ -193,6 +197,37 @@ export const setFilters = (filters: Partial<PortfolioState['filters']>) => {
   fetchTransactions(true)
 }
 
+export const ensureAssetInvested = async (assetId: string) => {
+  const currentUser = user.get()
+  if (!currentUser) return
+
+  try {
+    const inQ = query(
+      collection(db, 'users', currentUser.uid, 'transactions'),
+      where('assetId', '==', assetId),
+      where('type', 'in', TransactionImpact.Inflow)
+    )
+    const outQ = query(
+      collection(db, 'users', currentUser.uid, 'transactions'),
+      where('assetId', '==', assetId),
+      where('type', 'in', TransactionImpact.Outflow)
+    )
+
+    const [inSnap, outSnap] = await Promise.all([
+      getAggregateFromServer(inQ, { total: sum('amount') }),
+      getAggregateFromServer(outQ, { total: sum('amount') })
+    ])
+
+    const net = (inSnap.data().total || 0) - (outSnap.data().total || 0)
+
+    const map = { ...portfolioStore.get().assetInvestedMap }
+    map[assetId] = net
+    portfolioStore.setKey('assetInvestedMap', map)
+  } catch (e) {
+    console.error(`Failed to get asset invested amount for ${assetId}`, e)
+  }
+}
+
 export const fetchTotals = async () => {
   const currentUser = user.get()
   if (!currentUser) return
@@ -203,23 +238,29 @@ export const fetchTotals = async () => {
   portfolioStore.setKey('calculatingTotals', true)
 
   try {
-    // Optimisation: Use server-side aggregation to avoid downloading all documents.
-    // We filter by 'type' in validTypes and sum the 'amount'.
-    // Note: 'in' operator combined with aggregation requires a composite index.
-
-    const q = query(
+    const inQ = query(
       collection(db, 'users', currentUser.uid, 'transactions'),
-      where('type', 'in', TransactionTypes)
+      where('type', 'in', TransactionImpact.Inflow)
+    )
+    const outQ = query(
+      collection(db, 'users', currentUser.uid, 'transactions'),
+      where('type', 'in', TransactionImpact.Outflow)
     )
 
-    const snapshot = await getAggregateFromServer(q, {
-      totalInvested: sum('amount'),
-      count: count()
-    })
+    const [inSnap, outSnap] = await Promise.all([
+      getAggregateFromServer(inQ, { totalInvested: sum('amount'), count: count() }),
+      getAggregateFromServer(outQ, { totalInvested: sum('amount'), count: count() })
+    ])
 
-    const data = snapshot.data()
-    portfolioStore.setKey('totalInvested', data.totalInvested || 0)
-    portfolioStore.setKey('transactionCount', data.count || 0)
+    const inData = inSnap.data()
+    const outData = outSnap.data()
+
+    portfolioStore.setKey('totalInvested', (inData.totalInvested || 0) - (outData.totalInvested || 0))
+    portfolioStore.setKey('transactionCount', (inData.count || 0) + (outData.count || 0))
+
+    // Refresh requested asset investments
+    const currentKeys = Object.keys(portfolioStore.get().assetInvestedMap)
+    await Promise.all(currentKeys.map((key) => ensureAssetInvested(key)))
   } catch (e) {
     console.error('Error calculating totals:', e)
     // Expose error to UI
