@@ -9,6 +9,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "deploy:app": "npm run build && firebase deploy --only hosting",
+    "deploy:db:rules": "firebase deploy --only firestore:rules",
+    "deploy:db:indexes": "firebase deploy --only firestore:indexes",
+    "deploy:all": "npm run build && firebase deploy",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint . --ext .js,.cjs,.ts,.astro,.vue",
@@ -18,8 +22,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node scripts/seed_database.cjs",
     "users-list": "node scripts/list_users.cjs",
-    "migrate-tx": "node scripts/migrate_transactions.cjs",
-    "deploy": "node scripts/deploy.cjs"
+    "migrate-tx": "node scripts/migrate_transactions.cjs"
   },
   "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
   "license": "ISC",
