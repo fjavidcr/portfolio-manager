@@ -4,23 +4,23 @@ A personal investment portfolio management application built with **Astro**, **V
 
 ## 🚀 Features
 
-*   **Google Authentication**.
-*   **Real-time Database** (Cloud Firestore).
-*   **Astro + Vue**: High performance SSR/SSG with interactive Vue components.
-*   **Data Seeding**: Scripts to import CSV transaction history into Firestore.
+- **Google Authentication**.
+- **Real-time Database** (Cloud Firestore).
+- **Astro + Vue**: High performance SSR/SSG with interactive Vue components.
+- **Data Seeding**: Scripts to import CSV transaction history into Firestore.
 
 ## 🛠️ Prerequisites
 
-*   **Node.js** (v24.0.0+).
-*   **Firebase Project** (with Auth and Firestore enabled).
+- **Node.js** (v24.0.0+).
+- **Firebase Project** (with Auth and Firestore enabled).
 
 ## 📂 Project Structure
 
-*   **/src**: The main Astro and Vue application logic.
-*   **/scripts**: Utility scripts (e.g., seeding database, migrations, lists).
-*   **/csv**: Data files for seeding.
-*   **/account**: Service account keys for admin operations.
-*   **/dist**: The generated build output (Firebase Hosting public directory).
+- **/src**: The main Astro and Vue application logic.
+- **/scripts**: Utility scripts (e.g., seeding database, migrations, lists).
+- **/csv**: Data files for seeding.
+- **/account**: Service account keys for admin operations.
+- **/dist**: The generated build output (Firebase Hosting public directory).
 
 ## ⚙️ Setup
 
@@ -61,9 +61,9 @@ npm run dev
 
 The `package.json` includes several scripts for deploying specific parts of the project to Firebase:
 
-*   `npm run deploy:app`: Builds the Astro app and deploys **only** to Firebase Hosting.
-*   `npm run deploy:db:rules`: Deploys **only** the Firestore security rules (`firestore.rules`).
-*   `npm run deploy:db:indexes`: Deploys **only** the Firestore indexes (`firestore.indexes.json`).
-*   `npm run deploy:storage`: Deploys **only** the Firebase Storage rules (`firebase.storage.rules`).
-    *   *Note: Firebase Storage is not actively used in this project, but its configuration file is kept here securely in version control.*
-*   `npm run deploy:all`: Builds the Astro app and deploys **everything** (app, database rules/indexes, and storage rules) to Firebase.
+- `npm run deploy:app`: Builds the Astro app and deploys **only** to Firebase Hosting.
+- `npm run deploy:db:rules`: Deploys **only** the Firestore security rules (`firestore.rules`).
+- `npm run deploy:db:indexes`: Deploys **only** the Firestore indexes (`firestore.indexes.json`).
+- `npm run deploy:storage`: Deploys **only** the Firebase Storage rules (`firebase.storage.rules`).
+  - _Note: Firebase Storage is not actively used in this project, but its configuration file is kept here securely in version control._
+- `npm run deploy:all`: Builds the Astro app and deploys **everything** (app, database rules/indexes, and storage rules) to Firebase.

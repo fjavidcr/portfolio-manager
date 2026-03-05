@@ -36,8 +36,13 @@ const formatCurrency = (val: number) => {
         </div>
         <div class="text-right">
           <p class="text-xs uppercase tracking-wider text-secondary font-medium">Total Income</p>
-          <div v-if="loading" class="h-8 w-32 bg-surface-container-high animate-pulse rounded ml-auto"></div>
-          <h3 v-else class="text-2xl font-bold text-on-surface">{{ formatCurrency(totalIncome) }}</h3>
+          <div
+            v-if="loading"
+            class="h-8 w-32 bg-surface-container-high animate-pulse rounded ml-auto"
+          ></div>
+          <h3 v-else class="text-2xl font-bold text-on-surface">
+            {{ formatCurrency(totalIncome) }}
+          </h3>
         </div>
       </div>
 
