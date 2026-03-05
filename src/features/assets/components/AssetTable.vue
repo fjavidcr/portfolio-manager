@@ -48,17 +48,13 @@ const filteredAssets = computed(() => {
 // Separate active and archived assets
 const activeAssets = computed(() => {
   return filteredAssets.value
-    .filter((asset) => getInvested(asset.id) > 0 && !asset.isArchived)
-    .sort((a, b) => getInvested(b.id) - getInvested(a.id)) // Sort by invested amount (descending)
+    .filter((asset) => (asset.currentValue || 0) > 0 && !asset.isArchived)
+    .sort((a, b) => (b.currentValue || 0) - (a.currentValue || 0)) // Sort by current value
 })
 
 const archivedAssets = computed(() => {
-  return filteredAssets.value.filter((asset) => getInvested(asset.id) === 0 || asset.isArchived)
+  return filteredAssets.value.filter((asset) => (asset.currentValue || 0) <= 0 || asset.isArchived)
 })
-
-const getInvested = (assetId: string) => {
-  return $portfolio.value.assetInvestedMap[assetId] || 0
-}
 
 // Get unique asset types and their counts
 const assetTypes = computed(() => {
