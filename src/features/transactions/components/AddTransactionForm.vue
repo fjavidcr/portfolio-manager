@@ -235,7 +235,7 @@ const handleSubmit = async () => {
     v-else-if="fetchError"
     class="p-4 mb-6 rounded-lg bg-error/10 border border-error/20 text-error flex items-center gap-3"
   >
-    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         stroke-linecap="round"
         stroke-linejoin="round"
