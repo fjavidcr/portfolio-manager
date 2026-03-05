@@ -79,8 +79,12 @@ const groupedTransactions = computed(() => {
 
   // Sort months chronologically (most recent first)
   return Object.entries(groups).sort((a, b) => {
-    const dateA = new Date(a[1][0].date instanceof Date ? a[1][0].date : (a[1][0].date as any).toDate())
-    const dateB = new Date(b[1][0].date instanceof Date ? b[1][0].date : (b[1][0].date as any).toDate())
+    const dateA = new Date(
+      a[1][0].date instanceof Date ? a[1][0].date : (a[1][0].date as any).toDate()
+    )
+    const dateB = new Date(
+      b[1][0].date instanceof Date ? b[1][0].date : (b[1][0].date as any).toDate()
+    )
     return dateB.getTime() - dateA.getTime()
   })
 })
@@ -179,10 +183,16 @@ const clearFilters = () => {
         />
       </template>
       <template #actions>
-        <div class="flex bg-surface-container rounded-lg p-1 border border-outline-variant shadow-inner">
+        <div
+          class="flex bg-surface-container rounded-lg p-1 border border-outline-variant shadow-inner"
+        >
           <button
             class="p-1.5 rounded-md transition-all duration-200"
-            :class="viewMode === 'grid' ? 'bg-primary text-on-primary shadow-sm' : 'text-secondary hover:text-on-surface'"
+            :class="
+              viewMode === 'grid'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-secondary hover:text-on-surface'
+            "
             title="Grid View"
             @click="setViewMode('grid')"
           >
@@ -190,7 +200,11 @@ const clearFilters = () => {
           </button>
           <button
             class="p-1.5 rounded-md transition-all duration-200"
-            :class="viewMode === 'list' ? 'bg-primary text-on-primary shadow-sm' : 'text-secondary hover:text-on-surface'"
+            :class="
+              viewMode === 'list'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-secondary hover:text-on-surface'
+            "
             title="List View"
             @click="setViewMode('list')"
           >
@@ -227,12 +241,7 @@ const clearFilters = () => {
       v-if="$portfolio.error"
       class="bg-error-container text-on-error-container p-4 rounded-lg mb-6 flex items-start gap-3"
     >
-      <svg
-        class="h-5 w-5 mt-0.5 shrink-0"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
+      <svg class="h-5 w-5 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -251,7 +260,11 @@ const clearFilters = () => {
     <!-- Transaction List (Always show if we have data) -->
     <!-- Transaction List (Always show if we have data) -->
     <div v-else class="space-y-10">
-      <div v-for="[monthYear, transactions] in groupedTransactions" :key="monthYear" class="space-y-4">
+      <div
+        v-for="[monthYear, transactions] in groupedTransactions"
+        :key="monthYear"
+        class="space-y-4"
+      >
         <!-- Month Header -->
         <div class="flex items-center gap-4">
           <h2 class="text-sm font-bold uppercase tracking-[0.2em] text-secondary/60">
@@ -263,7 +276,10 @@ const clearFilters = () => {
         <!-- Content -->
         <div>
           <!-- Grid Mode -->
-          <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            v-if="viewMode === 'grid'"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
             <TransactionCard
               v-for="transaction in transactions"
               :key="transaction.id"

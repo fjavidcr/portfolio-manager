@@ -53,7 +53,9 @@ const emit = defineEmits<{
     </div>
 
     <!-- Results Count Footer -->
-    <div class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-sm text-secondary">
+    <div
+      class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-sm text-secondary"
+    >
       <span>Showing {{ resultCount }} results</span>
       <div class="flex items-center gap-2">
         <slot name="actions"></slot>

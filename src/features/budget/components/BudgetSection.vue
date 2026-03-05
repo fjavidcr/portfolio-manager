@@ -86,7 +86,10 @@ const addItem = () => {
 }
 
 const removeItem = (id: string) => {
-  emit('update:items', props.items.filter((i) => i.id !== id))
+  emit(
+    'update:items',
+    props.items.filter((i) => i.id !== id)
+  )
 }
 </script>
 
@@ -184,7 +187,13 @@ const removeItem = (id: string) => {
       <input
         v-model="newItemName"
         type="text"
-        :placeholder="editingItemId ? 'Edit Name' : type === 'income' ? 'Name (e.g. Salary)' : 'Name (e.g. Groceries)'"
+        :placeholder="
+          editingItemId
+            ? 'Edit Name'
+            : type === 'income'
+              ? 'Name (e.g. Salary)'
+              : 'Name (e.g. Groceries)'
+        "
         class="flex-1 bg-surface-container-high border-0 border-b-2 border-outline-variant/50 focus:border-primary focus:ring-0 rounded-xl px-4 transition-colors text-sm"
         @keyup.enter="addItem"
       />

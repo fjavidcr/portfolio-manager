@@ -67,7 +67,9 @@ const formatCurrency = (val: number) => {
           <div
             class="opacity-0 group-hover:opacity-100 absolute -top-10 bg-inverse-surface text-inverse-on-surface text-xs py-1 px-2 rounded whitespace-nowrap transition-opacity pointer-events-none"
           >
-            Investments: {{ formatCurrency(investmentTarget) }} ({{ Math.round(segments.investment) }}%)
+            Investments: {{ formatCurrency(investmentTarget) }} ({{
+              Math.round(segments.investment)
+            }}%)
           </div>
         </div>
 

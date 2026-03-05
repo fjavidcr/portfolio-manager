@@ -255,7 +255,10 @@ export const fetchTotals = async () => {
     const inData = inSnap.data()
     const outData = outSnap.data()
 
-    portfolioStore.setKey('totalInvested', (inData.totalInvested || 0) - (outData.totalInvested || 0))
+    portfolioStore.setKey(
+      'totalInvested',
+      (inData.totalInvested || 0) - (outData.totalInvested || 0)
+    )
     portfolioStore.setKey('transactionCount', (inData.count || 0) + (outData.count || 0))
 
     // Refresh requested asset investments
