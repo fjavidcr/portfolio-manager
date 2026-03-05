@@ -217,7 +217,7 @@ export const ensureAssetInvested = async (assetId: string) => {
       getAggregateFromServer(outQ, { total: sum('amount') })
     ])
 
-    const net = (inSnap.data().total || 0) - (outSnap.data().total || 0)
+    const net = (inSnap.data().total || 0) - Math.abs(outSnap.data().total || 0)
 
     const map = { ...portfolioStore.get().assetInvestedMap }
     map[assetId] = net
@@ -256,7 +256,7 @@ export const fetchTotals = async () => {
 
     portfolioStore.setKey(
       'totalInvested',
-      (inData.totalInvested || 0) - (outData.totalInvested || 0)
+      (inData.totalInvested || 0) - Math.abs(outData.totalInvested || 0)
     )
     portfolioStore.setKey('transactionCount', (inData.count || 0) + (outData.count || 0))
 

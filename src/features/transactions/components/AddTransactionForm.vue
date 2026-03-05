@@ -158,19 +158,33 @@ const handleSubmit = async () => {
 
     if (routeId.value) {
       // UPDATE MODE
+      const normalizedAmount = Math.abs(Number(amount.value))
+      if (normalizedAmount <= 0) {
+        alert('Please enter a positive amount')
+        submitting.value = false
+        return
+      }
+
       await updateTransaction(routeId.value, {
         type: type.value,
-        amount: Number(amount.value),
+        amount: normalizedAmount,
         assetId: assetId.value.toUpperCase(),
         description: description.value,
         date: txDate
       })
     } else {
       // CREATE MODE
+      const normalizedAmount = Math.abs(Number(amount.value))
+      if (normalizedAmount <= 0) {
+        alert('Please enter a positive amount')
+        submitting.value = false
+        return
+      }
+
       await addDoc(collection(db, 'users', uid, 'transactions'), {
         userId: uid,
         type: type.value,
-        amount: Number(amount.value),
+        amount: normalizedAmount,
         assetId: assetId.value.toUpperCase(),
         description: description.value,
         date: txDate
@@ -183,10 +197,11 @@ const handleSubmit = async () => {
         const assetSnap = await getDoc(assetRef)
 
         let valueChange = 0
+        const normalizedAmount = Math.abs(Number(amount.value))
         if ((TransactionImpact.Inflow as readonly string[]).includes(type.value)) {
-          valueChange = Number(amount.value)
+          valueChange = normalizedAmount
         } else if ((TransactionImpact.Outflow as readonly string[]).includes(type.value)) {
-          valueChange = -Number(amount.value)
+          valueChange = -normalizedAmount
         }
 
         if (assetSnap.exists()) {
@@ -341,6 +356,7 @@ const handleSubmit = async () => {
             class="block w-full pl-10 pr-3 py-3 text-on-surface bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-xl transition-all duration-200"
             placeholder="0.00"
             step="0.01"
+            min="0"
           />
         </div>
       </div>
