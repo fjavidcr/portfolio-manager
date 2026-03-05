@@ -2,6 +2,7 @@
 import { useStore } from '@nanostores/vue'
 import { portfolioStore, fetchTransactions, setFilters } from '@shared/stores/portfolioStore'
 import { TransactionTypes, type TransactionModel } from '@shared/types'
+import { type Timestamp } from 'firebase/firestore'
 import { watch, onMounted, ref, onUnmounted, computed } from 'vue'
 import TransactionCard from './TransactionCard.vue'
 import FilterCard from '@shared/components/FilterCard.vue'
@@ -13,6 +14,14 @@ import TransactionListItem from './TransactionListItem.vue'
 
 const $portfolio = useStore(portfolioStore)
 const observerTarget = ref<HTMLElement | null>(null)
+
+const toJSDate = (date: Date | Timestamp | null): Date => {
+  if (!date) return new Date()
+  if ('toDate' in date && typeof date.toDate === 'function') {
+    return date.toDate()
+  }
+  return date as Date
+}
 
 const searchQuery = ref('')
 const selectedType = ref('')
@@ -69,7 +78,7 @@ const groupedTransactions = computed(() => {
   const groups: Record<string, TransactionModel[]> = {}
 
   filteredTransactions.value.forEach((tx) => {
-    const date = tx.date instanceof Date ? tx.date : (tx.date as any).toDate()
+    const date = toJSDate(tx.date)
     const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' })
     if (!groups[monthYear]) {
       groups[monthYear] = []
@@ -79,12 +88,8 @@ const groupedTransactions = computed(() => {
 
   // Sort months chronologically (most recent first)
   return Object.entries(groups).sort((a, b) => {
-    const dateA = new Date(
-      a[1][0].date instanceof Date ? a[1][0].date : (a[1][0].date as any).toDate()
-    )
-    const dateB = new Date(
-      b[1][0].date instanceof Date ? b[1][0].date : (b[1][0].date as any).toDate()
-    )
+    const dateA = toJSDate(a[1][0].date)
+    const dateB = toJSDate(b[1][0].date)
     return dateB.getTime() - dateA.getTime()
   })
 })

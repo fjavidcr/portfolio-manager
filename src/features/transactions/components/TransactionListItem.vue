@@ -13,12 +13,12 @@ defineProps<{
 
 const $portfolio = useStore(portfolioStore)
 
-const formatDate = (date: Date | Timestamp | null) => {
-  if (!date) return ''
+const toJSDate = (date: Date | Timestamp | null): Date | null => {
+  if (!date) return null
   if ('toDate' in date && typeof date.toDate === 'function') {
-    return date.toDate().toLocaleDateString()
+    return date.toDate()
   }
-  return (date as Date).toLocaleDateString()
+  return date as Date
 }
 
 const getAssetName = (assetId: string) => {
@@ -86,25 +86,13 @@ const getActionStyle = (type: string) => {
       <span
         class="text-[10px] uppercase font-bold text-secondary tracking-widest leading-none mb-1"
       >
-        {{
-          new Date(
-            transaction.date instanceof Date ? transaction.date : (transaction.date as any).toDate()
-          ).toLocaleString('default', { month: 'short' })
-        }}
+        {{ toJSDate(transaction.date)?.toLocaleString('default', { month: 'short' }) }}
       </span>
       <span class="text-xl font-black text-on-surface leading-none">
-        {{
-          new Date(
-            transaction.date instanceof Date ? transaction.date : (transaction.date as any).toDate()
-          ).getDate()
-        }}
+        {{ toJSDate(transaction.date)?.getDate() }}
       </span>
       <span class="text-[10px] font-medium text-secondary/60 mt-1">
-        {{
-          new Date(
-            transaction.date instanceof Date ? transaction.date : (transaction.date as any).toDate()
-          ).getFullYear()
-        }}
+        {{ toJSDate(transaction.date)?.getFullYear() }}
       </span>
     </div>
 

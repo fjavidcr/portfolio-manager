@@ -21,7 +21,6 @@ import {
   type AssetModel,
   type TransactionModel,
   type PlatformModel,
-  TransactionTypes,
   TransactionImpact
 } from '@shared/types'
 
