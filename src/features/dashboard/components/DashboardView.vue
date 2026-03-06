@@ -31,7 +31,7 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
       v-if="$user"
       class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant"
     >
-      <div class="px-6 py-8 flex items-center gap-6">
+      <div class="px-6 py-8 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
         <img
           v-if="$user.photoURL"
           :src="$user.photoURL"
