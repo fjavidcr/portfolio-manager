@@ -43,9 +43,14 @@
 @import "./themes/retro.css";
 @import "./themes/bumblebee.css";
 
+html {
+    background-color: var(--color-surface);
+}
+
 body {
     background-color: var(--color-surface);
     color: var(--color-on-surface);
+    overflow-x: hidden;
     @apply transition-colors duration-300;
 }
 
