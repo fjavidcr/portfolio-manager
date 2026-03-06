@@ -3,11 +3,9 @@ import { ref, computed } from 'vue'
 import { useStore } from '@nanostores/vue'
 import { portfolioStore } from '@shared/stores/portfolioStore'
 
-import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
 import { user } from '@features/auth/stores/authStore'
-import type { TransactionModel, AssetModel } from '@shared/types'
-import { TransactionTypes } from '@shared/types'
+import type { AssetModel } from '@shared/types'
 import FilterCard from '@shared/components/FilterCard.vue'
 import FilterSelect, { type FilterOption } from '@shared/components/FilterSelect.vue'
 import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
@@ -20,7 +18,6 @@ const searchQuery = ref('')
 const selectedType = ref('')
 const selectedPlatform = ref('')
 const showArchived = ref(false)
-const allTransactions = ref<TransactionModel[]>([])
 
 const filteredAssets = computed(() => {
   if (!$portfolio.value.assets) return []
@@ -51,58 +48,13 @@ const filteredAssets = computed(() => {
 // Separate active and archived assets
 const activeAssets = computed(() => {
   return filteredAssets.value
-    .filter((asset) => getInvested(asset.id) > 0 && !asset.isArchived)
-    .sort((a, b) => getInvested(b.id) - getInvested(a.id)) // Sort by invested amount (descending)
+    .filter((asset) => (asset.currentValue || 0) > 0 && !asset.isArchived)
+    .sort((a, b) => (b.currentValue || 0) - (a.currentValue || 0)) // Sort by current value
 })
 
 const archivedAssets = computed(() => {
-  return filteredAssets.value.filter((asset) => getInvested(asset.id) === 0 || asset.isArchived)
+  return filteredAssets.value.filter((asset) => (asset.currentValue || 0) <= 0 || asset.isArchived)
 })
-
-// Load all transactions on mount for accurate calculations
-import { watch } from 'vue'
-
-const loadAllTransactions = async () => {
-  if (!$user.value) return
-
-  try {
-    const txSnapshot = await getDocs(collection(db, 'users', $user.value.uid, 'transactions'))
-    allTransactions.value = txSnapshot.docs.map(
-      (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data()
-        }) as TransactionModel
-    )
-    console.log(`Loaded ${allTransactions.value.length} transactions for asset calculations`)
-  } catch (error) {
-    console.error('Error loading all transactions:', error)
-  }
-}
-
-// Watch for user to be available, then load transactions
-watch(
-  $user,
-  (newUser) => {
-    if (newUser && allTransactions.value.length === 0) {
-      loadAllTransactions()
-    }
-  },
-  { immediate: true }
-)
-
-const getInvested = (assetId: string) => {
-  if (allTransactions.value.length === 0) return 0
-
-  const matchingTransactions = allTransactions.value.filter((tx) => {
-    return (
-      tx.assetId === assetId &&
-      TransactionTypes.includes(tx.type as (typeof TransactionTypes)[number])
-    )
-  })
-
-  return matchingTransactions.reduce((sum, tx) => sum + tx.amount, 0)
-}
 
 // Get unique asset types and their counts
 const assetTypes = computed(() => {

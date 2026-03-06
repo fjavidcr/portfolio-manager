@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useStore } from '@nanostores/vue'
-import { portfolioStore } from '@shared/stores/portfolioStore'
+import { portfolioStore, ensureAssetInvested } from '@shared/stores/portfolioStore'
 import { formatCurrency, formatDate } from '@shared/lib/utils'
 import type { AssetModel } from '@shared/types'
 import EditIcon from '@shared/components/icons/EditIcon.vue'
@@ -11,8 +12,14 @@ interface Props {
   onArchive?: (asset: AssetModel) => void
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 const $portfolio = useStore(portfolioStore)
+
+onMounted(() => {
+  if (props.asset.id && $portfolio.value.assetInvestedMap[props.asset.id] === undefined) {
+    ensureAssetInvested(props.asset.id)
+  }
+})
 
 const getPlatformName = (platformId: string) => {
   const platform = $portfolio.value.platforms.find((p) => p.id === platformId)
@@ -20,18 +27,7 @@ const getPlatformName = (platformId: string) => {
 }
 
 const getInvested = (assetId: string) => {
-  const inflows = ['Plan', 'Aportación', 'Dividendo', 'Traspaso']
-  const outflows = ['Retirada', 'Venta']
-
-  const invested = $portfolio.value.transactions
-    .filter((t) => t.assetId === assetId)
-    .reduce((sum, t) => {
-      if (inflows.includes(t.type)) return sum + t.amount
-      if (outflows.includes(t.type)) return sum - t.amount
-      return sum
-    }, 0)
-
-  return invested
+  return $portfolio.value.assetInvestedMap[assetId] || 0
 }
 
 const getProfit = (asset: AssetModel) => {
@@ -83,7 +79,7 @@ const getRoiPercent = (asset: AssetModel) => {
       <div class="flex gap-1">
         <button
           v-if="onArchive"
-          class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-surface-container/50 rounded-full transition-colors flex-shrink-0"
+          class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-surface-container/50 rounded-full transition-colors shrink-0"
           title="Archivar"
           @click="onArchive(asset)"
         >
@@ -91,7 +87,7 @@ const getRoiPercent = (asset: AssetModel) => {
         </button>
         <a
           :href="`/edit-asset?id=${asset.id}`"
-          class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors flex-shrink-0"
+          class="p-2 text-primary hover:bg-primary-container/20 rounded-full transition-colors shrink-0"
           title="Editar"
         >
           <EditIcon size="md" />
