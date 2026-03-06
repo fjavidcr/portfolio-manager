@@ -31,25 +31,25 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
       v-if="$user"
       class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant"
     >
-      <div class="px-6 py-8 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+      <div class="px-4 py-6 sm:px-6 sm:py-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
         <img
           v-if="$user.photoURL"
           :src="$user.photoURL"
           alt="User Avatar"
-          class="w-20 h-20 rounded-full border-2 border-primary"
+          class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-primary"
           referrerpolicy="no-referrer"
         />
         <div
           v-else
-          class="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-3xl font-bold border-2 border-primary"
+          class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl sm:text-3xl font-bold border-2 border-primary"
         >
           {{ $user.displayName?.[0] || 'U' }}
         </div>
 
-        <div>
-          <h1 class="text-3xl font-bold text-on-surface">Welcome back, {{ $user.displayName }}!</h1>
+        <div class="min-w-0">
+          <h1 class="text-2xl sm:text-3xl font-bold text-on-surface truncate">Welcome back, {{ $user.displayName }}!</h1>
           <div class="mt-1">
-            <p class="text-sm font-medium text-on-surface-variant">{{ $user.email }}</p>
+            <p class="text-sm font-medium text-on-surface-variant truncate">{{ $user.email }}</p>
           </div>
         </div>
       </div>
@@ -119,51 +119,52 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
     </div>
 
     <!-- KPI Grid -->
-    <div v-if="$portfolio.calculatingTotals" class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <div v-if="$portfolio.calculatingTotals" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
       <div
         v-for="i in 3"
         :key="i"
-        class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-6 animate-pulse"
+        class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-4 sm:p-6 animate-pulse"
+        :class="i === 3 ? 'col-span-2 sm:col-span-1' : ''"
       >
         <div class="h-4 bg-gray-700/50 rounded w-1/3 mb-4"></div>
         <div class="h-8 bg-gray-700/50 rounded w-2/3"></div>
       </div>
     </div>
 
-    <div v-else class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <div v-else class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
       <!-- Net Invested -->
       <div
-        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-6"
+        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-4 sm:p-6"
       >
-        <dt class="text-sm font-medium text-gray-400 truncate">Net Invested</dt>
-        <dd class="mt-2 text-3xl font-bold text-on-surface">
+        <dt class="text-xs sm:text-sm font-medium text-gray-400 truncate">Net Invested</dt>
+        <dd class="mt-1 sm:mt-2 text-xl sm:text-3xl font-bold text-on-surface">
           {{ formatCurrency($netInvested) }}
         </dd>
       </div>
 
       <!-- Current Value -->
       <div
-        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-6"
+        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-4 sm:p-6"
       >
-        <dt class="text-sm font-medium text-gray-400 truncate">Current Value</dt>
-        <dd class="mt-2 text-3xl font-bold text-on-surface">
+        <dt class="text-xs sm:text-sm font-medium text-gray-400 truncate">Current Value</dt>
+        <dd class="mt-1 sm:mt-2 text-xl sm:text-3xl font-bold text-on-surface">
           {{ formatCurrency($currentValue) }}
         </dd>
       </div>
 
       <!-- ROI -->
       <div
-        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-6"
+        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-4 sm:p-6 col-span-2 sm:col-span-1"
       >
-        <dt class="text-sm font-medium text-gray-400 truncate">Total ROI</dt>
-        <dd class="mt-2 flex items-baseline gap-2">
+        <dt class="text-xs sm:text-sm font-medium text-gray-400 truncate">Total ROI</dt>
+        <dd class="mt-1 sm:mt-2 flex items-baseline gap-2">
           <span
-            class="text-3xl font-bold"
+            class="text-2xl sm:text-3xl font-bold"
             :class="$totalROI >= 0 ? 'text-green-400' : 'text-error'"
           >
             {{ $totalROI >= 0 ? '+' : '' }}{{ $totalROI.toFixed(2) }}%
           </span>
-          <span class="text-sm text-gray-400">
+          <span class="text-xs sm:text-sm text-gray-400">
             ({{ $currentValue - $netInvested >= 0 ? '+' : ''
             }}{{ formatCurrency($currentValue - $netInvested) }})
           </span>
@@ -178,7 +179,7 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
     >
       <ul role="list" class="divide-y divide-outline-variant">
         <template v-if="$portfolio.loading">
-          <li v-for="i in 5" :key="i" class="px-6 py-5 animate-pulse">
+          <li v-for="i in 5" :key="i" class="px-4 py-4 sm:px-6 sm:py-5 animate-pulse">
             <div class="flex items-center justify-between">
               <div class="h-4 bg-gray-700/50 rounded w-1/3"></div>
               <div class="h-5 bg-gray-700/50 rounded-full w-20"></div>
@@ -193,12 +194,12 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
         </li>
 
         <li v-for="transaction in $portfolio.transactions.slice(0, 5)" v-else :key="transaction.id">
-          <div class="px-6 py-5 hover:bg-surface-container-high transition-colors">
-            <div class="flex items-center justify-between">
-              <p class="text-sm font-medium text-primary truncate">
+          <div class="px-4 py-4 sm:px-6 sm:py-5 hover:bg-surface-container-high transition-colors">
+            <div class="flex items-center justify-between min-w-0 gap-2">
+              <p class="text-sm font-medium text-primary truncate flex-1 min-w-0">
                 {{ transaction.type }} {{ transaction.assetId ? `- ${transaction.assetId}` : '' }}
               </p>
-              <div class="ml-2 flex-shrink-0 flex">
+              <div class="flex-shrink-0 flex">
                 <p
                   class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-secondary-container text-on-secondary-container"
                 >
@@ -206,8 +207,8 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
                 </p>
               </div>
             </div>
-            <div class="mt-2 sm:flex sm:justify-between">
-              <p class="flex items-center text-xs text-gray-400">
+            <div class="mt-1 sm:mt-2 flex justify-between">
+              <p class="flex items-center text-[10px] sm:text-xs text-secondary dark:text-gray-400">
                 {{ formatTransactionDate(transaction.date) }}
               </p>
             </div>
