@@ -13,6 +13,10 @@ A personal investment portfolio management application built with **Astro**, **V
 
 - **Node.js** (v24.0.0+).
 - **Firebase Project** (with Auth and Firestore enabled).
+- **Security Scanners (macOS)**: Required for local Git hooks and manual secret scanning:
+  ```bash
+  brew install gitleaks trufflehog
+  ```
 
 ## 📂 Project Structure
 
@@ -56,6 +60,28 @@ To start the development server:
 ```bash
 npm run dev
 ```
+
+## 🛡️ Security & DevSecOps
+
+This project implements a multi-layered security pipeline to ensure safe code deployments and prevent secret leaks (such as Firebase Admin credentials or API tokens).
+
+### 1. Local Pre-commit Hook (Gitleaks)
+To prevent accidentally committing sensitive information, we use **Husky** and **Gitleaks**.
+Every time you run `git commit`, Husky triggers Gitleaks (`gitleaks protect -v --staged`).
+If Gitleaks detects a potential secret in the files you are trying to commit, **the commit will be blocked immediately**.
+
+### 2. Manual Deep Scanner (TruffleHog)
+While Gitleaks is fast and runs on every commit, **TruffleHog** is used for deep, comprehensive scanning of the entire repository history. To run a full audit locally:
+```bash
+npm run scan:secrets
+```
+*(Requires `trufflehog` to be installed on your system).*
+
+### 3. GitHub Actions CI/CD (CodeQL)
+The repository uses a automated **Security Verification** workflow (`.github/workflows/security.yml`).
+On every push or pull request to the main branches, **GitHub CodeQL** performs Static Application Security Testing (SAST). Additionally, Firebase deployments are blocked unless both the build CI and CodeQL security checks pass successfully.
+
+*(Note: Ensure you activate Dependabot in GitHub repository settings to keep `package.json` dependencies secure and up-to-date).*
 
 ## 🚀 Deployment Scripts
 
