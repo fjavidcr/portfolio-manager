@@ -23,7 +23,7 @@
     "seed": "node scripts/seed_database.cjs",
     "users-list": "node scripts/list_users.cjs",
     "migrate-tx": "node scripts/migrate_transactions.cjs",
-    "scan:secrets": "trufflehog git file://. && trufflehog filesystem . --exclude-paths=.trufflehog-ignore",
+    "scan:secrets": "trufflehog git file://. && echo \"\" && trufflehog filesystem . --exclude-paths=.trufflehog-ignore",
     "prepare": "husky"
   },
   "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
