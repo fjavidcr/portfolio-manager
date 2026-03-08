@@ -31,7 +31,9 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
       v-if="$user"
       class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant"
     >
-      <div class="px-4 py-6 sm:px-6 sm:py-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+      <div
+        class="px-4 py-6 sm:px-6 sm:py-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left"
+      >
         <img
           v-if="$user.photoURL"
           :src="$user.photoURL"
@@ -47,7 +49,9 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
         </div>
 
         <div class="min-w-0">
-          <h1 class="text-2xl sm:text-3xl font-bold text-on-surface truncate">Welcome back, {{ $user.displayName }}!</h1>
+          <h1 class="text-2xl sm:text-3xl font-bold text-on-surface truncate">
+            Welcome back, {{ $user.displayName }}!
+          </h1>
           <div class="mt-1">
             <p class="text-sm font-medium text-on-surface-variant truncate">{{ $user.email }}</p>
           </div>

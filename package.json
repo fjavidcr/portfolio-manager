@@ -22,7 +22,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node scripts/seed_database.cjs",
     "users-list": "node scripts/list_users.cjs",
-    "migrate-tx": "node scripts/migrate_transactions.cjs"
+    "migrate-tx": "node scripts/migrate_transactions.cjs",
+    "scan:secrets": "trufflehog git file://. && echo \"\" && trufflehog filesystem . --exclude-paths=.trufflehog-ignore",
+    "prepare": "husky"
   },
   "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
   "license": "ISC",
@@ -47,6 +49,7 @@
     "eslint-plugin-astro": "^1.5.0",
     "eslint-plugin-vue": "^10.6.2",
     "globals": "^17.0.0",
+    "husky": "^9.1.7",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1",
     "typescript-eslint": "^8.53.0",

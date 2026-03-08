@@ -26,23 +26,25 @@ const isExpanded = ref(false)
     class="sticky top-4 z-20 bg-surface-container-low shadow-lg rounded-2xl border border-outline-variant mb-6 backdrop-blur-sm transition-all overflow-hidden"
   >
     <!-- Mobile Header (Visible mainly on mobile, clicks to expand) -->
-    <div 
+    <div
       class="p-4 sm:hidden flex items-center justify-between cursor-pointer"
       @click="isExpanded = !isExpanded"
     >
       <div class="flex items-center gap-2">
         <span class="font-semibold text-on-surface">Filters & Search</span>
-        <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-secondary-container text-on-secondary-container">
+        <span
+          class="px-2 py-0.5 text-xs font-medium rounded-full bg-secondary-container text-on-secondary-container"
+        >
           {{ resultCount }}
         </span>
       </div>
-      <ChevronRightIcon 
+      <ChevronRightIcon
         :class="`text-secondary transition-transform duration-300 ${isExpanded ? 'rotate-90' : '-rotate-90'}`"
       />
     </div>
 
     <!-- Content Area -->
-    <div 
+    <div
       class="p-4 sm:p-6 sm:block border-t border-outline-variant/30 sm:border-t-0"
       :class="isExpanded ? 'block' : 'hidden'"
     >

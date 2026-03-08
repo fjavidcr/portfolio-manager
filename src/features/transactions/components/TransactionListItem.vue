@@ -85,7 +85,9 @@ const getActionStyle = (type: string) => {
       <div
         class="hidden sm:flex shrink-0 flex-col items-center justify-center bg-surface-container-high rounded-xl p-2 min-w-[70px] border border-outline-variant/50"
       >
-        <span class="text-[10px] uppercase font-bold text-secondary tracking-widest leading-none mb-1">
+        <span
+          class="text-[10px] uppercase font-bold text-secondary tracking-widest leading-none mb-1"
+        >
           {{ toJSDate(transaction.date)?.toLocaleString('default', { month: 'short' }) }}
         </span>
         <span class="text-xl font-black text-on-surface leading-none">
@@ -126,19 +128,27 @@ const getActionStyle = (type: string) => {
       >
         {{ getAssetName(transaction.assetId) }}
       </h3>
-      <p v-if="transaction.description" class="text-[10px] sm:text-xs text-secondary/70 truncate mt-0.5">
+      <p
+        v-if="transaction.description"
+        class="text-[10px] sm:text-xs text-secondary/70 truncate mt-0.5"
+      >
         {{ transaction.description }}
       </p>
     </div>
 
     <!-- Right: Amount & Edit -->
-    <div class="flex flex-col items-end sm:flex-row sm:items-center justify-end gap-2 sm:gap-6 shrink-0 relative">
+    <div
+      class="flex flex-col items-end sm:flex-row sm:items-center justify-end gap-2 sm:gap-6 shrink-0 relative"
+    >
       <div class="text-right">
-        <p class="text-base sm:text-lg font-bold tracking-tight" :class="getActionStyle(transaction.type).text">
+        <p
+          class="text-base sm:text-lg font-bold tracking-tight"
+          :class="getActionStyle(transaction.type).text"
+        >
           {{ formatCurrency(transaction.amount) }}
         </p>
       </div>
-      
+
       <a
         :href="`/edit-transaction?id=${transaction.id}`"
         class="hidden sm:block p-1.5 sm:p-2 rounded-full box-content bg-surface-container-highest/30 text-secondary hover:text-primary hover:bg-surface-container-highest transition-all sm:opacity-0 sm:group-hover:opacity-100"
