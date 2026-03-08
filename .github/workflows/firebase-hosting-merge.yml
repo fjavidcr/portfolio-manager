@@ -16,8 +16,10 @@ permissions:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
+    secrets: inherit
   security:
     uses: ./.github/workflows/security.yml
+    secrets: inherit
   build_and_deploy:
     needs: [ci, security]
     runs-on: ubuntu-latest

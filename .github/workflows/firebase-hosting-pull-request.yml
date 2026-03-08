@@ -17,8 +17,10 @@ permissions:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
+    secrets: inherit
   security:
     uses: ./.github/workflows/security.yml
+    secrets: inherit
   build_and_preview:
     needs: [ci, security]
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
