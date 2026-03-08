@@ -156,11 +156,22 @@ const handleSubmit = async () => {
     const uid = $user.value.uid
     const txDate = new Date(date.value)
 
+    if (description.value.length > 500) {
+      alert('Description must be 500 characters or less')
+      submitting.value = false
+      return
+    }
+
     if (routeId.value) {
       // UPDATE MODE
       const normalizedAmount = Math.abs(Number(amount.value))
       if (normalizedAmount <= 0) {
         alert('Please enter a positive amount')
+        submitting.value = false
+        return
+      }
+      if (normalizedAmount > 1000000000) {
+        alert('Amount exceeds maximum allowed limit')
         submitting.value = false
         return
       }
@@ -177,6 +188,11 @@ const handleSubmit = async () => {
       const normalizedAmount = Math.abs(Number(amount.value))
       if (normalizedAmount <= 0) {
         alert('Please enter a positive amount')
+        submitting.value = false
+        return
+      }
+      if (normalizedAmount > 1000000000) {
+        alert('Amount exceeds maximum allowed limit')
         submitting.value = false
         return
       }
@@ -357,6 +373,7 @@ const handleSubmit = async () => {
             placeholder="0.00"
             step="0.01"
             min="0"
+            max="1000000000"
           />
         </div>
       </div>
@@ -407,6 +424,7 @@ const handleSubmit = async () => {
           v-model="description"
           name="description"
           rows="3"
+          maxlength="500"
           class="block w-full pl-10 pr-3 py-3 text-on-surface bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-xl transition-all duration-200"
           placeholder="Optional notes..."
         ></textarea>

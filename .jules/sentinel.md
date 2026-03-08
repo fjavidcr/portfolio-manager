@@ -1,0 +1,4 @@
+## 2024-05-24 - [Add Input Boundaries to Prevent Database Bloat and DoS]
+**Vulnerability:** Input fields in Vue components (`AddTransactionForm.vue`) lacked explicit boundaries (`max` for numbers, `maxlength` for text), allowing potentially excessively large payloads to be submitted and processed.
+**Learning:** By default, HTML inputs do not enforce maximum limits. Without client-side and application-level validation before database interaction, malicious actors or user error could lead to database bloat or Denial of Service (DoS) via resource exhaustion.
+**Prevention:** Always implement defense in depth by adding HTML attributes (`max`, `maxlength`) to inputs in templates and corresponding programmatic validation in submission handlers before interacting with the database.
