@@ -1,0 +1,22 @@
+name: PR Size Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label_pr_size:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Size Labeler
+        uses: coverwallet/pr-labeler@v1.2.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          xs-max-size: '10'
+          s-max-size: '100'
+          m-max-size: '500'
+          l-max-size: '1000'
+          exclude-files: '.eslintrc.js, package-lock.json, *.lock'
