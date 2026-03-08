@@ -6,6 +6,13 @@ on:
   push:
     branches:
       - master
+permissions:
+  checks: write
+  contents: write
+  pull-requests: write
+  security-events: write
+  packages: read
+  actions: read
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
