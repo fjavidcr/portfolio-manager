@@ -187,6 +187,7 @@ const removeItem = (id: string) => {
       <input
         v-model="newItemName"
         type="text"
+        maxlength="50"
         :placeholder="
           editingItemId
             ? 'Edit Name'
@@ -226,6 +227,7 @@ const removeItem = (id: string) => {
         <input
           v-model="newItemAmount"
           type="number"
+          max="10000000000"
           placeholder="€"
           class="w-28 h-full bg-surface-container-high border-0 border-b-2 border-outline-variant/50 focus:border-primary focus:ring-0 px-4 rounded-xl transition-colors text-sm"
           @keyup.enter="addItem"
