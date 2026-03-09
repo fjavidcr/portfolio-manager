@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { computed } from 'vue'
+import { formatCurrencyClean } from '@shared/lib/utils'
 import {
   totalPersonalExpenses,
   totalCommonExpenses
@@ -21,14 +22,6 @@ const annualCostOfLiving = computed(() => monthlyCostOfLiving.value * 12)
 
 const targetEmergencyFund = computed(() => monthlyCostOfLiving.value * 6)
 const targetRetirementReserve = computed(() => annualCostOfLiving.value * 33)
-
-const formatCurrency = (val: number) => {
-  return val.toLocaleString('es-ES', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0
-  })
-}
 </script>
 
 <template>
@@ -60,13 +53,13 @@ const formatCurrency = (val: number) => {
         <div class="flex justify-between items-center">
           <span class="text-sm font-medium text-secondary">Monthly Cost of Living</span>
           <span class="text-lg font-bold text-on-surface">{{
-            formatCurrency(monthlyCostOfLiving)
+            formatCurrencyClean(monthlyCostOfLiving)
           }}</span>
         </div>
         <div class="flex justify-between items-center">
           <span class="text-sm font-medium text-secondary">Annual Cost of Living</span>
           <span class="text-lg font-bold text-on-surface">{{
-            formatCurrency(annualCostOfLiving)
+            formatCurrencyClean(annualCostOfLiving)
           }}</span>
         </div>
       </div>
@@ -77,7 +70,9 @@ const formatCurrency = (val: number) => {
         <div class="space-y-1">
           <div class="flex justify-between text-xs">
             <span class="font-medium text-tertiary">Emergency Fund (6 Months)</span>
-            <span class="font-bold text-tertiary">{{ formatCurrency(targetEmergencyFund) }}</span>
+            <span class="font-bold text-tertiary">{{
+              formatCurrencyClean(targetEmergencyFund)
+            }}</span>
           </div>
           <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
             <div class="h-full bg-tertiary/50 w-full opacity-30"></div>
@@ -92,7 +87,7 @@ const formatCurrency = (val: number) => {
           <div class="flex justify-between text-xs">
             <span class="font-medium text-primary">Retirement cash reserve (33x Annual)</span>
             <span class="font-bold text-primary">{{
-              formatCurrency(targetRetirementReserve)
+              formatCurrencyClean(targetRetirementReserve)
             }}</span>
           </div>
           <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">

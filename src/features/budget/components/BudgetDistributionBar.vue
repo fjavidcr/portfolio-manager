@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { formatCurrency } from '@shared/lib/utils'
 
 const props = defineProps<{
   totalIncome: number
@@ -21,10 +22,6 @@ const segments = computed(() => {
     savings: (props.savingsTarget / props.totalIncome) * 100
   }
 })
-
-const formatCurrency = (val: number) => {
-  return val.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
-}
 </script>
 
 <template>
