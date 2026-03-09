@@ -98,3 +98,9 @@ The `package.json` includes several scripts for deploying specific parts of the 
 - `npm run deploy:storage`: Deploys **only** the Firebase Storage rules (`firebase.storage.rules`).
   - _Note: Firebase Storage is not actively used in this project, but its configuration file is kept here securely in version control._
 - `npm run deploy:all`: Builds the Astro app and deploys **everything** (app, database rules/indexes, and storage rules) to Firebase.
+
+## 📄 License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
+Copyright (c) 2026 fjavidcr
