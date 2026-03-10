@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { portfolioStore } from '@shared/stores/portfolioStore'
-import { formatCurrency } from '@shared/lib/utils'
+import { formatCurrency, formatDate } from '@shared/lib/utils'
 import type { TransactionModel, AssetModel } from '@shared/types'
-import type { Timestamp } from 'firebase/firestore'
 import EditIcon from '@shared/components/icons/EditIcon.vue'
 import TransactionIcon from '@shared/components/icons/TransactionIcon.vue'
 
@@ -12,15 +11,6 @@ defineProps<{
 }>()
 
 const $portfolio = useStore(portfolioStore)
-
-const formatDate = (date: Date | Timestamp | null) => {
-  if (!date) return ''
-  if ('toDate' in date && typeof date.toDate === 'function') {
-    return date.toDate().toLocaleDateString()
-  }
-  // At this point, date must be a Date instance
-  return (date as Date).toLocaleDateString()
-}
 
 const getAssetName = (assetId: string) => {
   if (!assetId) return 'Unknown Asset'

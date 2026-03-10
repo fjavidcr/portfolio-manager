@@ -85,7 +85,7 @@ const isExpanded = ref(false)
       >
         <span class="hidden sm:inline">Showing {{ resultCount }} results</span>
         <span class="sm:hidden">
-          <button @click="isExpanded = false" class="text-primary font-medium hover:underline">
+          <button class="text-primary font-medium hover:underline" @click="isExpanded = false">
             Close Filters
           </button>
         </span>

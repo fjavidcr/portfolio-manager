@@ -2,3 +2,7 @@
 
 **Learning:** Calling `Date.prototype.toLocaleString` repeatedly inside a reactive context (like Vue's `computed` property) for large collections is a massive hidden bottleneck. `toLocaleString` re-instantiates locale data for each call, taking ~2 seconds for 10,000 iterations.
 **Action:** When formatting dates in a list or loop (especially inside Vue reactive getters), always pre-instantiate an `Intl.DateTimeFormat` object outside the loop and use `formatter.format(date)`, which is around ~100x faster.
+
+## 2025-03-10 - Pre-instantiate DateTimeFormat for faster list rendering
+**Learning:** Instantiating `Intl.DateTimeFormat` or calling `.toLocaleDateString()` and `.toLocaleString()` inside Vue components or render loops causes performance bottlenecks, especially in components rendering lists like transactions.
+**Action:** Always pre-instantiate `Intl.DateTimeFormat` objects in a centralized utility file and cache them outside of reactive contexts or loops. Update `utils.ts` and use the cached formatters throughout the app.
