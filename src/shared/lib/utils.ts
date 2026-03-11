@@ -31,12 +31,27 @@ export const formatCurrencyClean = (value: number) => {
   return cleanCurrencyFormatter.format(value)
 }
 
+// Cache Intl.DateTimeFormat objects for performance
+const esDateFormatter = new Intl.DateTimeFormat('es-ES')
+const systemDateFormatter = new Intl.DateTimeFormat('default')
+const shortMonthFormatter = new Intl.DateTimeFormat('default', { month: 'short' })
+
+export const formatSystemDate = (date: Date | null | undefined) => {
+  if (!date) return ''
+  return systemDateFormatter.format(date)
+}
+
+export const formatShortMonth = (date: Date | null | undefined) => {
+  if (!date) return ''
+  return shortMonthFormatter.format(date)
+}
+
 export const formatDate = (date: Date | Timestamp | { seconds: number } | null | undefined) => {
   if (!date) return '-'
   // Handle Firestore Timestamp
   if ('seconds' in date) {
-    return new Date(date.seconds * 1000).toLocaleDateString('es-ES')
+    return esDateFormatter.format(new Date(date.seconds * 1000))
   }
   // Handle Date object or string
-  return new Date(date).toLocaleDateString('es-ES')
+  return esDateFormatter.format(new Date(date))
 }
