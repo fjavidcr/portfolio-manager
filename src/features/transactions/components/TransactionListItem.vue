@@ -21,6 +21,19 @@ const toJSDate = (date: Date | Timestamp | null): Date | null => {
   return date as Date
 }
 
+// Import cached formatters to avoid recreation per instance
+import { formatShortMonth, formatDefaultDate } from '@shared/lib/utils'
+
+const getShortMonth = (date: Date | null) => {
+  if (!date || isNaN(date.getTime())) return ''
+  return formatShortMonth(date)
+}
+
+const getFormattedDate = (date: Date | null) => {
+  if (!date || isNaN(date.getTime())) return ''
+  return formatDefaultDate(date)
+}
+
 const getAssetName = (assetId: string) => {
   if (!assetId) return 'Unknown Asset'
   const asset = $portfolio.value.assets.find((a: AssetModel) => a.id === assetId)
@@ -88,7 +101,7 @@ const getActionStyle = (type: string) => {
         <span
           class="text-[10px] uppercase font-bold text-secondary tracking-widest leading-none mb-1"
         >
-          {{ toJSDate(transaction.date)?.toLocaleString('default', { month: 'short' }) }}
+          {{ getShortMonth(toJSDate(transaction.date)) }}
         </span>
         <span class="text-xl font-black text-on-surface leading-none">
           {{ toJSDate(transaction.date)?.getDate() }}
@@ -119,7 +132,7 @@ const getActionStyle = (type: string) => {
           {{ transaction.type }}
         </span>
         <span class="sm:hidden text-[10px] text-secondary font-medium tracking-wide">
-          {{ toJSDate(transaction.date)?.toLocaleDateString() }}
+          {{ getFormattedDate(toJSDate(transaction.date)) }}
         </span>
       </div>
       <h3

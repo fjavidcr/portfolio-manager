@@ -16,12 +16,19 @@ const $currentValue = useStore(currentPortfolioValue)
 const $totalROI = useStore(totalROI)
 const $portfolio = useStore(portfolioStore)
 
+// Import cached formatter
+import { formatDefaultDate } from '@shared/lib/utils'
+
 const formatTransactionDate = (date: Date | Timestamp | null) => {
   if (!date) return ''
+  let jsDate: Date
   if ('toDate' in date && typeof date.toDate === 'function') {
-    return date.toDate().toLocaleDateString()
+    jsDate = date.toDate()
+  } else {
+    jsDate = date as Date
   }
-  return (date as Date).toLocaleDateString()
+  if (isNaN(jsDate.getTime())) return ''
+  return formatDefaultDate(jsDate)
 }
 </script>
 
