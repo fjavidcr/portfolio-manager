@@ -187,6 +187,7 @@ const removeItem = (id: string) => {
       <input
         v-model="newItemName"
         type="text"
+        maxlength="100"
         :placeholder="
           editingItemId
             ? 'Edit Name'

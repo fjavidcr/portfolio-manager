@@ -340,6 +340,7 @@ const handleDelete = async () => {
         id="id"
         v-model="id"
         type="text"
+        maxlength="20"
         :disabled="!!effectiveAssetId"
         class="mt-2 block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
         placeholder="Ej: AAPL, BTC"
@@ -352,6 +353,7 @@ const handleDelete = async () => {
         id="name"
         v-model="name"
         type="text"
+        maxlength="100"
         class="mt-2 block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
         placeholder="Ej: Apple Inc."
       />
