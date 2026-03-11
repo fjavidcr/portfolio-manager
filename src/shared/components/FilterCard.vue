@@ -57,6 +57,7 @@ const isExpanded = ref(false)
           <input
             v-model="searchQuery"
             type="text"
+            maxlength="100"
             :placeholder="searchPlaceholder"
             class="block w-full pl-10 pr-3 py-3 bg-surface border border-outline-variant rounded-full text-on-surface placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent sm:text-sm"
           />
