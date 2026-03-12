@@ -165,7 +165,6 @@ const handleSubmit = async () => {
         return
       }
 
-      // Security: Enforce input length limits to prevent DB bloat/DoS
       if (description.value.length > 500) {
         alert('Description must be 500 characters or less')
         submitting.value = false
@@ -188,7 +187,6 @@ const handleSubmit = async () => {
         return
       }
 
-      // Security: Enforce input length limits to prevent DB bloat/DoS
       if (description.value.length > 500) {
         alert('Description must be 500 characters or less')
         submitting.value = false

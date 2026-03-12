@@ -1,0 +1,10 @@
+--- src/features/assets/components/AddAssetForm.vue
++++ src/features/assets/components/AddAssetForm.vue
+@@ -165,6 +165,7 @@
+     return
+   }
+
++  // Security: Enforce input length limits to prevent DB bloat/DoS
+   if (id.value.length > 20 || name.value.length > 100 || (isCustomType.value && customType.value.length > 50) || (isCreatingPlatform.value && newPlatformName.value.length > 50)) {
+     error.value = 'Un campo excede la longitud máxima permitida.'
+     return
