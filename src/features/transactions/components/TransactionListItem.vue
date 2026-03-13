@@ -1,7 +1,18 @@
+<script lang="ts">
+// ⚡ Bolt: Cache Intl.DateTimeFormat object at the module level to prevent
+// slow re-instantiation for every single list item during the initial render.
+const monthShortFormatter = new Intl.DateTimeFormat(undefined, { month: 'short' })
+
+const formatMonthShort = (date: Date | null) => {
+  if (!date || isNaN(date.getTime())) return ''
+  return monthShortFormatter.format(date)
+}
+</script>
+
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { portfolioStore } from '@shared/stores/portfolioStore'
-import { formatCurrency } from '@shared/lib/utils'
+import { formatCurrency, formatDate } from '@shared/lib/utils'
 import type { TransactionModel, AssetModel } from '@shared/types'
 import type { Timestamp } from 'firebase/firestore'
 import EditIcon from '@shared/components/icons/EditIcon.vue'
@@ -88,7 +99,7 @@ const getActionStyle = (type: string) => {
         <span
           class="text-[10px] uppercase font-bold text-secondary tracking-widest leading-none mb-1"
         >
-          {{ toJSDate(transaction.date)?.toLocaleString('default', { month: 'short' }) }}
+          {{ formatMonthShort(toJSDate(transaction.date)) }}
         </span>
         <span class="text-xl font-black text-on-surface leading-none">
           {{ toJSDate(transaction.date)?.getDate() }}
@@ -119,7 +130,7 @@ const getActionStyle = (type: string) => {
           {{ transaction.type }}
         </span>
         <span class="sm:hidden text-[10px] text-secondary font-medium tracking-wide">
-          {{ toJSDate(transaction.date)?.toLocaleDateString() }}
+          {{ formatDate(transaction.date) }}
         </span>
       </div>
       <h3
