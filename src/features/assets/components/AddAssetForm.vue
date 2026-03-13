@@ -336,10 +336,12 @@ const handleDelete = async () => {
 
     <div>
       <label for="id" class="block text-sm font-medium text-gray-400">Símbolo (Ticker / ID)</label>
+      <!-- Security: Restrict input length to prevent excessive DB storage/DoS -->
       <input
         id="id"
         v-model="id"
         type="text"
+        maxlength="20"
         :disabled="!!effectiveAssetId"
         class="mt-2 block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
         placeholder="Ej: AAPL, BTC"
@@ -348,10 +350,12 @@ const handleDelete = async () => {
 
     <div>
       <label for="name" class="block text-sm font-medium text-gray-400">Nombre Completo</label>
+      <!-- Security: Restrict input length to prevent excessive DB storage/DoS -->
       <input
         id="name"
         v-model="name"
         type="text"
+        maxlength="100"
         class="mt-2 block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
         placeholder="Ej: Apple Inc."
       />
@@ -383,10 +387,12 @@ const handleDelete = async () => {
         </div>
 
         <div v-else class="space-y-2">
+          <!-- Security: Restrict input length to prevent excessive DB storage/DoS -->
           <input
             ref="customTypeInput"
             v-model="customType"
             type="text"
+            maxlength="50"
             class="block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Escribe el nuevo tipo (ej: Bonos)"
             @input="handleCustomTypeInput"
@@ -420,9 +426,11 @@ const handleDelete = async () => {
         </div>
 
         <div v-else class="space-y-2">
+          <!-- Security: Restrict input length to prevent excessive DB storage/DoS -->
           <input
             v-model="newPlatformName"
             type="text"
+            maxlength="50"
             class="block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Nombre de la nueva plataforma (ej: Binance)"
           />
@@ -441,11 +449,13 @@ const handleDelete = async () => {
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <span class="text-gray-500 sm:text-sm">€</span>
         </div>
+        <!-- Security: Restrict max value to prevent integer overflow/DoS -->
         <input
           id="currentValue"
           v-model="currentValue"
           type="number"
           step="0.01"
+          max="1000000000"
           class="block w-full pl-8 pr-12 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary sm:text-sm"
           placeholder="0.00"
         />
