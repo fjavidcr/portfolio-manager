@@ -340,6 +340,7 @@ const handleDelete = async () => {
         id="id"
         v-model="id"
         type="text"
+        maxlength="20"
         :disabled="!!effectiveAssetId"
         class="mt-2 block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
         placeholder="Ej: AAPL, BTC"
@@ -352,6 +353,7 @@ const handleDelete = async () => {
         id="name"
         v-model="name"
         type="text"
+        maxlength="100"
         class="mt-2 block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
         placeholder="Ej: Apple Inc."
       />
@@ -387,6 +389,7 @@ const handleDelete = async () => {
             ref="customTypeInput"
             v-model="customType"
             type="text"
+            maxlength="50"
             class="block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Escribe el nuevo tipo (ej: Bonos)"
             @input="handleCustomTypeInput"
@@ -423,6 +426,7 @@ const handleDelete = async () => {
           <input
             v-model="newPlatformName"
             type="text"
+            maxlength="50"
             class="block w-full px-4 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Nombre de la nueva plataforma (ej: Binance)"
           />
@@ -445,6 +449,7 @@ const handleDelete = async () => {
           id="currentValue"
           v-model="currentValue"
           type="number"
+          max="1000000000"
           step="0.01"
           class="block w-full pl-8 pr-12 py-3 bg-surface border border-outline-variant rounded-lg text-on-surface focus:outline-none focus:ring-2 focus:ring-primary sm:text-sm"
           placeholder="0.00"

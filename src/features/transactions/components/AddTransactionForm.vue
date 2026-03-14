@@ -352,6 +352,7 @@ const handleSubmit = async () => {
             id="amount"
             v-model="amount"
             type="number"
+            max="1000000000"
             name="amount"
             class="block w-full pl-10 pr-3 py-3 text-on-surface bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-xl transition-all duration-200"
             placeholder="0.00"
@@ -405,6 +406,7 @@ const handleSubmit = async () => {
         <textarea
           id="description"
           v-model="description"
+          maxlength="500"
           name="description"
           rows="3"
           class="block w-full pl-10 pr-3 py-3 text-on-surface bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-xl transition-all duration-200"
