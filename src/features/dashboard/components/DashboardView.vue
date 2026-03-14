@@ -7,7 +7,7 @@ import {
   portfolioStore
 } from '@shared/stores/portfolioStore'
 import { user } from '@features/auth/stores/authStore'
-import { formatCurrency } from '@shared/lib/utils'
+import { formatCurrency, defaultDateFormatter } from '@shared/lib/utils'
 import type { Timestamp } from 'firebase/firestore'
 
 const $user = useStore(user)
@@ -18,10 +18,13 @@ const $portfolio = useStore(portfolioStore)
 
 const formatTransactionDate = (date: Date | Timestamp | null) => {
   if (!date) return ''
+  let d: Date
   if ('toDate' in date && typeof date.toDate === 'function') {
-    return date.toDate().toLocaleDateString()
+    d = date.toDate()
+  } else {
+    d = date as Date
   }
-  return (date as Date).toLocaleDateString()
+  return isNaN(d.getTime()) ? 'Invalid Date' : defaultDateFormatter.format(d)
 }
 </script>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { portfolioStore } from '@shared/stores/portfolioStore'
-import { formatCurrency } from '@shared/lib/utils'
+import { formatCurrency, defaultDateFormatter } from '@shared/lib/utils'
 import type { TransactionModel, AssetModel } from '@shared/types'
 import type { Timestamp } from 'firebase/firestore'
 import EditIcon from '@shared/components/icons/EditIcon.vue'
@@ -119,7 +119,13 @@ const getActionStyle = (type: string) => {
           {{ transaction.type }}
         </span>
         <span class="sm:hidden text-[10px] text-secondary font-medium tracking-wide">
-          {{ toJSDate(transaction.date)?.toLocaleDateString() }}
+          {{
+            (() => {
+              const d = toJSDate(transaction.date)
+              if (!d) return ''
+              return isNaN(d.getTime()) ? 'Invalid Date' : defaultDateFormatter.format(d)
+            })()
+          }}
         </span>
       </div>
       <h3
