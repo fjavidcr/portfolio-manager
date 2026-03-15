@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BudgetDistributionBar from './BudgetDistributionBar.vue'
+import { formatCurrency } from '@shared/lib/utils'
 
 const props = defineProps<{
   totalIncome: number
@@ -19,10 +20,6 @@ const emit = defineEmits<{
 const totalExpenses = computed(() => props.personalExpenses + props.commonExpenses)
 const remaining = computed(() => props.totalIncome - totalExpenses.value)
 const maxAllocation = computed(() => Math.max(0, remaining.value))
-
-const formatCurrency = (val: number) => {
-  return val.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
-}
 </script>
 
 <template>

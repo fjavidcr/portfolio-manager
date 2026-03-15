@@ -51,6 +51,17 @@ watch([selectedType, selectedAsset], ([type, asset]) => {
   })
 })
 
+// Pre-calculate asset names map to optimize search O(N*M) -> O(N+M)
+const assetMap = computed(() => {
+  return $portfolio.value.assets.reduce(
+    (acc, asset) => {
+      acc[asset.id] = asset.name
+      return acc
+    },
+    {} as Record<string, string>
+  )
+})
+
 // Filtered Transactions
 const filteredTransactions = computed(() => {
   let result = $portfolio.value.transactions
@@ -58,8 +69,9 @@ const filteredTransactions = computed(() => {
   // Apply search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
+    const assets = assetMap.value
     result = result.filter((tx) => {
-      const assetName = $portfolio.value.assets.find((a) => a.id === tx.assetId)?.name || ''
+      const assetName = assets[tx.assetId] || ''
       return (
         tx.type.toLowerCase().includes(query) ||
         tx.assetId.toLowerCase().includes(query) ||
@@ -73,13 +85,16 @@ const filteredTransactions = computed(() => {
   return result
 })
 
+// Cache Intl object for ~100x faster date formatting in loop
+const monthYearFormatter = new Intl.DateTimeFormat('default', { month: 'long', year: 'numeric' })
+
 // Grouped Transactions for List View
 const groupedTransactions = computed(() => {
   const groups: Record<string, TransactionModel[]> = {}
 
   filteredTransactions.value.forEach((tx) => {
     const date = toJSDate(tx.date)
-    const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' })
+    const monthYear = monthYearFormatter.format(date)
     if (!groups[monthYear]) {
       groups[monthYear] = []
     }

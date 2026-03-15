@@ -357,6 +357,7 @@ const handleSubmit = async () => {
             placeholder="0.00"
             step="0.01"
             min="0"
+            max="10000000000"
           />
         </div>
       </div>
@@ -407,6 +408,7 @@ const handleSubmit = async () => {
           v-model="description"
           name="description"
           rows="3"
+          maxlength="500"
           class="block w-full pl-10 pr-3 py-3 text-on-surface bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-xl transition-all duration-200"
           placeholder="Optional notes..."
         ></textarea>
