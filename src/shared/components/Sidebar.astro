@@ -71,6 +71,26 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
         Budget
       </a>
       <a
+        href="/planning"
+        class="flex items-center px-4 py-3.5 text-sm font-medium rounded-2xl transition-all duration-200 group nav-item hover:bg-surface-container-high"
+        id="nav-planning"
+      >
+        <svg
+          class="w-5 h-5 mr-3 transition-colors group-hover:text-primary"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"
+          ></path>
+        </svg>
+        Planning
+      </a>
+      <a
         href="/assets"
         class="flex items-center px-4 py-3.5 text-sm font-medium rounded-2xl transition-all duration-200 group nav-item hover:bg-surface-container-high"
         id="nav-assets"
@@ -209,6 +229,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
   const links = {
     '/': 'nav-dashboard',
     '/budget': 'nav-budget',
+    '/planning': 'nav-planning',
     '/assets': 'nav-assets',
     '/transactions': 'nav-transactions'
   }
@@ -218,6 +239,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
   if (path.includes('assets')) activeId = links['/assets']
   else if (path.includes('transactions')) activeId = links['/transactions']
   else if (path.includes('budget')) activeId = links['/budget']
+  else if (path.includes('planning')) activeId = links['/planning']
 
   document
     .getElementById(activeId)
