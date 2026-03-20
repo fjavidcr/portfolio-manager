@@ -33,24 +33,51 @@ export const formatCurrencyClean = (value: number) => {
 
 // Cache Intl.DateTimeFormat objects for ~100x faster date formatting in loops
 const defaultDateFormatter = new Intl.DateTimeFormat('es-ES')
-const shortMonthFormatter = new Intl.DateTimeFormat('default', { month: 'short' })
+const shortMonthFormatter = new Intl.DateTimeFormat(undefined, { month: 'short' })
+const monthYearFormatter = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' })
 
 export const formatDate = (date: Date | Timestamp | { seconds: number } | null | undefined) => {
   if (!date) return '-'
-  // Handle Firestore Timestamp
+
+  let d: Date
   if ('seconds' in date) {
-    return defaultDateFormatter.format(new Date(date.seconds * 1000))
+    d = new Date(date.seconds * 1000)
+  } else {
+    d = new Date(date as Date)
   }
-  // Handle Date object or string
-  return defaultDateFormatter.format(new Date(date))
+
+  if (isNaN(d.getTime())) return '-'
+  return defaultDateFormatter.format(d)
 }
 
 export const formatShortMonth = (
   date: Date | Timestamp | { seconds: number } | null | undefined
 ) => {
   if (!date) return '-'
+
+  let d: Date
   if ('seconds' in date) {
-    return shortMonthFormatter.format(new Date(date.seconds * 1000))
+    d = new Date(date.seconds * 1000)
+  } else {
+    d = new Date(date as Date)
   }
-  return shortMonthFormatter.format(new Date(date))
+
+  if (isNaN(d.getTime())) return '-'
+  return shortMonthFormatter.format(d)
+}
+
+export const formatMonthYear = (
+  date: Date | Timestamp | { seconds: number } | null | undefined
+) => {
+  if (!date) return '-'
+
+  let d: Date
+  if ('seconds' in date) {
+    d = new Date(date.seconds * 1000)
+  } else {
+    d = new Date(date as Date)
+  }
+
+  if (isNaN(d.getTime())) return '-'
+  return monthYearFormatter.format(d)
 }
