@@ -35,11 +35,17 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
     >
       <!-- Dynamic Mesh Gradient Background -->
       <div class="absolute inset-0 -z-10 opacity-30">
-        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary blur-[80px]"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary blur-[100px]"></div>
+        <div
+          class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary blur-[80px]"
+        ></div>
+        <div
+          class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary blur-[100px]"
+        ></div>
       </div>
 
-      <div class="px-6 py-10 sm:px-10 sm:py-12 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div
+        class="px-6 py-10 sm:px-10 sm:py-12 flex flex-col md:flex-row items-center justify-between gap-8"
+      >
         <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
           <div class="relative group">
             <img
@@ -59,7 +65,11 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
 
           <div>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">
-              Hello, <span class="bg-linear-to-r from-primary to-tertiary bg-clip-text text-transparent">{{ $user.displayName }}</span>!
+              Hello,
+              <span class="bg-linear-to-r from-primary to-tertiary bg-clip-text text-transparent">{{
+                $user.displayName
+              }}</span
+              >!
             </h1>
             <p class="mt-2 text-on-surface-variant font-medium opacity-80">
               Welcome back to your portfolio overview.
@@ -85,19 +95,42 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
         </div>
       </div>
     </div>
-    <div v-else class="animate-pulse bg-surface-container-low h-48 rounded-3xl w-full border border-outline-variant"></div>
+    <div
+      v-else
+      class="animate-pulse bg-surface-container-low h-48 rounded-3xl w-full border border-outline-variant"
+    ></div>
 
     <!-- Alert Sections -->
-    <div v-if="$portfolio.missingIndex" class="alert alert-warning shadow-md rounded-2xl border-none">
-      <svg class="h-6 w-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+    <div
+      v-if="$portfolio.missingIndex"
+      class="alert alert-warning shadow-md rounded-2xl border-none"
+    >
+      <svg class="h-6 w-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+        />
+      </svg>
       <div>
         <h3 class="font-bold text-sm">Index Required</h3>
         <p class="text-xs">Database aggregation requires a Firestore index. Check F12 console.</p>
       </div>
     </div>
 
-    <div v-else-if="$portfolio.totalsError" class="alert alert-error shadow-md rounded-2xl border-none text-on-error-container">
-      <svg class="h-6 w-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <div
+      v-else-if="$portfolio.totalsError"
+      class="alert alert-error shadow-md rounded-2xl border-none text-on-error-container"
+    >
+      <svg class="h-6 w-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
       <div>
         <h3 class="font-bold text-sm">Error Loading Totals</h3>
         <p class="text-xs">{{ $portfolio.totalsError }}</p>
@@ -117,11 +150,18 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
             :key="index"
             class="group relative overflow-hidden bg-surface-container-low/50 backdrop-blur-xl rounded-3xl border border-outline-variant p-6 transition-all hover:shadow-2xl hover:-translate-y-1"
           >
-            <div class="absolute -right-4 -top-4 w-16 h-16 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors"></div>
-            
-            <dt class="text-sm font-semibold text-on-surface-variant mb-2 opacity-70">{{ kpi.label }}</dt>
-            
-            <dd v-if="$portfolio.calculatingTotals" class="h-10 bg-surface-container-high animate-pulse rounded-lg w-3/4"></dd>
+            <div
+              class="absolute -right-4 -top-4 w-16 h-16 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors"
+            ></div>
+
+            <dt class="text-sm font-semibold text-on-surface-variant mb-2 opacity-70">
+              {{ kpi.label }}
+            </dt>
+
+            <dd
+              v-if="$portfolio.calculatingTotals"
+              class="h-10 bg-surface-container-high animate-pulse rounded-lg w-3/4"
+            ></dd>
             <dd v-else-if="kpi.isPercent" class="flex flex-col">
               <span
                 class="text-3xl font-black"
@@ -140,13 +180,17 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-sm overflow-hidden">
+        <div
+          class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-sm overflow-hidden"
+        >
           <div class="px-6 py-5 border-b border-outline-variant flex items-center justify-between">
             <h2 class="text-xl font-bold flex items-center gap-2">
               <TransactionIcon type="Plan" class="w-6 h-6 text-primary" />
               Recent Activity
             </h2>
-            <a href="/transactions" class="text-sm font-medium text-primary hover:underline">View All</a>
+            <a href="/transactions" class="text-sm font-medium text-primary hover:underline"
+              >View All</a
+            >
           </div>
           <ul class="divide-y divide-outline-variant">
             <template v-if="$portfolio.loading">
@@ -157,19 +201,34 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
                 </div>
               </li>
             </template>
-            <li v-else-if="$portfolio.transactions.length === 0" class="px-6 py-12 text-center text-on-surface-variant italic">
+            <li
+              v-else-if="$portfolio.transactions.length === 0"
+              class="px-6 py-12 text-center text-on-surface-variant italic"
+            >
               No transactions recorded yet.
             </li>
-            <li v-for="tx in $portfolio.transactions.slice(0, 5)" v-else :key="tx.id" class="group transition-colors hover:bg-surface-container-high">
+            <li
+              v-for="tx in $portfolio.transactions.slice(0, 5)"
+              v-else
+              :key="tx.id"
+              class="group transition-colors hover:bg-surface-container-high"
+            >
               <div class="px-6 py-4 flex items-center justify-between gap-4">
                 <div class="min-w-0">
                   <p class="text-sm font-bold text-on-surface truncate">
-                    {{ tx.type }} <span class="text-on-surface-variant font-normal opacity-70 ml-1">{{ tx.assetId ? `• ${tx.assetId}` : '' }}</span>
+                    {{ tx.type }}
+                    <span class="text-on-surface-variant font-normal opacity-70 ml-1">{{
+                      tx.assetId ? `• ${tx.assetId}` : ''
+                    }}</span>
                   </p>
-                  <p class="text-[11px] font-medium text-on-surface-variant mt-0.5">{{ formatTransactionDate(tx.date) }}</p>
+                  <p class="text-[11px] font-medium text-on-surface-variant mt-0.5">
+                    {{ formatTransactionDate(tx.date) }}
+                  </p>
                 </div>
                 <div class="shrink-0">
-                  <span class="px-3 py-1 rounded-full text-xs font-bold leading-5 bg-secondary-container text-on-secondary-container shadow-sm">
+                  <span
+                    class="px-3 py-1 rounded-full text-xs font-bold leading-5 bg-secondary-container text-on-secondary-container shadow-sm"
+                  >
                     {{ formatCurrency(tx.amount) }}
                   </span>
                 </div>
@@ -193,8 +252,14 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
 }
 
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>

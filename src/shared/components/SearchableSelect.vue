@@ -4,7 +4,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 export interface SelectOption {
   id: string
   label: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 interface Props {
@@ -28,18 +28,15 @@ const containerRef = ref<HTMLElement | null>(null)
 const filteredOptions = computed(() => {
   if (!searchQuery.value) return props.options
   const query = searchQuery.value.toLowerCase()
-  return props.options.filter(opt => 
-    opt.label.toLowerCase().includes(query) || 
-    opt.id.toLowerCase().includes(query) ||
-    Object.values(opt.metadata || {}).some(val => 
-      String(val).toLowerCase().includes(query)
-    )
+  return props.options.filter(
+    (opt) =>
+      opt.label.toLowerCase().includes(query) ||
+      opt.id.toLowerCase().includes(query) ||
+      Object.values(opt.metadata || {}).some((val) => String(val).toLowerCase().includes(query))
   )
 })
 
-const selectedOption = computed(() => 
-  props.options.find(opt => opt.id === props.modelValue)
-)
+const selectedOption = computed(() => props.options.find((opt) => opt.id === props.modelValue))
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value
@@ -71,14 +68,17 @@ onUnmounted(() => {
 
 <template>
   <div ref="containerRef" class="relative w-full">
-    <label v-if="label" class="text-[10px] font-bold text-secondary uppercase tracking-tight block ml-1 mb-1">
+    <label
+      v-if="label"
+      class="text-[10px] font-bold text-secondary uppercase tracking-tight block ml-1 mb-1"
+    >
       {{ label }}
     </label>
-    
-    <div 
-        @click="toggleDropdown"
-        class="flex items-center justify-between px-3 py-2 bg-surface-container-high border border-outline-variant/50 rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
-        :class="{ 'border-primary ring-1 ring-primary/20': isOpen }"
+
+    <div
+      class="flex items-center justify-between px-3 py-2 bg-surface-container-high border border-outline-variant/50 rounded-lg cursor-pointer hover:border-primary/50 transition-colors"
+      :class="{ 'border-primary ring-1 ring-primary/20': isOpen }"
+      @click="toggleDropdown"
     >
       <div class="flex-1 truncate">
         <span v-if="selectedOption" class="text-sm font-bold text-on-surface">
@@ -88,11 +88,11 @@ onUnmounted(() => {
           {{ placeholder }}
         </span>
       </div>
-      <svg 
+      <svg
         class="w-4 h-4 text-secondary transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"
-        fill="none" 
-        viewBox="0 0 24 24" 
+        fill="none"
+        viewBox="0 0 24 24"
         stroke="currentColor"
       >
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -108,29 +108,29 @@ onUnmounted(() => {
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <div 
+      <div
         v-if="isOpen"
         class="absolute z-50 w-full mt-1 bg-surface-container-high border border-outline-variant rounded-xl shadow-xl overflow-hidden"
       >
         <!-- Search Input -->
         <div class="p-2 border-b border-outline-variant/30">
-          <input 
+          <input
             v-model="searchQuery"
             type="text"
             placeholder="Buscar..."
             class="w-full px-3 py-1.5 bg-surface-container-low border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
-            @click.stop
             autofocus
+            @click.stop
           />
         </div>
 
         <!-- Options List -->
         <div class="max-h-60 overflow-y-auto">
-          <div 
-            v-for="option in filteredOptions" 
+          <div
+            v-for="option in filteredOptions"
             :key="option.id"
-            @click="selectOption(option.id)"
             class="px-3 py-2.5 hover:bg-primary/10 cursor-pointer transition-colors border-b last:border-0 border-outline-variant/10"
+            @click="selectOption(option.id)"
           >
             <slot name="option" :option="option">
               <span class="text-sm font-bold text-on-surface">{{ option.label }}</span>

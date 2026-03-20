@@ -28,7 +28,11 @@
 }
 
 @keyframes skeleton-pulse {
-  0% { mask-position: 200% 0; }
-  100% { mask-position: -200% 0; }
+  0% {
+    mask-position: 200% 0;
+  }
+  100% {
+    mask-position: -200% 0;
+  }
 }
 </style>

@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useStore } from '@nanostores/vue'
-import {
-  currentPortfolioValue,
-  portfolioStore
-} from '@shared/stores/portfolioStore'
+import { currentPortfolioValue, portfolioStore } from '@shared/stores/portfolioStore'
 import { formatCurrency } from '@shared/lib/utils'
 import VueApexCharts from 'vue3-apexcharts'
 import ListIcon from '@shared/components/icons/ListIcon.vue'
@@ -33,20 +30,28 @@ const chartSeries = computed(() => {
 
 const chartOptions = computed(() => {
   const assetNames = sortedAssets.value.map((asset) => asset.name || asset.id)
-  
+
   return {
     chart: {
       type: 'donut' as const,
       animations: {
         enabled: true,
         easing: 'easeinout' as const,
-        speed: 800,
+        speed: 800
       }
     },
     labels: assetNames,
     colors: [
-      '#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', 
-      '#ec4899', '#06b6d4', '#f97316', '#22c55e', '#3b82f6'
+      '#6366f1',
+      '#10b981',
+      '#f59e0b',
+      '#ef4444',
+      '#8b5cf6',
+      '#ec4899',
+      '#06b6d4',
+      '#f97316',
+      '#22c55e',
+      '#3b82f6'
     ],
     stroke: {
       show: true,
@@ -101,7 +106,7 @@ const chartOptions = computed(() => {
       hover: {
         filter: {
           type: 'lighten',
-          value: 0.15,
+          value: 0.15
         }
       }
     }
@@ -110,49 +115,64 @@ const chartOptions = computed(() => {
 </script>
 
 <template>
-  <div class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-lg p-6 flex flex-col">
+  <div
+    class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-lg p-6 flex flex-col"
+  >
     <h2 class="text-xl font-bold mb-2">Asset Allocation</h2>
-    <p class="text-xs text-on-surface-variant mb-6 font-medium opacity-70">Distribution by current value</p>
-    
-    <div v-if="$portfolio.assets.length === 0" class="flex-1 flex flex-col items-center justify-center text-center p-8">
-       <div class="w-24 h-24 rounded-full border-4 border-dashed border-outline-variant flex items-center justify-center mb-4">
-           <ListIcon class="w-8 h-8 text-outline-variant" />
-       </div>
-       <p class="text-on-surface-variant text-sm font-medium">No assets to visualize.</p>
+    <p class="text-xs text-on-surface-variant mb-6 font-medium opacity-70">
+      Distribution by current value
+    </p>
+
+    <div
+      v-if="$portfolio.assets.length === 0"
+      class="flex-1 flex flex-col items-center justify-center text-center p-8"
+    >
+      <div
+        class="w-24 h-24 rounded-full border-4 border-dashed border-outline-variant flex items-center justify-center mb-4"
+      >
+        <ListIcon class="w-8 h-8 text-outline-variant" />
+      </div>
+      <p class="text-on-surface-variant text-sm font-medium">No assets to visualize.</p>
     </div>
 
     <div v-else class="flex-1 flex flex-col">
       <div class="min-h-[250px] w-full flex items-center justify-center">
-        <VueApexCharts
-          width="100%"
-          height="300"
-          :options="chartOptions"
-          :series="chartSeries"
-        />
+        <VueApexCharts width="100%" height="300" :options="chartOptions" :series="chartSeries" />
       </div>
 
       <div class="mt-4 space-y-2">
-        <div v-for="(asset, i) in sortedAssets.slice(0, 5)" :key="i" class="flex items-center justify-between gap-2 text-[11px] sm:text-xs">
+        <div
+          v-for="(asset, i) in sortedAssets.slice(0, 5)"
+          :key="i"
+          class="flex items-center justify-between gap-2 text-[11px] sm:text-xs"
+        >
           <div class="flex items-center gap-2 min-w-0">
-            <div 
-              class="w-2 h-2 rounded-full shrink-0" 
+            <div
+              class="w-2 h-2 rounded-full shrink-0"
               :style="{ backgroundColor: chartOptions.colors[i % chartOptions.colors.length] }"
             ></div>
             <span class="font-bold truncate text-on-surface">{{ asset.name || asset.id }}</span>
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <span class="font-bold text-on-surface">{{ calculatePercentage(asset.currentValue || 0).toFixed(2) }}%</span>
-            <span class="text-on-surface-variant opacity-60">({{ formatCurrency(asset.currentValue || 0) }})</span>
+            <span class="font-bold text-on-surface"
+              >{{ calculatePercentage(asset.currentValue || 0).toFixed(2) }}%</span
+            >
+            <span class="text-on-surface-variant opacity-60"
+              >({{ formatCurrency(asset.currentValue || 0) }})</span
+            >
           </div>
         </div>
-        <div v-if="sortedAssets.length > 5" class="pt-1 text-center text-[10px] text-primary font-bold">
+        <div
+          v-if="sortedAssets.length > 5"
+          class="pt-1 text-center text-[10px] text-primary font-bold"
+        >
           + {{ sortedAssets.length - 5 }} more assets
         </div>
       </div>
 
-      <button 
-        @click="showDetailedView = !showDetailedView"
+      <button
         class="mt-6 w-full btn btn-sm bg-surface-container-high border-outline-variant rounded-xl capitalize hover:bg-surface-container-highest transition-colors font-bold text-xs"
+        @click="showDetailedView = !showDetailedView"
       >
         {{ showDetailedView ? 'Hide' : 'View' }} Detailed Breakdown
       </button>
@@ -169,10 +189,20 @@ const chartOptions = computed(() => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="asset in sortedAssets" :key="asset.id" class="border-b border-outline-variant/10 hover:bg-primary/5 transition-colors">
-                  <td class="px-1 py-2 font-medium max-w-[80px] truncate">{{ asset.name || asset.id }}</td>
-                  <td class="px-1 py-2 text-right font-semibold">{{ formatCurrency(asset.currentValue || 0) }}</td>
-                  <td class="px-1 py-2 text-right font-black text-primary">{{ calculatePercentage(asset.currentValue || 0).toFixed(2) }}%</td>
+                <tr
+                  v-for="asset in sortedAssets"
+                  :key="asset.id"
+                  class="border-b border-outline-variant/10 hover:bg-primary/5 transition-colors"
+                >
+                  <td class="px-1 py-2 font-medium max-w-[80px] truncate">
+                    {{ asset.name || asset.id }}
+                  </td>
+                  <td class="px-1 py-2 text-right font-semibold">
+                    {{ formatCurrency(asset.currentValue || 0) }}
+                  </td>
+                  <td class="px-1 py-2 text-right font-black text-primary">
+                    {{ calculatePercentage(asset.currentValue || 0).toFixed(2) }}%
+                  </td>
                 </tr>
               </tbody>
             </table>

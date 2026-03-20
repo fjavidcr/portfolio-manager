@@ -37,9 +37,15 @@
     <!-- Skeleton Add Form -->
     <div class="p-6 bg-surface-container-low border-t border-outline-variant/30 rounded-b-2xl">
       <div class="flex flex-col sm:flex-row gap-4 items-end">
-        <div class="flex-1 w-full"><div class="skeleton h-10 w-full rounded-lg opacity-10"></div></div>
-        <div class="flex-1 w-full"><div class="skeleton h-10 w-full rounded-lg opacity-10"></div></div>
-        <div class="w-full sm:w-auto"><div class="skeleton h-10 w-32 rounded-lg opacity-20"></div></div>
+        <div class="flex-1 w-full">
+          <div class="skeleton h-10 w-full rounded-lg opacity-10"></div>
+        </div>
+        <div class="flex-1 w-full">
+          <div class="skeleton h-10 w-full rounded-lg opacity-10"></div>
+        </div>
+        <div class="w-full sm:w-auto">
+          <div class="skeleton h-10 w-32 rounded-lg opacity-20"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -54,7 +60,11 @@
 }
 
 @keyframes skeleton-pulse {
-  0% { mask-position: 200% 0; }
-  100% { mask-position: -200% 0; }
+  0% {
+    mask-position: 200% 0;
+  }
+  100% {
+    mask-position: -200% 0;
+  }
 }
 </style>

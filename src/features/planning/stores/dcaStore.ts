@@ -1,7 +1,7 @@
 import { map, computed } from 'nanostores'
-import { user, authLoading } from '@features/auth/stores/authStore'
+import { user } from '@features/auth/stores/authStore'
 import { db } from '@shared/lib/firebase'
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, serverTimestamp, type Timestamp } from 'firebase/firestore'
 import type { DcaPlanModel, DcaGoal, DcaPlanItem } from '@shared/types'
 import { portfolioStore } from '@shared/stores/portfolioStore'
 
@@ -23,9 +23,9 @@ export const dcaStatus = map<{
 
 // Computeds
 export const dcaItemsWithAssets = computed([dcaStore, portfolioStore], ($dca, $portfolio) => {
-  return $dca.items.map(item => {
-    const asset = $portfolio.assets.find(a => a.id === item.assetId)
-    const platform = $portfolio.platforms.find(p => p.id === asset?.platformId)
+  return $dca.items.map((item) => {
+    const asset = $portfolio.assets.find((a) => a.id === item.assetId)
+    const platform = $portfolio.platforms.find((p) => p.id === asset?.platformId)
     return {
       ...item,
       assetName: asset?.name || 'Unknown Asset',
@@ -36,9 +36,7 @@ export const dcaItemsWithAssets = computed([dcaStore, portfolioStore], ($dca, $p
   })
 })
 
-export const totalDcaEuros = computed(dcaStore, (s) => 
-  s.goals.reduce((sum, g) => sum + g.euros, 0)
-)
+export const totalDcaEuros = computed(dcaStore, (s) => s.goals.reduce((sum, g) => sum + g.euros, 0))
 
 // Actions
 export const loadDcaPlan = async (uid: string) => {
@@ -80,7 +78,7 @@ export const saveDcaPlan = async () => {
     const data = dcaStore.get()
     const payload = {
       ...data,
-      lastUpdated: serverTimestamp() as any
+      lastUpdated: serverTimestamp() as unknown as Timestamp
     }
     await setDoc(doc(db, 'users', $user.uid, 'settings', 'dca_plan'), payload)
   } catch (e) {
@@ -93,7 +91,7 @@ export const saveDcaPlan = async () => {
 
 export const updateGoal = (goal: DcaGoal) => {
   const current = dcaStore.get().goals
-  const index = current.findIndex(g => g.id === goal.id)
+  const index = current.findIndex((g) => g.id === goal.id)
   if (index !== -1) {
     const next = [...current]
     next[index] = goal
@@ -129,8 +127,8 @@ export const deleteGoal = (id: string) => {
   const current = dcaStore.get()
   dcaStore.set({
     ...current,
-    goals: current.goals.filter(g => g.id !== id),
-    items: current.items.filter(i => i.goalId !== id)
+    goals: current.goals.filter((g) => g.id !== id),
+    items: current.items.filter((i) => i.goalId !== id)
   })
   saveDcaPlan()
 }
@@ -138,7 +136,7 @@ export const deleteGoal = (id: string) => {
 export const addPlanItem = (assetId: string, goalId: string) => {
   const current = dcaStore.get()
   // Check if already exists for this goal
-  if (current.items.some(i => i.assetId === assetId && i.goalId === goalId)) return
+  if (current.items.some((i) => i.assetId === assetId && i.goalId === goalId)) return
 
   const newItem: DcaPlanItem = {
     id: crypto.randomUUID(),
@@ -152,7 +150,10 @@ export const addPlanItem = (assetId: string, goalId: string) => {
 
 export const deletePlanItem = (id: string) => {
   const current = dcaStore.get()
-  dcaStore.setKey('items', current.items.filter(i => i.id !== id))
+  dcaStore.setKey(
+    'items',
+    current.items.filter((i) => i.id !== id)
+  )
   saveDcaPlan()
 }
 

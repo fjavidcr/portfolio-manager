@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useStore } from '@nanostores/vue'
-import {
-  currentPortfolioValue,
-  portfolioStore
-} from '@shared/stores/portfolioStore'
+import { currentPortfolioValue, portfolioStore } from '@shared/stores/portfolioStore'
 import { formatCurrency } from '@shared/lib/utils'
 import VueApexCharts from 'vue3-apexcharts'
 import ListIcon from '@shared/components/icons/ListIcon.vue'
@@ -25,17 +22,34 @@ const typeAllocation = computed(() => {
     groups[type] = (groups[type] || 0) + (asset.currentValue || 0)
   })
   return Object.entries(groups)
-    .filter(([_, value]) => value > 0)
+    .filter(([, value]) => value > 0)
     .sort((a, b) => b[1] - a[1])
 })
 
+interface FormatterOp {
+  value: number
+}
+
+interface TooltipOp {
+  seriesIndex: number
+  dataPointIndex: number
+  w: {
+    globals: {
+      initialSeries: Array<{ data: Array<{ x: string; y: number }> }>
+      colors: string[]
+    }
+  }
+}
+
 const typeChartSeries = computed(() => {
-  return [{
-    data: typeAllocation.value.map(([type, value]) => ({
-      x: type,
-      y: value
-    }))
-  }]
+  return [
+    {
+      data: typeAllocation.value.map(([type, value]) => ({
+        x: type,
+        y: value
+      }))
+    }
+  ]
 })
 
 const typeChartOptions = computed(() => {
@@ -58,14 +72,14 @@ const typeChartOptions = computed(() => {
         fontSize: '12px',
         fontWeight: 700
       },
-      formatter: (text: string, op: any) => {
+      formatter: (text: string, op: FormatterOp) => {
         return [text, formatCurrency(op.value)]
       },
       offsetY: -4
     },
     tooltip: {
       theme: 'dark',
-      custom: ({ seriesIndex, dataPointIndex, w }: any) => {
+      custom: ({ seriesIndex, dataPointIndex, w }: TooltipOp) => {
         const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex]
         return `
           <div class="p-3 bg-surface-container-highest border border-outline-variant rounded-xl shadow-xl">
@@ -91,24 +105,33 @@ const typeChartOptions = computed(() => {
 </script>
 
 <template>
-  <div class="bg-surface-container-low/50 backdrop-blur-xl rounded-3xl border border-outline-variant shadow-lg p-6">
+  <div
+    class="bg-surface-container-low/50 backdrop-blur-xl rounded-3xl border border-outline-variant shadow-lg p-6"
+  >
     <div class="flex items-center justify-between mb-6">
       <div>
         <h2 class="text-xl font-bold">Allocation by Type</h2>
-        <p class="text-xs text-on-surface-variant font-medium opacity-70">Distribution by category</p>
+        <p class="text-xs text-on-surface-variant font-medium opacity-70">
+          Distribution by category
+        </p>
       </div>
       <div class="p-2 bg-secondary-container/30 rounded-xl text-secondary">
         <ListIcon class="w-5 h-5" />
       </div>
     </div>
-    
-    <div v-if="typeAllocation.length === 0" class="py-12 flex flex-col items-center justify-center text-center">
-       <div class="w-16 h-16 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center mb-4 opacity-50">
-           <ListIcon class="w-6 h-6 text-outline-variant" />
-       </div>
-       <p class="text-on-surface-variant text-xs font-medium">No types to visualize.</p>
+
+    <div
+      v-if="typeAllocation.length === 0"
+      class="py-12 flex flex-col items-center justify-center text-center"
+    >
+      <div
+        class="w-16 h-16 rounded-full border-2 border-dashed border-outline-variant flex items-center justify-center mb-4 opacity-50"
+      >
+        <ListIcon class="w-6 h-6 text-outline-variant" />
+      </div>
+      <p class="text-on-surface-variant text-xs font-medium">No types to visualize.</p>
     </div>
-    
+
     <div v-else class="min-h-[250px]">
       <VueApexCharts
         width="100%"

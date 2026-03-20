@@ -19,19 +19,21 @@ const investmentTarget = computed(() => budget.value.savingsParams.investmentTar
 const remainingBudget = computed(() => investmentTarget.value - totalPlanned.value)
 
 const calculateMonthly = (goalId: string, percentage: number) => {
-    const goal = dca.value.goals.find(g => g.id === goalId)
-    if (!goal) return 0
-    return (goal.euros * percentage) / 100
+  const goal = dca.value.goals.find((g) => g.id === goalId)
+  if (!goal) return 0
+  return (goal.euros * percentage) / 100
 }
 
 const totalAllocatedEur = computed(() => {
-    return itemsWithAssets.value.reduce((sum, item) => sum + calculateMonthly(item.goalId, item.percentage), 0)
+  return itemsWithAssets.value.reduce(
+    (sum, item) => sum + calculateMonthly(item.goalId, item.percentage),
+    0
+  )
 })
 
 // Mock exchange rate for demo
 const EUR_USD = 1.09
 const totalPlannedUsd = computed(() => totalPlanned.value * EUR_USD)
-
 </script>
 
 <template>
@@ -44,13 +46,18 @@ const totalPlannedUsd = computed(() => totalPlanned.value * EUR_USD)
           <p class="text-sm text-secondary tracking-tight">Vinculado a tu presupuesto mensual</p>
         </div>
         <div class="text-right flex flex-col items-end">
-          <p class="text-[10px] uppercase tracking-widest text-secondary font-bold mb-1">Total Planificado</p>
+          <p class="text-[10px] uppercase tracking-widest text-secondary font-bold mb-1">
+            Total Planificado
+          </p>
           <div v-if="isLoading" class="skeleton h-10 w-40 opacity-30 rounded-lg"></div>
           <template v-else>
             <h3 class="text-4xl font-black text-on-surface">
-                {{ formatCurrency(totalPlanned) }}
+              {{ formatCurrency(totalPlanned) }}
             </h3>
-            <p class="text-xs font-bold text-secondary/60 mt-1">≈ {{ totalPlannedUsd.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</p>
+            <p class="text-xs font-bold text-secondary/60 mt-1">
+              ≈
+              {{ totalPlannedUsd.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+            </p>
           </template>
         </div>
       </div>
@@ -59,15 +66,19 @@ const totalPlannedUsd = computed(() => totalPlanned.value * EUR_USD)
       <SummarySkeleton v-if="isLoading" />
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/50">
-          <span class="text-[10px] font-black uppercase text-secondary tracking-widest block mb-2">Presupuesto (Budget)</span>
+          <span class="text-[10px] font-black uppercase text-secondary tracking-widest block mb-2"
+            >Presupuesto (Budget)</span
+          >
           <div class="text-xl font-bold text-on-surface">
             {{ formatCurrency(investmentTarget) }}
           </div>
         </div>
 
         <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/50">
-          <span class="text-[10px] font-black uppercase text-secondary tracking-widest block mb-2">Por Asignar</span>
-          <div 
+          <span class="text-[10px] font-black uppercase text-secondary tracking-widest block mb-2"
+            >Por Asignar</span
+          >
+          <div
             class="text-xl font-bold"
             :class="remainingBudget < 0 ? 'text-error' : 'text-on-surface'"
           >
@@ -76,18 +87,31 @@ const totalPlannedUsd = computed(() => totalPlanned.value * EUR_USD)
         </div>
 
         <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/50">
-          <span class="text-[10px] font-black uppercase text-secondary tracking-widest block mb-2">Ejecución DCA</span>
+          <span class="text-[10px] font-black uppercase text-secondary tracking-widest block mb-2"
+            >Ejecución DCA</span
+          >
           <div class="text-xl font-bold text-on-surface">
             {{ formatCurrency(totalAllocatedEur) }}
           </div>
         </div>
 
-        <div 
-            class="p-5 rounded-2xl border transition-colors"
-            :class="Math.abs(remainingBudget) < 1 ? 'bg-primary/5 border-primary/20' : 'bg-surface-container-low border-outline-variant/50'"
+        <div
+          class="p-5 rounded-2xl border transition-colors"
+          :class="
+            Math.abs(remainingBudget) < 1
+              ? 'bg-primary/5 border-primary/20'
+              : 'bg-surface-container-low border-outline-variant/50'
+          "
         >
-          <span class="text-[10px] font-black uppercase tracking-widest block mb-2" :class="Math.abs(remainingBudget) < 1 ? 'text-primary' : 'text-secondary'">Alineación</span>
-          <div class="text-xl font-bold" :class="Math.abs(remainingBudget) < 1 ? 'text-primary' : 'text-on-surface'">
+          <span
+            class="text-[10px] font-black uppercase tracking-widest block mb-2"
+            :class="Math.abs(remainingBudget) < 1 ? 'text-primary' : 'text-secondary'"
+            >Alineación</span
+          >
+          <div
+            class="text-xl font-bold"
+            :class="Math.abs(remainingBudget) < 1 ? 'text-primary' : 'text-on-surface'"
+          >
             {{ Math.round((totalPlanned / (investmentTarget || 1)) * 100) }}%
           </div>
         </div>
