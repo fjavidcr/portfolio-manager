@@ -1,7 +1,9 @@
 {
   "name": "portfolio-manager",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Portfolio manager",
+  "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
+  "license": "ISC",
   "type": "module",
   "engines": {
     "node": ">=24.0.0"
@@ -26,14 +28,12 @@
     "scan:secrets": "trufflehog git file://. && echo \"\" && trufflehog filesystem . --exclude-paths=.trufflehog-ignore",
     "prepare": "husky"
   },
-  "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
-  "license": "ISC",
   "dependencies": {
-    "@astrojs/vue": "^5.1.4",
+    "@astrojs/vue": "^6.0.1",
     "@nanostores/vue": "^1.0.1",
     "@tailwindcss/vite": "^4.1.18",
     "apexcharts": "^5.10.4",
-    "astro": "^5.18.0",
+    "astro": "^6.0.7",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
     "firebase": "^12.7.0",
