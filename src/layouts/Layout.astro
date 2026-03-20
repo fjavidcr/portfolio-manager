@@ -4,22 +4,52 @@ import "@styles/global.css";
 
 interface Props {
 	title: string;
+	description?: string;
 	requireAuth?: boolean;
+	image?: string;
 }
 
-const { title, requireAuth = false } = Astro.props;
+const {
+	title,
+	description = "Portfolio Manager - Track your investments, assets, and budget in one place.",
+	requireAuth = false,
+	image = "/og-image.png"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="Portfolio Manager" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="canonical" href={canonicalURL} />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+
+		<!-- Primary Meta Tags -->
+		<title>{title} | Portfolio Manager</title>
+		<meta name="title" content={`${title} | Portfolio Manager`} />
+		<meta name="description" content={description} />
+
+		<!-- Security & Privacy -->
+		{requireAuth && <meta name="robots" content="noindex, nofollow" />}
+		<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.googleusercontent.com; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com;" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, Astro.url)} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={Astro.url} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL(image, Astro.url)} />
 
         <script is:inline>
             // Theme Init - Multi-Theme Support
@@ -60,6 +90,13 @@ const { title, requireAuth = false } = Astro.props;
         </script>
 	</head>
 	<body class="bg-surface text-on-surface min-h-screen flex">
+		<a
+			href="#main-content"
+			class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-primary focus:text-on-primary rounded-br-lg transition-all"
+		>
+			Skip to main content
+		</a>
+
 		<!-- Sidebar for Desktop -->
 		<Sidebar />
 
@@ -70,13 +107,17 @@ const { title, requireAuth = false } = Astro.props;
 			>
 				<button
 					id="menu-btn"
-					class="p-2 -ml-2 rounded-md hover:bg-surface-container-high"
+					class="p-2 -ml-2 rounded-md hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary"
+					aria-label="Open navigation menu"
+					aria-expanded="false"
+					aria-controls="sidebar"
 				>
 					<svg
 						class="w-6 h-6"
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
+						aria-hidden="true"
 						><path
 							stroke-linecap="round"
 							stroke-linejoin="round"
@@ -86,18 +127,18 @@ const { title, requireAuth = false } = Astro.props;
 				</button>
 				<span class="ml-4 font-bold text-lg">Portfolio Manager</span>
                 <div class="ml-auto">
-                    <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface">
-                         <svg id="mobile-light-icon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Toggle color theme">
+                         <svg id="mobile-light-icon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
-                        <svg id="mobile-dark-icon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg id="mobile-dark-icon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                         </svg>
                     </button>
                 </div>
 			</header>
 
-			<main class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 lg:p-8">
+			<main id="main-content" class="flex-1 max-w-[1600px] w-full mx-auto p-4 sm:p-6 lg:p-8 outline-none" tabindex="-1">
 				<slot />
 			</main>
 		</div>
@@ -109,9 +150,11 @@ const { title, requireAuth = false } = Astro.props;
 			const overlay = document.getElementById("sidebar-overlay");
 
 			btn?.addEventListener("click", () => {
+				const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+				btn.setAttribute('aria-expanded', (!isExpanded).toString());
 				sidebar?.classList.toggle("-translate-x-full");
 				sidebar?.classList.toggle("translate-x-0");
-				overlay?.classList.remove("hidden");
+				overlay?.classList.toggle("hidden");
 			});
 
             // Mobile Theme Toggle - Mode only (Light/Dark/System)

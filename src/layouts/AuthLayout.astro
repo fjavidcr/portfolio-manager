@@ -19,27 +19,42 @@ const { title } = Astro.props
     <title>{title}</title>
 
     <script is:inline>
-      // Theme Init (kept consistent)
-      const getThemePreference = () => {
-        const STORAGE_KEY = 'theme_pref'
-        if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY)) {
-          return localStorage.getItem(STORAGE_KEY)
-        }
-        return 'system'
+      // Theme Init - Multi-Theme Support (Consistent with Layout.astro)
+      const getThemePreferences = () => {
+        const STORAGE_KEY_COLOR = 'color_theme'
+        const STORAGE_KEY_MODE = 'theme_mode'
+
+        const colorTheme = localStorage.getItem(STORAGE_KEY_COLOR) || 'default'
+        const mode = localStorage.getItem(STORAGE_KEY_MODE) || 'system'
+
+        return { colorTheme, mode }
       }
 
       const applyTheme = () => {
-        const pref = getThemePreference()
-        if (
-          pref === 'dark' ||
-          (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        ) {
-          document.documentElement.classList.add('dark')
-        } else {
-          document.documentElement.classList.remove('dark')
-        }
+        const { colorTheme, mode } = getThemePreferences()
+
+        // Determine if dark mode
+        const isDark =
+          mode === 'dark' ||
+          (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+        // Combine: "blue-light", "green-dark", etc.
+        const fullTheme = `${colorTheme}-${isDark ? 'dark' : 'light'}`
+
+        // Set data-theme attribute
+        document.documentElement.setAttribute('data-theme', fullTheme)
+
+        // Keep .dark class for backward compatibility
+        document.documentElement.classList.toggle('dark', isDark)
       }
+
       applyTheme()
+
+      // Listen for system changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        const { mode } = getThemePreferences()
+        if (mode === 'system') applyTheme()
+      })
     </script>
   </head>
   <body
@@ -48,8 +63,9 @@ const { title } = Astro.props
     <!-- Theme Toggle -->
     <button
       id="theme-toggle"
-      class="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface focus:outline-none cursor-pointer"
+      class="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
       title="Toggle Theme"
+      aria-label="Toggle color theme mode"
     >
       <!-- Sun (Light) -->
       <svg
@@ -58,6 +74,7 @@ const { title } = Astro.props
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           stroke-linecap="round"
@@ -73,6 +90,7 @@ const { title } = Astro.props
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           stroke-linecap="round"
@@ -88,6 +106,7 @@ const { title } = Astro.props
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
       >
         <path
           stroke-linecap="round"
@@ -103,6 +122,12 @@ const { title } = Astro.props
     <!-- Inverse Auth Guard: If logged in, go to Dashboard -->
     <script>
       import { user, authLoading } from '@features/auth/stores/authStore'
+      import {
+        initThemeListeners,
+        cycleThemeMode,
+        getThemePreferences,
+        subscribe
+      } from '@shared/controllers/themeController'
 
       const checkAuth = () => {
         // If not loading AND we have a user, redirect to home
@@ -121,46 +146,30 @@ const { title } = Astro.props
       const iconSystem = document.getElementById('theme-icon-system')
 
       const updateThemeUI = () => {
-        const STORAGE_KEY = 'theme_pref'
-        const stored = localStorage.getItem(STORAGE_KEY) || 'system'
+        const { mode } = getThemePreferences()
 
         // Hide all
         iconLight?.classList.add('hidden')
         iconDark?.classList.add('hidden')
         iconSystem?.classList.add('hidden')
 
-        if (stored === 'light') {
+        if (mode === 'light') {
           iconLight?.classList.remove('hidden')
-        } else if (stored === 'dark') {
+        } else if (mode === 'dark') {
           iconDark?.classList.remove('hidden')
         } else {
           iconSystem?.classList.remove('hidden')
         }
-
-        // Apply class
-        const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const shouldBeDark = stored === 'dark' || (stored === 'system' && sysDark)
-
-        if (shouldBeDark) {
-          document.documentElement.classList.add('dark')
-        } else {
-          document.documentElement.classList.remove('dark')
-        }
       }
 
-      // Initial check
+      // Init Theme Listeners
+      initThemeListeners()
+      subscribe(updateThemeUI)
+      // Initial UI update
       updateThemeUI()
 
       themeToggleBtn?.addEventListener('click', () => {
-        const STORAGE_KEY = 'theme_pref'
-        const current = localStorage.getItem(STORAGE_KEY) || 'system'
-        let next = 'system'
-        if (current === 'system') next = 'light'
-        else if (current === 'light') next = 'dark'
-        else if (current === 'dark') next = 'system'
-
-        localStorage.setItem(STORAGE_KEY, next)
-        updateThemeUI()
+        cycleThemeMode()
       })
     </script>
   </body>

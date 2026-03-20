@@ -171,14 +171,20 @@ const chartOptions = computed(() => {
       </div>
 
       <button
-        class="mt-6 w-full btn btn-sm bg-surface-container-high border-outline-variant rounded-xl capitalize hover:bg-surface-container-highest transition-colors font-bold text-xs"
+        class="mt-6 w-full btn btn-sm bg-surface-container-high border-outline-variant rounded-xl capitalize hover:bg-surface-container-highest transition-colors font-bold text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+        :aria-expanded="showDetailedView"
+        aria-controls="detailed-breakdown"
         @click="showDetailedView = !showDetailedView"
       >
         {{ showDetailedView ? 'Hide' : 'View' }} Detailed Breakdown
       </button>
 
       <Transition name="fade-slide">
-        <div v-if="showDetailedView" class="mt-4 border-t border-outline-variant pt-4">
+        <div
+          v-if="showDetailedView"
+          id="detailed-breakdown"
+          class="mt-4 border-t border-outline-variant pt-4"
+        >
           <div class="overflow-x-auto">
             <table class="table table-xs w-full">
               <thead>

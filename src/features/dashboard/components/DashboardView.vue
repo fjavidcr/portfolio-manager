@@ -54,6 +54,7 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
               alt="User Avatar"
               class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-primary/20 shadow-lg transition-transform group-hover:scale-105"
               referrerpolicy="no-referrer"
+              fetchpriority="high"
             />
             <div
               v-else
