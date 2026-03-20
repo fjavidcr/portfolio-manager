@@ -69,6 +69,61 @@ export const portfolioStore = map<PortfolioState>({
 let unsubAssets: Unsubscribe | null = null
 let unsubPlatforms: Unsubscribe | null = null
 
+// Subscribe/Unsubscribe based on user state
+user.subscribe((currentUser) => {
+  if (currentUser) {
+    // Assets Subscription (User Level)
+    const assetsQuery = collection(db, 'users', currentUser.uid, 'assets')
+    unsubAssets = onSnapshot(assetsQuery, (snapshot) => {
+      const assetsList: AssetModel[] = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data()
+          }) as AssetModel
+      )
+      portfolioStore.setKey('assets', assetsList)
+    })
+
+    // Platforms Subscription
+    const platformsQuery = collection(db, 'users', currentUser.uid, 'platforms')
+    unsubPlatforms = onSnapshot(platformsQuery, (snapshot) => {
+      const platformsList: PlatformModel[] = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data()
+          }) as PlatformModel
+      )
+      portfolioStore.setKey('platforms', platformsList)
+    })
+
+    // Initial Fetch
+    fetchTransactions(true)
+    fetchTotals()
+  } else {
+    // Cleanup
+    if (unsubAssets) unsubAssets()
+    if (unsubPlatforms) unsubPlatforms()
+    portfolioStore.set({
+      assets: [],
+      transactions: [],
+      platforms: [],
+      loading: true, // Keep loading state while auth initializes
+      calculatingTotals: true, // Keep loading skeleton while auth initializes
+      error: null,
+      lastVisible: null,
+      hasMore: true,
+      totalInvested: 0,
+      transactionCount: 0,
+      missingIndex: false,
+      totalsError: null,
+      assetInvestedMap: {},
+      filters: { type: '', assetId: '', searchQuery: '' }
+    })
+  }
+})
+
 const PAGE_SIZE = 25
 
 export const fetchTransactions = async (reset = false) => {
@@ -275,58 +330,3 @@ export const updateTransaction = async (transactionId: string, data: Partial<Tra
     throw e
   }
 }
-
-// Initial Subscription (placed after functions are defined)
-user.subscribe((currentUser) => {
-  if (currentUser) {
-    // Assets Subscription (User Level)
-    const assetsQuery = collection(db, 'users', currentUser.uid, 'assets')
-    unsubAssets = onSnapshot(assetsQuery, (snapshot) => {
-      const assetsList: AssetModel[] = snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data()
-          }) as AssetModel
-      )
-      portfolioStore.setKey('assets', assetsList)
-    })
-
-    // Platforms Subscription
-    const platformsQuery = collection(db, 'users', currentUser.uid, 'platforms')
-    unsubPlatforms = onSnapshot(platformsQuery, (snapshot) => {
-      const platformsList: PlatformModel[] = snapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data()
-          }) as PlatformModel
-      )
-      portfolioStore.setKey('platforms', platformsList)
-    })
-
-    // Initial Fetch
-    fetchTransactions(true)
-    fetchTotals()
-  } else {
-    // Cleanup
-    if (unsubAssets) unsubAssets()
-    if (unsubPlatforms) unsubPlatforms()
-    portfolioStore.set({
-      assets: [],
-      transactions: [],
-      platforms: [],
-      loading: true,
-      calculatingTotals: true,
-      error: null,
-      lastVisible: null,
-      hasMore: true,
-      totalInvested: 0,
-      transactionCount: 0,
-      missingIndex: false,
-      totalsError: null,
-      assetInvestedMap: {},
-      filters: { type: '', assetId: '', searchQuery: '' }
-    })
-  }
-})

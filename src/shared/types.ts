@@ -63,23 +63,3 @@ export interface BudgetModel {
   }
   lastUpdated?: Date | Timestamp
 }
-
-export interface DcaGoal {
-  id: string
-  name: string
-  euros: number
-  percentage: number
-}
-
-export interface DcaPlanItem {
-  id: string
-  assetId: string
-  goalId: string
-  percentage: number
-}
-
-export interface DcaPlanModel {
-  goals: DcaGoal[]
-  items: DcaPlanItem[]
-  lastUpdated?: Date | Timestamp
-}

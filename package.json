@@ -1,9 +1,7 @@
 {
   "name": "portfolio-manager",
-  "version": "2.0.0",
-  "description": "Portfolio Manager - Track your investments, assets, and budget in one place.",
-  "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
-  "license": "ISC",
+  "version": "1.0.0",
+  "description": "Portfolio manager",
   "type": "module",
   "engines": {
     "node": ">=24.0.0"
@@ -28,21 +26,20 @@
     "scan:secrets": "trufflehog git file://. && echo \"\" && trufflehog filesystem . --exclude-paths=.trufflehog-ignore",
     "prepare": "husky"
   },
+  "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
+  "license": "ISC",
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.1",
-    "@astrojs/vue": "^6.0.1",
+    "@astrojs/vue": "^5.1.4",
     "@nanostores/vue": "^1.0.1",
     "@tailwindcss/vite": "^4.1.18",
-    "apexcharts": "^5.10.4",
-    "astro": "^6.0.7",
+    "astro": "^5.18.0",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
     "firebase": "^12.7.0",
     "firebase-admin": "^13.6.0",
     "nanostores": "^1.1.0",
     "tailwindcss": "^4.1.18",
-    "vue": "^3.5.26",
-    "vue3-apexcharts": "^1.11.1"
+    "vue": "^3.5.26"
   },
   "devDependencies": {
     "astro-eslint-parser": "^1.2.2",
