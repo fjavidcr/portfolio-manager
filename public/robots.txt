@@ -1,0 +1,17 @@
+User-agent: *
+# Allow the login page to be found
+Allow: /login
+# Disallow all app-related and private paths
+Disallow: /assets
+Disallow: /transactions
+Disallow: /planning
+Disallow: /budget
+Disallow: /add-asset
+Disallow: /add-transaction
+Disallow: /edit-asset
+Disallow: /edit-transaction
+Disallow: /index.html
+# Root is usually the dashboard, so keep it private unless it's just a lander
+Disallow: /
+
+Sitemap: https://portfolio-manager.fjdcr.dev/sitemap-index.xml

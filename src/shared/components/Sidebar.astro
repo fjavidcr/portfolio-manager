@@ -8,7 +8,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
 >
   <!-- Header -->
   <div class="pt-8 pb-6 px-6">
-    <div class="flex items-center gap-3 mb-2">
+    <div class="flex items-center gap-3 mb-2" aria-hidden="true">
       <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
@@ -28,7 +28,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
   </div>
 
   <!-- Navigation -->
-  <nav class="flex-1 px-4 space-y-2 py-4">
+  <nav class="flex-1 px-4 space-y-2 py-4" aria-label="Main Navigation">
     <div class="space-y-1">
       <a
         href="/"
@@ -40,6 +40,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -60,6 +61,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -80,6 +82,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -100,6 +103,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -120,6 +124,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path
             stroke-linecap="round"
@@ -159,7 +164,8 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
     <!-- Light/Dark Mode Toggle -->
     <button
       id="theme-toggle"
-      class="flex items-center w-full px-4 py-3 text-sm font-medium rounded-2xl transition-colors hover:bg-surface-container-high focus:outline-none text-on-surface"
+      class="flex items-center w-full px-4 py-3 text-sm font-medium rounded-2xl transition-colors hover:bg-surface-container-high focus:outline-none focus:ring-2 focus:ring-primary text-on-surface"
+      aria-label="Toggle color theme mode"
     >
       <!-- Sun (Light) -->
       <svg
@@ -168,6 +174,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
         ><path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -182,6 +189,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
         ><path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -196,6 +204,7 @@ import UserProfile from '@features/auth/components/UserProfile.vue'
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
+        aria-hidden="true"
         ><path
           stroke-linecap="round"
           stroke-linejoin="round"
