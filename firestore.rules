@@ -4,35 +4,38 @@ service cloud.firestore {
 
     function isWhitelisted() {
       return request.auth != null &&
-             request.auth.token != null &&
-             request.auth.token.email != null &&
-             exists(/databases/$(database)/documents/config/whitelist) &&
-             request.auth.token.email in get(/databases/$(database)/documents/config/whitelist).data.emails;
+              request.auth.token != null &&
+              request.auth.token.email != null &&
+              request.auth.token.email in get(/databases/$(database)/documents/config/whitelist).data.emails;
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
     }
 
     // Match any document in the 'users' collection
     match /users/{userId} {
       // Allow read/write only if the request's auth.uid matches the document's userId
-      allow read, write: if request.auth != null && request.auth.uid == userId && isWhitelisted();
+      allow read, write: if isOwner(userId) && isWhitelisted();
 
       // Match any document in the 'assets' subcollection
       match /assets/{assetId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId && isWhitelisted();
+        allow read, write: if isOwner(userId) && isWhitelisted();
       }
 
       // Match any document in the 'transactions' subcollection
       match /transactions/{transactionId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId && isWhitelisted();
+        allow read, write: if isOwner(userId) && isWhitelisted();
       }
 
       // Match any document in the 'platforms' subcollection
       match /platforms/{platformId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId && isWhitelisted();
+        allow read, write: if isOwner(userId) && isWhitelisted();
       }
 
       // Match any document in the 'settings' subcollection
       match /settings/{settingId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId && isWhitelisted();
+        allow read, write: if isOwner(userId) && isWhitelisted();
       }
     }
 
