@@ -9,6 +9,11 @@ import {
 import { user } from '@features/auth/stores/authStore'
 import { formatCurrency, formatDate } from '@shared/lib/utils'
 import type { Timestamp } from 'firebase/firestore'
+import PlusIcon from '@shared/components/icons/PlusIcon.vue'
+import ListIcon from '@shared/components/icons/ListIcon.vue'
+import TransactionIcon from '@shared/components/icons/TransactionIcon.vue'
+import AssetAllocationChart from './AssetAllocationChart.vue'
+import TypeAllocationChart from './TypeAllocationChart.vue'
 
 const $user = useStore(user)
 const $netInvested = useStore(netInvested)
@@ -22,199 +27,174 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-8 pb-12">
+    <!-- Premium Hero Section -->
     <div
       v-if="$user"
-      class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant"
+      class="relative overflow-hidden rounded-3xl bg-surface-container-low border border-outline-variant shadow-xl"
     >
-      <div
-        class="px-4 py-6 sm:px-6 sm:py-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left"
-      >
-        <img
-          v-if="$user.photoURL"
-          :src="$user.photoURL"
-          alt="User Avatar"
-          class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-primary"
-          referrerpolicy="no-referrer"
-        />
-        <div
-          v-else
-          class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container text-2xl sm:text-3xl font-bold border-2 border-primary"
-        >
-          {{ $user.displayName?.[0] || 'U' }}
-        </div>
-
-        <div class="min-w-0">
-          <h1 class="text-2xl sm:text-3xl font-bold text-on-surface truncate">
-            Welcome back, {{ $user.displayName }}!
-          </h1>
-          <div class="mt-1">
-            <p class="text-sm font-medium text-on-surface-variant truncate">{{ $user.email }}</p>
-          </div>
-        </div>
+      <!-- Dynamic Mesh Gradient Background -->
+      <div class="absolute inset-0 -z-10 opacity-30">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary blur-[80px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary blur-[100px]"></div>
       </div>
-    </div>
-    <div v-else class="animate-pulse bg-gray-800 h-32 rounded-2xl w-full"></div>
 
-    <!-- Missing Index Alert -->
-    <div
-      v-if="$portfolio.missingIndex"
-      class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-md shadow-sm"
-    >
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              fill-rule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd"
+      <div class="px-6 py-10 sm:px-10 sm:py-12 flex flex-col md:flex-row items-center justify-between gap-8">
+        <div class="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+          <div class="relative group">
+            <img
+              v-if="$user.photoURL"
+              :src="$user.photoURL"
+              alt="User Avatar"
+              class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-primary/20 shadow-lg transition-transform group-hover:scale-105"
+              referrerpolicy="no-referrer"
             />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-amber-800">Configuration Required</h3>
-          <div class="mt-2 text-sm text-amber-700">
-            <p>
-              Server-side aggregation requires a database index. Please open the browser console
-              (F12) and click the Firebase link to create it.
+            <div
+              v-else
+              class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-primary-container flex items-center justify-center text-on-primary-container text-3xl font-bold border-2 border-primary/20 shadow-lg"
+            >
+              {{ $user.displayName?.[0] || 'U' }}
+            </div>
+          </div>
+
+          <div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-on-surface tracking-tight">
+              Hello, <span class="bg-linear-to-r from-primary to-tertiary bg-clip-text text-transparent">{{ $user.displayName }}</span>!
+            </h1>
+            <p class="mt-2 text-on-surface-variant font-medium opacity-80">
+              Welcome back to your portfolio overview.
             </p>
           </div>
         </div>
+
+        <div class="flex flex-wrap justify-center gap-3">
+          <a
+            href="/transactions"
+            class="btn btn-primary btn-md rounded-xl shadow-lg shadow-primary/20 transition-all hover:scale-105"
+          >
+            <PlusIcon class="w-5 h-5 mr-1" />
+            Add Transaction
+          </a>
+          <a
+            href="/assets"
+            class="btn btn-ghost bg-surface-container-high border-outline-variant btn-md rounded-xl transition-all hover:scale-105"
+          >
+            <ListIcon class="w-5 h-5 mr-1" />
+            Assets List
+          </a>
+        </div>
+      </div>
+    </div>
+    <div v-else class="animate-pulse bg-surface-container-low h-48 rounded-3xl w-full border border-outline-variant"></div>
+
+    <!-- Alert Sections -->
+    <div v-if="$portfolio.missingIndex" class="alert alert-warning shadow-md rounded-2xl border-none">
+      <svg class="h-6 w-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+      <div>
+        <h3 class="font-bold text-sm">Index Required</h3>
+        <p class="text-xs">Database aggregation requires a Firestore index. Check F12 console.</p>
       </div>
     </div>
 
-    <!-- General Totals Error (Quota etc) -->
-    <div
-      v-else-if="$portfolio.totalsError"
-      class="bg-red-50 border-l-4 border-red-400 p-4 rounded-md shadow-sm"
-    >
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg
-            class="h-5 w-5 text-red-400"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
+    <div v-else-if="$portfolio.totalsError" class="alert alert-error shadow-md rounded-2xl border-none text-on-error-container">
+      <svg class="h-6 w-6 stroke-current shrink-0" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div>
+        <h3 class="font-bold text-sm">Error Loading Totals</h3>
+        <p class="text-xs">{{ $portfolio.totalsError }}</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      <!-- Main KPIs -->
+      <div class="lg:col-span-2 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div
+            v-for="(kpi, index) in [
+              { label: 'Net Invested', value: $netInvested, color: 'primary' },
+              { label: 'Portfolio Value', value: $currentValue, color: 'tertiary' },
+              { label: 'Total ROI', value: $totalROI, isPercent: true }
+            ]"
+            :key="index"
+            class="group relative overflow-hidden bg-surface-container-low/50 backdrop-blur-xl rounded-3xl border border-outline-variant p-6 transition-all hover:shadow-2xl hover:-translate-y-1"
           >
-            <path
-              fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800">Error Loading Totals</h3>
-          <div class="mt-2 text-sm text-red-700">
-            <p>
-              {{
-                $portfolio.totalsError.includes('resource-exhausted')
-                  ? 'Firestore Quota Exceeded. The daily read/aggregation limit has been reached. Please try again tomorrow or upgrade plan.'
-                  : $portfolio.totalsError
-              }}
-            </p>
+            <div class="absolute -right-4 -top-4 w-16 h-16 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-colors"></div>
+            
+            <dt class="text-sm font-semibold text-on-surface-variant mb-2 opacity-70">{{ kpi.label }}</dt>
+            
+            <dd v-if="$portfolio.calculatingTotals" class="h-10 bg-surface-container-high animate-pulse rounded-lg w-3/4"></dd>
+            <dd v-else-if="kpi.isPercent" class="flex flex-col">
+              <span
+                class="text-3xl font-black"
+                :class="kpi.value >= 0 ? 'text-green-500' : 'text-error'"
+              >
+                {{ kpi.value >= 0 ? '+' : '' }}{{ kpi.value.toFixed(2) }}%
+              </span>
+              <span class="text-xs font-medium text-on-surface-variant mt-1">
+                ({{ formatCurrency($currentValue - $netInvested) }})
+              </span>
+            </dd>
+            <dd v-else class="text-3xl font-black text-on-surface">
+              {{ formatCurrency(kpi.value) }}
+            </dd>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- KPI Grid -->
-    <div v-if="$portfolio.calculatingTotals" class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
-      <div
-        v-for="i in 3"
-        :key="i"
-        class="bg-surface-container-low shadow rounded-2xl border border-outline-variant p-4 sm:p-6 animate-pulse"
-        :class="i === 3 ? 'col-span-2 sm:col-span-1' : ''"
-      >
-        <div class="h-4 bg-gray-700/50 rounded w-1/3 mb-4"></div>
-        <div class="h-8 bg-gray-700/50 rounded w-2/3"></div>
-      </div>
-    </div>
-
-    <div v-else class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
-      <!-- Net Invested -->
-      <div
-        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-4 sm:p-6"
-      >
-        <dt class="text-xs sm:text-sm font-medium text-gray-400 truncate">Net Invested</dt>
-        <dd class="mt-1 sm:mt-2 text-xl sm:text-3xl font-bold text-on-surface">
-          {{ formatCurrency($netInvested) }}
-        </dd>
-      </div>
-
-      <!-- Current Value -->
-      <div
-        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-4 sm:p-6"
-      >
-        <dt class="text-xs sm:text-sm font-medium text-gray-400 truncate">Current Value</dt>
-        <dd class="mt-1 sm:mt-2 text-xl sm:text-3xl font-bold text-on-surface">
-          {{ formatCurrency($currentValue) }}
-        </dd>
-      </div>
-
-      <!-- ROI -->
-      <div
-        class="bg-surface-container-low overflow-hidden shadow rounded-2xl border border-outline-variant p-4 sm:p-6 col-span-2 sm:col-span-1"
-      >
-        <dt class="text-xs sm:text-sm font-medium text-gray-400 truncate">Total ROI</dt>
-        <dd class="mt-1 sm:mt-2 flex items-baseline gap-2">
-          <span
-            class="text-2xl sm:text-3xl font-bold"
-            :class="$totalROI >= 0 ? 'text-green-400' : 'text-error'"
-          >
-            {{ $totalROI >= 0 ? '+' : '' }}{{ $totalROI.toFixed(2) }}%
-          </span>
-          <span class="text-xs sm:text-sm text-gray-400">
-            ({{ $currentValue - $netInvested >= 0 ? '+' : ''
-            }}{{ formatCurrency($currentValue - $netInvested) }})
-          </span>
-        </dd>
-      </div>
-    </div>
-
-    <!-- Recent Activity (Using Transactions from Store) -->
-    <h2 class="text-xl font-bold text-on-surface mt-8">Recent Activity</h2>
-    <div
-      class="bg-surface-container-low shadow overflow-hidden rounded-2xl border border-outline-variant"
-    >
-      <ul role="list" class="divide-y divide-outline-variant">
-        <template v-if="$portfolio.loading">
-          <li v-for="i in 5" :key="i" class="px-4 py-4 sm:px-6 sm:py-5 animate-pulse">
-            <div class="flex items-center justify-between">
-              <div class="h-4 bg-gray-700/50 rounded w-1/3"></div>
-              <div class="h-5 bg-gray-700/50 rounded-full w-20"></div>
-            </div>
-            <div class="mt-2 flex justify-between">
-              <div class="h-3 bg-gray-700/30 rounded w-1/4"></div>
-            </div>
-          </li>
-        </template>
-        <li v-else-if="$portfolio.transactions.length === 0" class="p-6 text-center text-gray-400">
-          No transactions found.
-        </li>
-
-        <li v-for="transaction in $portfolio.transactions.slice(0, 5)" v-else :key="transaction.id">
-          <div class="px-4 py-4 sm:px-6 sm:py-5 hover:bg-surface-container-high transition-colors">
-            <div class="flex items-center justify-between min-w-0 gap-2">
-              <p class="text-sm font-medium text-primary truncate flex-1 min-w-0">
-                {{ transaction.type }} {{ transaction.assetId ? `- ${transaction.assetId}` : '' }}
-              </p>
-              <div class="flex-shrink-0 flex">
-                <p
-                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-secondary-container text-on-secondary-container"
-                >
-                  {{ formatCurrency(transaction.amount) }}
-                </p>
+        <!-- Recent Activity -->
+        <div class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-sm overflow-hidden">
+          <div class="px-6 py-5 border-b border-outline-variant flex items-center justify-between">
+            <h2 class="text-xl font-bold flex items-center gap-2">
+              <TransactionIcon type="Plan" class="w-6 h-6 text-primary" />
+              Recent Activity
+            </h2>
+            <a href="/transactions" class="text-sm font-medium text-primary hover:underline">View All</a>
+          </div>
+          <ul class="divide-y divide-outline-variant">
+            <template v-if="$portfolio.loading">
+              <li v-for="i in 5" :key="i" class="px-6 py-5 animate-pulse">
+                <div class="flex items-center justify-between gap-4">
+                  <div class="h-4 bg-surface-container-high rounded w-32"></div>
+                  <div class="h-6 bg-surface-container-high rounded-full w-24"></div>
+                </div>
+              </li>
+            </template>
+            <li v-else-if="$portfolio.transactions.length === 0" class="px-6 py-12 text-center text-on-surface-variant italic">
+              No transactions recorded yet.
+            </li>
+            <li v-for="tx in $portfolio.transactions.slice(0, 5)" v-else :key="tx.id" class="group transition-colors hover:bg-surface-container-high">
+              <div class="px-6 py-4 flex items-center justify-between gap-4">
+                <div class="min-w-0">
+                  <p class="text-sm font-bold text-on-surface truncate">
+                    {{ tx.type }} <span class="text-on-surface-variant font-normal opacity-70 ml-1">{{ tx.assetId ? `• ${tx.assetId}` : '' }}</span>
+                  </p>
+                  <p class="text-[11px] font-medium text-on-surface-variant mt-0.5">{{ formatTransactionDate(tx.date) }}</p>
+                </div>
+                <div class="shrink-0">
+                  <span class="px-3 py-1 rounded-full text-xs font-bold leading-5 bg-secondary-container text-on-secondary-container shadow-sm">
+                    {{ formatCurrency(tx.amount) }}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div class="mt-1 sm:mt-2 flex justify-between">
-              <p class="flex items-center text-[10px] sm:text-xs text-secondary dark:text-gray-400">
-                {{ formatTransactionDate(transaction.date) }}
-              </p>
-            </div>
-          </div>
-        </li>
-      </ul>
+            </li>
+          </ul>
+        </div>
+
+        <TypeAllocationChart />
+      </div>
+
+      <AssetAllocationChart />
     </div>
   </div>
 </template>
+
+<style scoped>
+.bg-linear-to-r {
+  background-size: 200% auto;
+  animation: gradient 8s linear infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style>
