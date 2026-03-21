@@ -32,6 +32,8 @@ jobs:
           cache: 'npm'
           
       - name: Create and push version tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION=$(node -p "require('./package.json').version")
           TAG="v$VERSION"
@@ -43,6 +45,8 @@ jobs:
             git config --local user.name "github-actions[bot]"
             git tag $TAG
             git push origin $TAG
+            echo "Creating GitHub Release for $TAG"
+            gh release create "$TAG" --generate-notes --title "Release $TAG"
           fi
           
       - run: npm ci && npm run build
