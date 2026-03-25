@@ -117,6 +117,7 @@ onUnmounted(() => {
           <input
             v-model="searchQuery"
             type="text"
+            maxlength="100"
             placeholder="Buscar..."
             class="w-full px-3 py-1.5 bg-surface-container-low border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
             autofocus

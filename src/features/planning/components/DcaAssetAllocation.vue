@@ -161,6 +161,8 @@ const calculateMonthly = (goalId: string, percentage: number) => {
                 <input
                   type="number"
                   :value="item.percentage"
+                  min="0"
+                  max="100"
                   class="input input-xs w-16 bg-surface-container-high border-outline-variant/50 text-right font-mono font-bold text-primary focus:border-primary transition-colors"
                   @input="
                     (e) => handleItemPercentageChange(item.id, (e.target as HTMLInputElement).value)

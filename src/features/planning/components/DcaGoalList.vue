@@ -153,6 +153,7 @@ const isCorrect = (goalId: string) => {
               <input
                 type="number"
                 :value="goal.euros"
+                max="10000000000"
                 class="input input-ghost input-sm h-8 w-full max-w-[120px] font-mono font-black text-on-surface text-xl bg-transparent border-none p-0 focus:outline-none focus:ring-0"
                 @input="(e) => handleEurosChange(goal.id, (e.target as HTMLInputElement).value)"
               />
@@ -190,6 +191,7 @@ const isCorrect = (goalId: string) => {
           <input
             v-model="newGoalName"
             type="text"
+            maxlength="100"
             placeholder="Nombre del nuevo objetivo (ej. Jubilación)"
             class="flex-1 input input-sm bg-surface-container-high border-outline-variant/50 text-on-surface text-sm focus:border-primary transition-colors"
             @keyup.enter="handleAddGoal"
