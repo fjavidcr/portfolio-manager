@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useStore } from '@nanostores/vue'
 import { user } from '@features/auth/stores/authStore'
 import { db } from '@shared/lib/firebase'
+import { isValidDocId } from '@shared/lib/utils'
 import {
   doc,
   getDoc,
@@ -232,9 +233,13 @@ onMounted(() => {
     const params = new URLSearchParams(window.location.search)
     const idFromUrl = params.get('id')
     if (idFromUrl) {
-      console.log('AddAssetForm: Found assetId in URL', idFromUrl)
-      effectiveAssetId.value = idFromUrl
-      loading.value = true
+      if (isValidDocId(idFromUrl)) {
+        console.log('AddAssetForm: Found assetId in URL', idFromUrl)
+        effectiveAssetId.value = idFromUrl
+        loading.value = true
+      } else {
+        console.warn('Sentinel: Ignored invalid asset ID from URL to prevent path manipulation')
+      }
     }
   }
 })

@@ -13,6 +13,7 @@ import {
   collection
 } from 'firebase/firestore'
 import { db } from '@shared/lib/firebase'
+import { isValidDocId } from '@shared/lib/utils'
 import {
   TransactionTypes,
   TransactionImpact,
@@ -54,7 +55,15 @@ onMounted(() => {
   if (!routeId.value && typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search)
     const id = params.get('id')
-    if (id) routeId.value = id
+    if (id) {
+      if (isValidDocId(id)) {
+        routeId.value = id
+      } else {
+        console.warn(
+          'Sentinel: Ignored invalid transaction ID from URL to prevent path manipulation'
+        )
+      }
+    }
   }
 })
 
