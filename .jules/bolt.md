@@ -7,3 +7,8 @@
 
 **Learning:** Instantiating `Intl.DateTimeFormat` or calling `.toLocaleDateString()` and `.toLocaleString()` inside Vue components or render loops causes performance bottlenecks, especially in components rendering lists like transactions.
 **Action:** Always pre-instantiate `Intl.DateTimeFormat` objects in a centralized utility file and cache them outside of reactive contexts or loops. Update `utils.ts` and use the cached formatters throughout the app.
+
+## 2026-04-01 - Pre-instantiate NumberFormat for USD
+
+**Learning:** Similar to Date formatting, instantiating `Intl.NumberFormat` inline in Vue components via `toLocaleString()` causes overhead on re-renders.
+**Action:** Pre-instantiate `Intl.NumberFormat` objects in `utils.ts` and export formatting functions to avoid reactive context re-instantiation.
