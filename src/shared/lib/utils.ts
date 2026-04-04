@@ -81,3 +81,13 @@ export const formatMonthYear = (
   if (isNaN(d.getTime())) return '-'
   return monthYearFormatter.format(d)
 }
+
+/**
+ * Validates if a document ID is safe (alphanumeric, hyphens and underscores).
+ * Prevents path manipulation attacks and ensures the ID matches Firestore constraints.
+ */
+export const isValidDocId = (id: string | null): boolean => {
+  if (!id) return false
+  const docIdRegex = /^[a-zA-Z0-9_-]{1,128}$/
+  return docIdRegex.test(id)
+}
