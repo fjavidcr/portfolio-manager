@@ -3,7 +3,7 @@ import { useStore } from '@nanostores/vue'
 import { dcaStore, dcaStatus, dcaItemsWithAssets, totalDcaEuros } from '../stores/dcaStore'
 import { budgetStore, budgetStatus } from '@features/budget/stores/budgetStore'
 import { computed } from 'vue'
-import { formatCurrency } from '@shared/lib/utils'
+import { formatCurrency, formatCurrencyUSD } from '@shared/lib/utils'
 import SummarySkeleton from './skeletons/SummarySkeleton.vue'
 
 const dca = useStore(dcaStore)
@@ -56,7 +56,7 @@ const totalPlannedUsd = computed(() => totalPlanned.value * EUR_USD)
             </h3>
             <p class="text-xs font-bold text-secondary/60 mt-1">
               ≈
-              {{ totalPlannedUsd.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}
+              {{ formatCurrencyUSD(totalPlannedUsd) }}
             </p>
           </template>
         </div>
