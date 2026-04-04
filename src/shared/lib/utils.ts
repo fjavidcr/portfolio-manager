@@ -31,6 +31,17 @@ export const formatCurrencyClean = (value: number) => {
   return cleanCurrencyFormatter.format(value)
 }
 
+// Cache USD formatter for ~100x faster currency formatting
+const usdCurrencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  useGrouping: true
+})
+
+export const formatCurrencyUSD = (value: number) => {
+  return usdCurrencyFormatter.format(value)
+}
+
 // Cache Intl.DateTimeFormat objects for ~100x faster date formatting in loops
 const defaultDateFormatter = new Intl.DateTimeFormat('es-ES')
 const shortMonthFormatter = new Intl.DateTimeFormat(undefined, { month: 'short' })
