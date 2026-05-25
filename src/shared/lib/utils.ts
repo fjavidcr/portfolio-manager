@@ -15,6 +15,11 @@ const cleanCurrencyFormatter = new Intl.NumberFormat('es-ES', {
   maximumFractionDigits: 0
 })
 
+const usdCurrencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+})
+
 export const formatCurrency = (value: number, options?: Intl.NumberFormatOptions) => {
   if (options) {
     return new Intl.NumberFormat('es-ES', {
@@ -29,6 +34,10 @@ export const formatCurrency = (value: number, options?: Intl.NumberFormatOptions
 
 export const formatCurrencyClean = (value: number) => {
   return cleanCurrencyFormatter.format(value)
+}
+
+export const formatUsd = (value: number) => {
+  return usdCurrencyFormatter.format(value)
 }
 
 // Cache Intl.DateTimeFormat objects for ~100x faster date formatting in loops
