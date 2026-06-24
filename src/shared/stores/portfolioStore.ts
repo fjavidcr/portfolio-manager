@@ -12,6 +12,9 @@ import {
   getAggregateFromServer,
   sum,
   count,
+  doc,
+  setDoc,
+  serverTimestamp,
   type DocumentSnapshot,
   type Unsubscribe
 } from 'firebase/firestore'
@@ -21,6 +24,7 @@ import {
   type AssetModel,
   type TransactionModel,
   type PlatformModel,
+  type BalanceHistoryModel,
   TransactionImpact
 } from '@shared/types'
 
@@ -28,6 +32,7 @@ interface PortfolioState {
   assets: AssetModel[]
   transactions: TransactionModel[]
   platforms: PlatformModel[]
+  balanceHistory: BalanceHistoryModel[]
   loading: boolean
   calculatingTotals: boolean // Loading state for dashboard totals
   error: string | null
@@ -49,6 +54,7 @@ export const portfolioStore = map<PortfolioState>({
   assets: [],
   transactions: [],
   platforms: [],
+  balanceHistory: [],
   loading: true, // Start in loading state to prevent "No data" flash
   calculatingTotals: true, // Start true to show skeleton on fresh load
   error: null,
@@ -68,6 +74,7 @@ export const portfolioStore = map<PortfolioState>({
 
 let unsubAssets: Unsubscribe | null = null
 let unsubPlatforms: Unsubscribe | null = null
+let unsubHistory: Unsubscribe | null = null
 
 const PAGE_SIZE = 25
 
@@ -276,9 +283,69 @@ export const updateTransaction = async (transactionId: string, data: Partial<Tra
   }
 }
 
+export const syncTodayBalanceHistory = async () => {
+  const currentUser = user.get()
+  if (!currentUser) return
+
+  const state = portfolioStore.get()
+  const activeAssets = state.assets.filter((a) => !a.isArchived)
+
+  if (activeAssets.length === 0) return
+
+  const totalValue = activeAssets.reduce((sum, asset) => sum + (asset.currentValue || 0), 0)
+  const assetsMap: Record<string, number> = {}
+  activeAssets.forEach((asset) => {
+    assetsMap[asset.id] = asset.currentValue || 0
+  })
+
+  // Get local date string 'YYYY-MM-DD'
+  const todayStr = new Date().toLocaleDateString('sv').substring(0, 10)
+
+  // Find if today's entry already exists in the local state
+  const todayEntry = state.balanceHistory?.find((h) => h.date === todayStr)
+
+  if (todayEntry) {
+    const isSameTotal = todayEntry.totalValue === totalValue
+    const isSameAssets =
+      Object.keys(assetsMap).every((key) => todayEntry.assets[key] === assetsMap[key]) &&
+      Object.keys(todayEntry.assets).every((key) => todayEntry.assets[key] === assetsMap[key])
+
+    if (isSameTotal && isSameAssets) {
+      // No changes needed
+      return
+    }
+  }
+
+  try {
+    const docRef = doc(db, 'users', currentUser.uid, 'balance_history', todayStr)
+    await setDoc(
+      docRef,
+      {
+        date: todayStr,
+        totalValue,
+        assets: assetsMap,
+        lastUpdated: serverTimestamp()
+      },
+      { merge: true }
+    )
+    console.log(`[BalanceHistory] Sincronizado para hoy (${todayStr}):`, totalValue)
+  } catch (e) {
+    console.error('[BalanceHistory] Error al sincronizar:', e)
+  }
+}
+
 // Initial Subscription (placed after functions are defined)
 user.subscribe((currentUser) => {
   if (currentUser) {
+    let assetsLoaded = false
+    let historyLoaded = false
+
+    const checkAndSync = () => {
+      if (assetsLoaded && historyLoaded) {
+        syncTodayBalanceHistory()
+      }
+    }
+
     // Assets Subscription (User Level)
     const assetsQuery = collection(db, 'users', currentUser.uid, 'assets')
     unsubAssets = onSnapshot(assetsQuery, (snapshot) => {
@@ -290,6 +357,26 @@ user.subscribe((currentUser) => {
           }) as AssetModel
       )
       portfolioStore.setKey('assets', assetsList)
+      assetsLoaded = true
+      checkAndSync()
+    })
+
+    // Balance History Subscription
+    const historyQuery = query(
+      collection(db, 'users', currentUser.uid, 'balance_history'),
+      orderBy('date', 'asc')
+    )
+    unsubHistory = onSnapshot(historyQuery, (snapshot) => {
+      const historyList: BalanceHistoryModel[] = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data()
+          }) as BalanceHistoryModel
+      )
+      portfolioStore.setKey('balanceHistory', historyList)
+      historyLoaded = true
+      checkAndSync()
     })
 
     // Platforms Subscription
@@ -312,10 +399,12 @@ user.subscribe((currentUser) => {
     // Cleanup
     if (unsubAssets) unsubAssets()
     if (unsubPlatforms) unsubPlatforms()
+    if (unsubHistory) unsubHistory()
     portfolioStore.set({
       assets: [],
       transactions: [],
       platforms: [],
+      balanceHistory: [],
       loading: true,
       calculatingTotals: true,
       error: null,

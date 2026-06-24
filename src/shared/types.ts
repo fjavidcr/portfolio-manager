@@ -83,3 +83,11 @@ export interface DcaPlanModel {
   items: DcaPlanItem[]
   lastUpdated?: Date | Timestamp
 }
+
+export interface BalanceHistoryModel {
+  date: string
+  totalValue: number
+  assets: Record<string, number>
+  lastUpdated?: Date | Timestamp
+}
+
