@@ -14,6 +14,7 @@ import ListIcon from '@shared/components/icons/ListIcon.vue'
 import TransactionIcon from '@shared/components/icons/TransactionIcon.vue'
 import AssetAllocationChart from './AssetAllocationChart.vue'
 import TypeAllocationChart from './TypeAllocationChart.vue'
+import BalanceHistoryChart from './BalanceHistoryChart.vue'
 
 const $user = useStore(user)
 const $netInvested = useStore(netInvested)
@@ -180,6 +181,11 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
           </div>
         </div>
 
+        <!-- Balance History Chart -->
+        <BalanceHistoryChart />
+
+        <TypeAllocationChart />
+
         <!-- Recent Activity -->
         <div
           class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-sm overflow-hidden"
@@ -237,8 +243,6 @@ const formatTransactionDate = (date: Date | Timestamp | null) => {
             </li>
           </ul>
         </div>
-
-        <TypeAllocationChart />
       </div>
 
       <AssetAllocationChart />

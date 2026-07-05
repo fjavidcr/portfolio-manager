@@ -19,6 +19,7 @@ import {
   type TransactionModel,
   type TransactionType
 } from '@shared/types'
+import { isValidDocId } from '@shared/lib/utils'
 import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
 
 const props = defineProps<{
@@ -54,7 +55,7 @@ onMounted(() => {
   if (!routeId.value && typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search)
     const id = params.get('id')
-    if (id) routeId.value = id
+    if (id && isValidDocId(id)) routeId.value = id
   }
 })
 

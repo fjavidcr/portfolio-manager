@@ -14,6 +14,7 @@ import {
   getDocs
 } from 'firebase/firestore'
 import type { PlatformModel } from '@shared/types'
+import { isValidDocId } from '@shared/lib/utils'
 import LoadingSpinner from '@shared/components/icons/LoadingSpinner.vue'
 
 const props = defineProps<{
@@ -123,8 +124,6 @@ const fetchAssetTypes = async () => {
 
     // Use only DB types, sorted
     assetTypes.value = Array.from(types).sort()
-
-    console.log('AddAssetForm: Asset types loaded', assetTypes.value)
   } catch (e) {
     console.error('AddAssetForm: Error fetching asset types:', e)
   }
@@ -133,11 +132,8 @@ const fetchAssetTypes = async () => {
 const effectiveAssetId = ref(props.assetId)
 
 const fetchPlatforms = async () => {
-  if (!$user.value) {
-    console.log('AddAssetForm: Cannot fetch platforms, no user')
-    return
-  }
-  console.log('AddAssetForm: Fetching platforms for user', $user.value.uid)
+  if (!$user.value) return
+
   try {
     const platformsRef = collection(db, 'users', $user.value.uid, 'platforms')
     const snapshot = await getDocs(platformsRef)
@@ -148,49 +144,26 @@ const fetchPlatforms = async () => {
           ...doc.data()
         }) as PlatformModel
     )
-    console.log(
-      'AddAssetForm: Platforms loaded',
-      platforms.value.map((p) => `${p.name} (${p.id})`)
-    )
   } catch (e) {
     console.error('AddAssetForm: Error fetching platforms:', e)
-    if (e instanceof Error && 'code' in e) {
-      const firebaseError = e as { code?: string }
-      console.error('Error Code:', firebaseError.code)
-    }
   }
 }
 
 const fetchAsset = async (assetId: string) => {
-  if (!$user.value || !assetId) {
-    console.log('AddAssetForm: Missing user or assetId', { user: !!$user.value, assetId })
-    return
-  }
+  if (!$user.value || !assetId) return
 
-  console.log('AddAssetForm: Fetching asset', assetId)
   try {
     const assetRef = doc(db, 'users', $user.value.uid, 'assets', assetId)
     const assetSnap = await getDoc(assetRef)
 
     if (assetSnap.exists()) {
       const data = assetSnap.data()
-      console.log('AddAssetForm: Asset data received', JSON.stringify(data, null, 2))
       name.value = data.name || ''
-
       type.value = data.type || ''
-
       platformId.value = data.platformId || ''
       currentValue.value = data.currentValue || 0
       id.value = data.id || assetId
-
-      console.log('AddAssetForm: Assigned values:', {
-        type: type.value,
-        platformId: platformId.value,
-        currentValue: currentValue.value,
-        platformsCount: platforms.value.length
-      })
     } else {
-      console.error('AddAssetForm: Asset not found')
       error.value = 'El activo no existe o no tienes permiso para verlo.'
     }
   } catch (e) {
@@ -225,14 +198,12 @@ watch(
 )
 
 onMounted(() => {
-  console.log('AddAssetForm: Mounted', { assetId: props.assetId })
   // In static sites, Astro.url.searchParams doesn't work at runtime.
   // We extract it from window.location.search
   if (!effectiveAssetId.value && typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search)
     const idFromUrl = params.get('id')
-    if (idFromUrl) {
-      console.log('AddAssetForm: Found assetId in URL', idFromUrl)
+    if (idFromUrl && isValidDocId(idFromUrl)) {
       effectiveAssetId.value = idFromUrl
       loading.value = true
     }

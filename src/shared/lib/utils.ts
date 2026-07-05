@@ -15,6 +15,11 @@ const cleanCurrencyFormatter = new Intl.NumberFormat('es-ES', {
   maximumFractionDigits: 0
 })
 
+const usdCurrencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+})
+
 export const formatCurrency = (value: number, options?: Intl.NumberFormatOptions) => {
   if (options) {
     return new Intl.NumberFormat('es-ES', {
@@ -29,6 +34,10 @@ export const formatCurrency = (value: number, options?: Intl.NumberFormatOptions
 
 export const formatCurrencyClean = (value: number) => {
   return cleanCurrencyFormatter.format(value)
+}
+
+export const formatUsd = (value: number) => {
+  return usdCurrencyFormatter.format(value)
 }
 
 // Cache Intl.DateTimeFormat objects for ~100x faster date formatting in loops
@@ -80,4 +89,14 @@ export const formatMonthYear = (
 
   if (isNaN(d.getTime())) return '-'
   return monthYearFormatter.format(d)
+}
+
+/**
+ * Validates if a document ID is safe (alphanumeric, hyphens and underscores).
+ * Prevents path manipulation attacks and ensures the ID matches Firestore constraints.
+ */
+export const isValidDocId = (id: string | null): boolean => {
+  if (!id) return false
+  const docIdRegex = /^[a-zA-Z0-9_-]{1,128}$/
+  return docIdRegex.test(id)
 }
