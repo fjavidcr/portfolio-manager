@@ -18,7 +18,7 @@ if (!USER_ID) {
 }
 
 async function seedHistory() {
-  console.log(`🌱 Iniciando siembra de historial para el usuario: ${USER_ID}...`)
+  console.log('🌱 Iniciando siembra de historial para el usuario configurado...')
 
   try {
     // 2. Obtener los activos actuales
