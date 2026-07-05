@@ -115,7 +115,7 @@ const chartOptions = computed(() => {
     },
     tooltip: {
       theme: 'dark',
-      custom: ({ seriesIndex, dataPointIndex, w }: any) => {
+      custom: ({ dataPointIndex }: { dataPointIndex: number }) => {
         const item = $portfolio.value.balanceHistory[dataPointIndex]
         if (!item) return ''
 
