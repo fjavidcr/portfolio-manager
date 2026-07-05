@@ -28,6 +28,11 @@ service cloud.firestore {
         allow read, write: if isOwner(userId) && isWhitelisted();
       }
 
+      // Match any document in the 'balance_history' subcollection
+      match /balance_history/{date} {
+        allow read, write: if isOwner(userId) && isWhitelisted();
+      }
+
       // Match any document in the 'platforms' subcollection
       match /platforms/{platformId} {
         allow read, write: if isOwner(userId) && isWhitelisted();
