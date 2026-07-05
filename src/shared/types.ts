@@ -90,4 +90,3 @@ export interface BalanceHistoryModel {
   assets: Record<string, number>
   lastUpdated?: Date | Timestamp
 }
-

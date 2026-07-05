@@ -209,18 +209,14 @@ const chartOptions = computed(() => {
       </div>
       <p class="text-on-surface-variant text-xs font-semibold">Sin historial registrado aún.</p>
       <p class="text-on-surface-variant/60 text-[10px] mt-1 max-w-[280px]">
-        El balance de hoy se guardará automáticamente al interactuar con tus activos o agregar transacciones.
+        El balance de hoy se guardará automáticamente al interactuar con tus activos o agregar
+        transacciones.
       </p>
     </div>
 
     <!-- Chart -->
     <div v-else class="min-h-[300px] w-full">
-      <VueApexCharts
-        width="100%"
-        height="300"
-        :options="chartOptions"
-        :series="chartSeries"
-      />
+      <VueApexCharts width="100%" height="300" :options="chartOptions" :series="chartSeries" />
     </div>
   </div>
 </template>
@@ -233,6 +229,8 @@ const chartOptions = computed(() => {
 :deep(.apexcharts-tooltip) {
   border-radius: 16px !important;
   border: none !important;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3) !important;
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.3),
+    0 8px 10px -6px rgb(0 0 0 / 0.3) !important;
 }
 </style>

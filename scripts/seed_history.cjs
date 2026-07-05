@@ -88,12 +88,16 @@ async function seedHistory() {
       totalValue = Math.round(totalValue * 100) / 100
 
       const docRef = historyCollectionRef.doc(dateStr)
-      batch.set(docRef, {
-        date: dateStr,
-        totalValue,
-        assets: dayAssets,
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp()
-      }, { merge: true })
+      batch.set(
+        docRef,
+        {
+          date: dateStr,
+          totalValue,
+          assets: dayAssets,
+          lastUpdated: admin.firestore.FieldValue.serverTimestamp()
+        },
+        { merge: true }
+      )
 
       console.log(`📝 Preparado balance para ${dateStr}: ${totalValue} €`)
     }
