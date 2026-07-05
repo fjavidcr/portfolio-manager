@@ -97,6 +97,7 @@ export const formatMonthYear = (
  */
 export const isValidDocId = (id: string | null): boolean => {
   if (!id) return false
-  const docIdRegex = /^[a-zA-Z0-9_-]{1,128}$/
+  if (id === '.' || id === '..') return false
+  const docIdRegex = /^[a-zA-Z0-9_\-\.]{1,128}$/
   return docIdRegex.test(id)
 }
