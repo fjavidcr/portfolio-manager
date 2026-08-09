@@ -1,0 +1,48 @@
+name: 🚀 Nueva Funcionalidad (Feature Request)
+description: Propón una nueva funcionalidad o mejora para el proyecto
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por proponer una nueva funcionalidad para `portfolio-manager`. Completa la información a continuación.
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: ¿Qué problema resuelve este cambio?
+      description: Describe de forma clara el problema o necesidad del usuario.
+      placeholder: Ej. Actualmente no es posible exportar el resumen de la cartera a PDF...
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Solución Propuesta
+      description: Describe cómo te gustaría que funcionase la nueva característica.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas Consideradas
+      description: ¿Se han considerado otras alternativas o soluciones temporales?
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Criterios de Aceptación
+      description: Lista las condiciones necesarias para dar por completada la funcionalidad.
+      placeholder: |
+        - [ ] El usuario puede interactuar con el botón
+        - [ ] Se valida el resultado correctamente
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Información Adicional o Mockups
+      description: Añade capturas de pantalla, prototipos o enlaces de interés.
+    validations:
+      required: false
