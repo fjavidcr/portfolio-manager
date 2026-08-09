@@ -1,7 +1,7 @@
 name: 📝 Propuesta de Cambio / Tarea Técnica (Task / Refactor)
 description: Documenta refactorizaciones, cambios de infraestructura o deuda técnica
-title: "[TASK] "
-labels: ["refactor", "tech-debt"]
+title: '[TASK] '
+labels: ['refactor', 'tech-debt']
 body:
   - type: markdown
     attributes:

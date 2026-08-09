@@ -1,7 +1,7 @@
 name: 🐛 Reporte de Bug (Bug Report)
 description: Reporta un error o fallo inesperado en la aplicación
-title: "[BUG] "
-labels: ["bug"]
+title: '[BUG] '
+labels: ['bug']
 body:
   - type: markdown
     attributes:

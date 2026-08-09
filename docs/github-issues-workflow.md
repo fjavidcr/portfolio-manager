@@ -34,17 +34,21 @@ flowchart LR
 ```
 
 ### 1. Creación del Issue
+
 Antes de comenzar un cambio significativo, se crea o consulta el GitHub Issue correspondiente.
 
 ### 2. Creación de la Rama
+
 Las ramas deben seguir la convención:
+
 - `feature/<nombre-breve-o-numero-issue>`
 - `fix/<nombre-breve-o-numero-issue>`
 - `refactor/<nombre-breve-o-numero-issue>`
 
-*Ejemplo:* `feature/github-issues-workflow` o `fix/issue-12-auth-error`.
+_Ejemplo:_ `feature/github-issues-workflow` o `fix/issue-12-auth-error`.
 
 ### 3. Vinculación en Commits y PRs
+
 En las descripciones de los Pull Requests o en el mensaje final de merge/commit, incluye palabras clave de cierre de GitHub:
 
 - `Closes #123`
@@ -58,5 +62,6 @@ Esto provocará que al hacer merge a `develop` o `main`, GitHub cierre el issue 
 ## 🤖 Guía para Asistentes de IA (AGENTS)
 
 Cuando trabajes con asistentes de IA (Antigravity/Gemini/Jules):
+
 1. **Pide referencia al Issue**: Proporciona el número de issue o pide a la IA que redacte la propuesta/solución teniendo en cuenta el issue.
 2. **Commits estructurados**: Indica al agente que incluya `Closes #<número_issue>` o `Ref #<número_issue>` en el mensaje de commit.
