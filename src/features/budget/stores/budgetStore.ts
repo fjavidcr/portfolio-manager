@@ -26,26 +26,73 @@ export const budgetStatus = map<{
 })
 
 // Computeds
-const calculateMonthlyTotal = (items: BudgetItem[]) => {
+const calculateDirectMonthlyTotal = (items: BudgetItem[]) => {
   return items.reduce((sum, item) => {
+    if (item.frequency === 'Annual') return sum
     let amount = item.amount
-    // Apply share percentage if present
     if (item.share !== undefined) {
       amount = amount * (item.share / 100)
     }
-    if (item.frequency === 'Annual') amount = amount / 12
     return sum + amount
   }, 0)
 }
 
+const calculateAnnualReserveMonthlyTotal = (items: BudgetItem[]) => {
+  return items.reduce((sum, item) => {
+    if (item.frequency !== 'Annual') return sum
+    let amount = item.amount
+    if (item.share !== undefined) {
+      amount = amount * (item.share / 100)
+    }
+    return sum + amount / 12
+  }, 0)
+}
+
+const calculateMonthlyTotal = (items: BudgetItem[]) => {
+  return calculateDirectMonthlyTotal(items) + calculateAnnualReserveMonthlyTotal(items)
+}
+
 export const totalIncome = computed(budgetStore, (s) => calculateMonthlyTotal(s.income))
-export const totalPersonalExpenses = computed(budgetStore, (s) =>
-  calculateMonthlyTotal(s.personalExpenses)
+
+export const totalPersonalMonthlyDirect = computed(budgetStore, (s) =>
+  calculateDirectMonthlyTotal(s.personalExpenses)
 )
-export const totalCommonExpenses = computed(budgetStore, (s) =>
-  calculateMonthlyTotal(s.commonExpenses)
+export const totalPersonalAnnualReserve = computed(budgetStore, (s) =>
+  calculateAnnualReserveMonthlyTotal(s.personalExpenses)
+)
+export const totalPersonalExpenses = computed(
+  [totalPersonalMonthlyDirect, totalPersonalAnnualReserve],
+  (d, a) => d + a
+)
+
+export const totalCommonMonthlyDirect = computed(budgetStore, (s) =>
+  calculateDirectMonthlyTotal(s.commonExpenses)
+)
+export const totalCommonAnnualReserve = computed(budgetStore, (s) =>
+  calculateAnnualReserveMonthlyTotal(s.commonExpenses)
+)
+export const totalCommonExpenses = computed(
+  [totalCommonMonthlyDirect, totalCommonAnnualReserve],
+  (d, a) => d + a
+)
+
+export const totalDirectMonthlyExpenses = computed(
+  [totalPersonalMonthlyDirect, totalCommonMonthlyDirect],
+  (p, c) => p + c
+)
+export const totalAnnualReserveExpenses = computed(
+  [totalPersonalAnnualReserve, totalCommonAnnualReserve],
+  (p, c) => p + c
 )
 export const totalExpenses = computed([totalPersonalExpenses, totalCommonExpenses], (p, c) => p + c)
+
+// Helper to sanitize items from Firestore
+const sanitizeItems = (items: BudgetItem[] = []): BudgetItem[] => {
+  return items.map((item) => ({
+    ...item,
+    frequency: item.frequency || 'Monthly'
+  }))
+}
 
 // Actions
 export const loadBudget = async (uid: string) => {
@@ -59,9 +106,9 @@ export const loadBudget = async (uid: string) => {
     if (docSnap.exists()) {
       const data = docSnap.data() as BudgetModel
       budgetStore.set({
-        income: data.income || [],
-        personalExpenses: data.personalExpenses || [],
-        commonExpenses: data.commonExpenses || [],
+        income: sanitizeItems(data.income),
+        personalExpenses: sanitizeItems(data.personalExpenses),
+        commonExpenses: sanitizeItems(data.commonExpenses),
         savingsParams: {
           investmentTarget: data.savingsParams?.investmentTarget || 0,
           savingsTarget: data.savingsParams?.savingsTarget || 0

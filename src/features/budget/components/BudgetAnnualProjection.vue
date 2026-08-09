@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { computed } from 'vue'
-import { budgetStore } from '../stores/budgetStore'
-import { totalIncome } from '../stores/budgetStore'
+import { budgetStore, totalIncome, totalAnnualReserveExpenses } from '../stores/budgetStore'
 import { formatCurrencyClean } from '@shared/lib/utils'
 
 const $budget = useStore(budgetStore)
 const $totalIncome = useStore(totalIncome)
+const $annualReserveExpenses = useStore(totalAnnualReserveExpenses)
 
 const annualIncome = computed(() => $totalIncome.value * 12)
 const annualSavings = computed(() => {
@@ -17,6 +17,7 @@ const annualInvestments = computed(() => {
   const monthlyInvestments = $budget.value.savingsParams.investmentTarget
   return monthlyInvestments * 12
 })
+const annualReserveTotal = computed(() => $annualReserveExpenses.value * 12)
 </script>
 
 <template>
@@ -45,7 +46,7 @@ const annualInvestments = computed(() => {
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div
         class="flex flex-col items-center justify-center bg-surface-container-low px-2 py-3 rounded-xl"
       >
@@ -74,6 +75,18 @@ const annualInvestments = computed(() => {
         </p>
         <p class="text-center text-xl font-bold text-emerald-500">
           {{ formatCurrencyClean(annualSavings) }}
+        </p>
+      </div>
+      <div
+        class="flex flex-col items-center justify-center bg-amber-500/10 px-2 py-3 rounded-xl border border-amber-500/20"
+      >
+        <p
+          class="text-center text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider mb-1"
+        >
+          Annual Bills Fund
+        </p>
+        <p class="text-center text-xl font-bold text-amber-600 dark:text-amber-400">
+          {{ formatCurrencyClean(annualReserveTotal) }}
         </p>
       </div>
     </div>
