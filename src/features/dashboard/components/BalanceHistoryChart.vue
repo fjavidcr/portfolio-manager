@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useStore } from '@nanostores/vue'
 import { portfolioStore } from '@shared/stores/portfolioStore'
-import { formatCurrency } from '@shared/lib/utils'
+import { formatCurrency, formatCurrencyClean } from '@shared/lib/utils'
 import VueApexCharts from 'vue3-apexcharts'
 
 const $portfolio = useStore(portfolioStore)
@@ -14,6 +14,64 @@ const formatTooltipDate = (dateStr: string) => {
   const date = new Date(y, m - 1, d)
   return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
 }
+
+// History Stats (Evolution diff & percentage over ~30 days or available window)
+const historyStats = computed(() => {
+  const history = $portfolio.value.balanceHistory
+  if (!history || !history.length) return null
+
+  const latestIndex = history.length - 1
+  const latestItem = history[latestIndex]
+  const latestValue = latestItem.totalValue
+
+  if (history.length === 1) {
+    return {
+      latestValue,
+      diff: 0,
+      percentage: 0,
+      isPositive: true,
+      label: 'sin datos previos'
+    }
+  }
+
+  // Calculate target date ~30 days ago
+  const [y, m, d] = latestItem.date.split('-').map(Number)
+  const latestDateObj = new Date(y, m - 1, d)
+  const targetDateObj = new Date(latestDateObj)
+  targetDateObj.setDate(targetDateObj.getDate() - 30)
+
+  const yT = targetDateObj.getFullYear()
+  const mT = String(targetDateObj.getMonth() + 1).padStart(2, '0')
+  const dT = String(targetDateObj.getDate()).padStart(2, '0')
+  const targetDateStr = `${yT}-${mT}-${dT}`
+
+  // Find index closest to 30 days ago, or fallback to earliest entry
+  let refIndex = history.findIndex((h) => h.date >= targetDateStr)
+  if (refIndex < 0 || refIndex >= latestIndex) {
+    refIndex = 0
+  }
+
+  const refItem = history[refIndex]
+  const refValue = refItem.totalValue
+  const diff = latestValue - refValue
+  const percentage = refValue > 0 ? (diff / refValue) * 100 : 0
+  const isPositive = diff >= 0
+
+  // Calculate actual days difference between refItem and latestItem
+  const [yR, mR, dR] = refItem.date.split('-').map(Number)
+  const refDateObj = new Date(yR, mR - 1, dR)
+  const daysDiff = Math.max(1, Math.round((latestDateObj.getTime() - refDateObj.getTime()) / (1000 * 60 * 60 * 24)))
+
+  const label = daysDiff === 1 ? 'vs. ayer' : `vs. hace ${daysDiff}d`
+
+  return {
+    latestValue,
+    diff,
+    percentage,
+    isPositive,
+    label
+  }
+})
 
 // Chart Series
 const chartSeries = computed(() => {
@@ -41,6 +99,9 @@ const chartOptions = computed(() => {
         easing: 'easeinout' as const,
         speed: 800
       }
+    },
+    dataLabels: {
+      enabled: false
     },
     stroke: {
       curve: 'smooth' as const,
@@ -75,7 +136,7 @@ const chartOptions = computed(() => {
       strokeDashArray: 4,
       xaxis: { lines: { show: false } },
       yaxis: { lines: { show: true } },
-      padding: { top: 10, right: 10, bottom: 0, left: 10 }
+      padding: { top: 15, right: 15, bottom: 5, left: 15 }
     },
     markers: {
       size: 4,
@@ -105,7 +166,7 @@ const chartOptions = computed(() => {
     },
     yaxis: {
       labels: {
-        formatter: (val: number) => formatCurrency(val),
+        formatter: (val: number) => formatCurrencyClean(val),
         style: {
           colors: 'var(--color-on-surface-variant)',
           fontSize: '11px',
@@ -160,7 +221,7 @@ const chartOptions = computed(() => {
   <div
     class="bg-surface-container-low rounded-3xl border border-outline-variant shadow-lg p-6 flex flex-col"
   >
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
       <div>
         <h2 class="text-xl font-bold flex items-center gap-2">
           <!-- Premium Sparkline/History icon inlined -->
@@ -182,6 +243,44 @@ const chartOptions = computed(() => {
         <p class="text-xs text-on-surface-variant font-medium opacity-70 mt-1">
           Evolución diaria del valor de tu portafolio
         </p>
+      </div>
+
+      <div
+        v-if="historyStats"
+        class="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl border text-xs font-bold shrink-0 self-start sm:self-auto"
+        :class="
+          historyStats.isPositive
+            ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+            : 'bg-rose-500/10 text-rose-500 border-rose-500/20'
+        "
+      >
+        <svg
+          class="w-4 h-4 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path
+            v-if="historyStats.isPositive"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"
+          />
+          <path
+            v-else
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.25 6L9 12.75l4.306-4.307a11.95 11.95 0 015.814 5.519l2.74 1.22m0 0l-5.94 2.28m5.94-2.28l-2.28-5.941"
+          />
+        </svg>
+        <span>
+          {{ historyStats.isPositive ? '+' : '' }}{{ formatCurrency(historyStats.diff) }}
+          ({{ historyStats.isPositive ? '+' : '' }}{{ historyStats.percentage.toFixed(2) }}%)
+        </span>
+        <span class="opacity-70 text-[10px] font-normal border-l border-current/25 pl-2 ml-0.5">
+          {{ historyStats.label }}
+        </span>
       </div>
     </div>
 
