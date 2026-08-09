@@ -60,7 +60,10 @@ const historyStats = computed(() => {
   // Calculate actual days difference between refItem and latestItem
   const [yR, mR, dR] = refItem.date.split('-').map(Number)
   const refDateObj = new Date(yR, mR - 1, dR)
-  const daysDiff = Math.max(1, Math.round((latestDateObj.getTime() - refDateObj.getTime()) / (1000 * 60 * 60 * 24)))
+  const daysDiff = Math.max(
+    1,
+    Math.round((latestDateObj.getTime() - refDateObj.getTime()) / (1000 * 60 * 60 * 24))
+  )
 
   const label = daysDiff === 1 ? 'vs. ayer' : `vs. hace ${daysDiff}d`
 
@@ -275,8 +278,9 @@ const chartOptions = computed(() => {
           />
         </svg>
         <span>
-          {{ historyStats.isPositive ? '+' : '' }}{{ formatCurrency(historyStats.diff) }}
-          ({{ historyStats.isPositive ? '+' : '' }}{{ historyStats.percentage.toFixed(2) }}%)
+          {{ historyStats.isPositive ? '+' : '' }}{{ formatCurrency(historyStats.diff) }} ({{
+            historyStats.isPositive ? '+' : ''
+          }}{{ historyStats.percentage.toFixed(2) }}%)
         </span>
         <span class="opacity-70 text-[10px] font-normal border-l border-current/25 pl-2 ml-0.5">
           {{ historyStats.label }}
