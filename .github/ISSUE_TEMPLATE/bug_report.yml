@@ -1,0 +1,51 @@
+name: 🐛 Reporte de Bug (Bug Report)
+description: Reporta un error o fallo inesperado en la aplicación
+title: '[BUG] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar un problema. Proporciona todos los detalles posibles para ayudarnos a reproducirlo y solucionarlo rápidamente.
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del Bug
+      description: Explicación clara y concisa de cuál es el problema.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Pasos para Reproducir
+      description: Pasos exactos para reproducir el fallo.
+      placeholder: |
+        1. Ir a la página '...'
+        2. Hacer clic en '...'
+        3. Ver el error en pantalla o consola
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Comportamiento Esperado
+      description: Qué debería haber ocurrido en su lugar.
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots-logs
+    attributes:
+      label: Capturas de Pantalla o Logs
+      description: Adjunta capturas o trazas de error (stack trace, logs de consola, etc.).
+    validations:
+      required: false
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Entorno
+      options:
+        - Desarrollo local
+        - Staging / Preview
+        - Producción
+    validations:
+      required: false
