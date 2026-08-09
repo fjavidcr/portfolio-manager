@@ -1,6 +1,6 @@
 {
   "name": "portfolio-manager",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "Portfolio Manager - Track your investments, assets, and budget in one place.",
   "author": "Francisco Javier del Castillo Ramírez <fj.delcastillo.ramirez@gmail.com>",
   "license": "ISC",
@@ -29,12 +29,12 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.1",
-    "@astrojs/vue": "^6.0.1",
+    "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vue": "^7.0.2",
     "@nanostores/vue": "^1.0.1",
     "@tailwindcss/vite": "^4.1.18",
     "apexcharts": "^5.10.4",
-    "astro": "^6.0.7",
+    "astro": "^7.2.0",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",
     "firebase": "^12.7.0",
