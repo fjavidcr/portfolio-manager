@@ -1,14 +1,14 @@
-# Flujo de Trabajo con GitHub Issues (Issue-Driven Development)
+# Flujo de Trabajo con GitHub Issues y Releases
 
-Este documento define la metodología para documentar, planificar y rastrear cambios en `portfolio-manager` utilizando GitHub Issues.
+Este documento define la metodología para documentar, planificar, versionar y publicar cambios en `portfolio-manager` utilizando GitHub Issues, la convención SemVer y ramas `release/`.
 
 ---
 
 ## 🎯 Objetivos
 
 1. **Trazabilidad**: Vincular cada cambio de código con una razón o requerimiento documentado.
-2. **Historial Limpio**: Mantener la motivación de los cambios accesible para cualquier colaborador o asistente IA.
-3. **Automatización**: Permitir el cierre automático de tareas e integración con sistemas de CI/CD y changelogs.
+2. **Control de Versiones Limpio (SemVer)**: Garantizar que la versión en `package.json` se actualice en la característica.
+3. **Flujo Seguro de Despliegue a Producción (`master`)**: Garantizar que solo se haga PR a `master` desde ramas dedicadas `release/<version>`.
 
 ---
 
@@ -22,40 +22,36 @@ Al crear un nuevo issue en GitHub, se debe seleccionar la plantilla adecuada:
 
 ---
 
-## 🔄 Ciclo de Vida del Cambio
+## 🔄 Ciclo de Vida del Cambio y Publicación
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Crear GitHub Issue] --> B[Crear rama feature/...]
-    B --> C[Desarrollar & Commits]
-    C --> D[Abrir Pull Request]
-    D --> E[Revisión & Merge]
-    E --> F[Cierre Automático de Issue]
+    B --> C[Desarrollo & Incrementar versión en package.json]
+    C --> D[Abrir PR a develop & Merge]
+    D --> E[Crear rama release/vX.Y.Z desde develop]
+    E --> F[Abrir PR desde release/vX.Y.Z a master]
+    F --> G[Merge a master & Release]
 ```
 
-### 1. Creación del Issue
+### 1. Creación del Issue y Rama
 
-Antes de comenzar un cambio significativo, se crea o consulta el GitHub Issue correspondiente.
+- Antes de comenzar un cambio, se crea o asigna el GitHub Issue.
+- Se trabaja en ramas `feature/<nombre>`, `fix/<nombre>` o `refactor/<nombre>`.
 
-### 2. Creación de la Rama
+### 2. Actualización de Versión en `package.json`
 
-Las ramas deben seguir la convención:
+- Durante el desarrollo en la rama `feature/` (o antes de la PR a `develop`), se incrementa la versión en `package.json` (ej. de `3.0.0` a `3.1.0`).
 
-- `feature/<nombre-breve-o-numero-issue>`
-- `fix/<nombre-breve-o-numero-issue>`
-- `refactor/<nombre-breve-o-numero-issue>`
+### 3. PR y Merge a `develop`
 
-_Ejemplo:_ `feature/github-issues-workflow` o `fix/issue-12-auth-error`.
+- Se abre la PR desde la rama `feature/` hacia `develop` incluyendo `Closes #123`.
+- Al mergear en `develop`, GitHub cierra automáticamente el issue.
 
-### 3. Vinculación en Commits y PRs
+### 4. Creación de la Rama Release y PR a `master`
 
-En las descripciones de los Pull Requests o en el mensaje final de merge/commit, incluye palabras clave de cierre de GitHub:
-
-- `Closes #123`
-- `Fixes #123`
-- `Resolves #123`
-
-Esto provocará que al hacer merge a `develop` o `main`, GitHub cierre el issue automáticamente y cree la vinculación visual.
+- Con los cambios y la versión consolidada en `develop`, se crea la rama `release/<version>` (ej. `release/3.1.0`).
+- Se abre la Pull Request **desde `release/3.1.0` hacia `master`**.
 
 ---
 
@@ -63,5 +59,6 @@ Esto provocará que al hacer merge a `develop` o `main`, GitHub cierre el issue 
 
 Cuando trabajes con asistentes de IA (Antigravity/Gemini/Jules):
 
-1. **Pide referencia al Issue**: Proporciona el número de issue o pide a la IA que redacte la propuesta/solución teniendo en cuenta el issue.
-2. **Commits estructurados**: Indica al agente que incluya `Closes #<número_issue>` o `Ref #<número_issue>` en el mensaje de commit.
+1. **Incremento de Versión**: Asegúrate de que se actualice `package.json` en la rama del cambio.
+2. **Commits Estructurados**: Referenciar `Closes #<número_issue>` o `Ref #<número_issue>`.
+3. **Flujo de PRs**: Hacer PR a `develop` desde la `feature/`, y únicamente abrir PR a `master` desde una rama `release/<version>`.
