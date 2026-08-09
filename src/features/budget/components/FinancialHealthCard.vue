@@ -4,18 +4,15 @@ import { computed } from 'vue'
 import { formatCurrencyClean } from '@shared/lib/utils'
 import {
   totalPersonalExpenses,
-  totalCommonExpenses
-  // Assuming we have a store for current total savings/emergency fund.
-  // If not, for now we might need to mock it or use accumulated savings if available.
-  // Checking budgetStore again, it seems we primarily track monthly flows.
-  // The spreadsheet shows "Fondo de emergencia" as a static value or accumulated.
-  // I will assume for this card we are showing the *Targets* based on flows,
-  // and maybe compare against a hypothetical current saving if I can find where it is stored.
-  // If no "Current Assets" store exists, I will just display the calculated Targets for now.
+  totalCommonExpenses,
+  totalDirectMonthlyExpenses,
+  totalAnnualReserveExpenses
 } from '../stores/budgetStore'
 
 const $personal = useStore(totalPersonalExpenses)
 const $common = useStore(totalCommonExpenses)
+const $direct = useStore(totalDirectMonthlyExpenses)
+const $reserve = useStore(totalAnnualReserveExpenses)
 
 const monthlyCostOfLiving = computed(() => $personal.value + $common.value)
 const annualCostOfLiving = computed(() => monthlyCostOfLiving.value * 12)
@@ -56,7 +53,20 @@ const targetRetirementReserve = computed(() => annualCostOfLiving.value * 33)
             formatCurrencyClean(monthlyCostOfLiving)
           }}</span>
         </div>
-        <div class="flex justify-between items-center">
+        <div
+          v-if="$reserve > 0"
+          class="text-xs space-y-1 bg-surface-container-low p-2.5 rounded-xl border border-outline-variant/20"
+        >
+          <div class="flex justify-between text-secondary">
+            <span>• Direct Monthly Bills:</span>
+            <span class="font-semibold text-on-surface">{{ formatCurrencyClean($direct) }}</span>
+          </div>
+          <div class="flex justify-between text-amber-600 dark:text-amber-400">
+            <span>• Annual Expense Reserve:</span>
+            <span class="font-semibold">{{ formatCurrencyClean($reserve) }}/mo</span>
+          </div>
+        </div>
+        <div class="flex justify-between items-center pt-1">
           <span class="text-sm font-medium text-secondary">Annual Cost of Living</span>
           <span class="text-lg font-bold text-on-surface">{{
             formatCurrencyClean(annualCostOfLiving)
