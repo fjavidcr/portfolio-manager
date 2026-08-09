@@ -1,0 +1,41 @@
+name: 📝 Propuesta de Cambio / Tarea Técnica (Task / Refactor)
+description: Documenta refactorizaciones, cambios de infraestructura o deuda técnica
+title: '[TASK] '
+labels: ['refactor', 'tech-debt']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa esta plantilla para documentar refactorizaciones, cambios de infraestructura o mejoras técnicas internas.
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objetivo del Cambio
+      description: Resumen claro de qué se va a modificar y por qué.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Alcance e Impacto
+      description: Módulos, archivos o servicios afectados (ej. Firestore rules, componentes UI, Astro, etc.).
+    validations:
+      required: true
+  - type: textarea
+    id: implementation-plan
+    attributes:
+      label: Plan de Implementación
+      description: Pasos técnicos detallados para realizar el cambio.
+      placeholder: |
+        - [ ] Crear rama feature/...
+        - [ ] Modificar componente X
+        - [ ] Ejecutar verificaciones / tests
+    validations:
+      required: false
+  - type: textarea
+    id: verification
+    attributes:
+      label: Plan de Verificación
+      description: Cómo se probará que el cambio funciona correctamente y no introduce regresiones.
+    validations:
+      required: true
