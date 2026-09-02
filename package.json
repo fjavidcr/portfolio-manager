@@ -32,7 +32,7 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vue": "^7.0.2",
     "@nanostores/vue": "^1.0.1",
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.3.3",
     "apexcharts": "^5.10.4",
     "astro": "^7.2.0",
     "csv-parser": "^3.2.0",
