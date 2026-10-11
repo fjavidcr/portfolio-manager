@@ -8,7 +8,7 @@ const props = defineProps<{
   personalExpenses: number
   commonExpenses: number
   investmentTarget: number
-  savingsTarget: number
+  savingsTarget?: number
   loading?: boolean
 }>()
 
@@ -20,6 +20,10 @@ const emit = defineEmits<{
 const totalExpenses = computed(() => props.personalExpenses + props.commonExpenses)
 const remaining = computed(() => props.totalIncome - totalExpenses.value)
 const maxAllocation = computed(() => Math.max(0, remaining.value))
+const effectiveSavingsTarget = computed(() => {
+  if (props.savingsTarget !== undefined) return props.savingsTarget
+  return Math.max(0, remaining.value - props.investmentTarget)
+})
 </script>
 
 <template>
@@ -49,7 +53,7 @@ const maxAllocation = computed(() => Math.max(0, remaining.value))
         :common-expenses="commonExpenses"
         :personal-expenses="personalExpenses"
         :investment-target="investmentTarget"
-        :savings-target="savingsTarget"
+        :savings-target="effectiveSavingsTarget"
         :loading="loading"
       />
 
