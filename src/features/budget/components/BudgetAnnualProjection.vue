@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import { useStore } from '@nanostores/vue'
 import { computed } from 'vue'
-import { budgetStore, totalIncome, totalAnnualReserveExpenses } from '../stores/budgetStore'
+import {
+  budgetStore,
+  totalIncome,
+  totalSavingsTarget,
+  totalAnnualReserveExpenses
+} from '../stores/budgetStore'
 import { formatCurrencyClean } from '@shared/lib/utils'
 
 const $budget = useStore(budgetStore)
 const $totalIncome = useStore(totalIncome)
+const $savingsTarget = useStore(totalSavingsTarget)
 const $annualReserveExpenses = useStore(totalAnnualReserveExpenses)
 
 const annualIncome = computed(() => $totalIncome.value * 12)
 const annualSavings = computed(() => {
-  const monthlySavings = $budget.value.savingsParams.savingsTarget
-  return monthlySavings * 12
+  return $savingsTarget.value * 12
 })
 const annualInvestments = computed(() => {
   const monthlyInvestments = $budget.value.savingsParams.investmentTarget
