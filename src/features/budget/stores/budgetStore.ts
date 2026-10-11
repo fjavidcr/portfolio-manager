@@ -86,6 +86,15 @@ export const totalAnnualReserveExpenses = computed(
 )
 export const totalExpenses = computed([totalPersonalExpenses, totalCommonExpenses], (p, c) => p + c)
 
+export const totalSavingsTarget = computed(
+  [totalIncome, totalExpenses, budgetStore],
+  (income, expenses, store) => {
+    const remaining = income - expenses
+    const investment = store.savingsParams.investmentTarget || 0
+    return Math.max(0, remaining - investment)
+  }
+)
+
 // Helper to sanitize items from Firestore
 const sanitizeItems = (items: BudgetItem[] = []): BudgetItem[] => {
   return items.map((item) => ({
@@ -105,16 +114,26 @@ export const loadBudget = async (uid: string) => {
 
     if (docSnap.exists()) {
       const data = docSnap.data() as BudgetModel
+      const investmentTarget = data.savingsParams?.investmentTarget || 0
       budgetStore.set({
         income: sanitizeItems(data.income),
         personalExpenses: sanitizeItems(data.personalExpenses),
         commonExpenses: sanitizeItems(data.commonExpenses),
         savingsParams: {
-          investmentTarget: data.savingsParams?.investmentTarget || 0,
+          investmentTarget,
           savingsTarget: data.savingsParams?.savingsTarget || 0
         },
         lastUpdated: data.lastUpdated
       })
+
+      // Synchronize savingsTarget in store with the actual computed remaining savings
+      const computedSavings = totalSavingsTarget.get()
+      if (budgetStore.get().savingsParams.savingsTarget !== computedSavings) {
+        budgetStore.setKey('savingsParams', {
+          investmentTarget,
+          savingsTarget: computedSavings
+        })
+      }
     } else {
       // Reset if new user/no doc
       budgetStore.set({
@@ -139,8 +158,13 @@ export const saveBudget = async () => {
   budgetStatus.setKey('saving', true)
   try {
     const data = budgetStore.get()
+    const currentSavings = totalSavingsTarget.get()
     const payload = {
       ...data,
+      savingsParams: {
+        ...data.savingsParams,
+        savingsTarget: currentSavings
+      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       lastUpdated: serverTimestamp() as any
     }
@@ -158,15 +182,26 @@ export const updateSection = async (
   items: BudgetItem[]
 ) => {
   budgetStore.setKey(section, items)
+  // Ensure local savingsParams reflect the newly computed savings
+  const computedSavings = totalSavingsTarget.get()
+  const currentParams = budgetStore.get().savingsParams
+  budgetStore.setKey('savingsParams', {
+    ...currentParams,
+    savingsTarget: computedSavings
+  })
   await saveBudget()
 }
 
-export const updateTargets = (investment: number, savings: number) => {
+export const updateTargets = (investment: number, savings?: number) => {
   const current = budgetStore.get().savingsParams
+  const computedSavings =
+    savings !== undefined
+      ? savings
+      : Math.max(0, totalIncome.get() - totalExpenses.get() - investment)
   budgetStore.setKey('savingsParams', {
     ...current,
     investmentTarget: investment,
-    savingsTarget: savings
+    savingsTarget: computedSavings
   })
 }
 
